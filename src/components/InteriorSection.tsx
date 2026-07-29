@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Images } from "lucide-react";
 import { useInterior } from "@/context/InteriorContext";
 import { PAGE } from "@/lib/layout";
@@ -8,113 +8,46 @@ import { PAGE } from "@/lib/layout";
 export function InteriorSection() {
   const { photos } = useInterior();
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const programmaticRef = useRef(false);
-  const userDraggingRef = useRef(false);
-  const normalizeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
-    undefined,
-  );
   const [canScroll, setCanScroll] = useState(false);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
 
   const visiblePhotos = useMemo(
     () => photos.filter((p) => Boolean(p.src?.trim())),
     [photos],
   );
-  const loop = visiblePhotos.length > 1;
-  const track = useMemo(
-    () => (loop ? [...visiblePhotos, ...visiblePhotos] : visiblePhotos),
-    [visiblePhotos, loop],
-  );
-
-  const getHalf = useCallback(() => {
-    const el = scrollerRef.current;
-    if (!el) return 0;
-    return el.scrollWidth / 2;
-  }, []);
-
-  const normalizeScroll = useCallback(() => {
-    const el = scrollerRef.current;
-    if (!el || !loop) return;
-    const half = getHalf();
-    if (half <= 0) return;
-
-    let next = el.scrollLeft;
-    if (next >= half - 2) next -= half;
-    else if (next <= 2) next += half;
-
-    if (Math.abs(next - el.scrollLeft) < 1) return;
-
-    programmaticRef.current = true;
-    el.style.scrollBehavior = "auto";
-    el.scrollLeft = next;
-    el.style.scrollBehavior = "";
-    programmaticRef.current = false;
-  }, [loop, getHalf]);
-
-  const scheduleNormalize = useCallback(() => {
-    clearTimeout(normalizeTimerRef.current);
-    normalizeTimerRef.current = setTimeout(() => {
-      if (!userDraggingRef.current) normalizeScroll();
-    }, 80);
-  }, [normalizeScroll]);
 
   function updateScrollState() {
     const el = scrollerRef.current;
     if (!el) return;
-    setCanScroll(loop || el.scrollWidth > el.clientWidth + 4);
+    const max = el.scrollWidth - el.clientWidth;
+    const overflow = max > 4;
+    setCanScroll(overflow);
+    setAtStart(el.scrollLeft <= 4);
+    setAtEnd(el.scrollLeft >= max - 4);
   }
 
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
+
     updateScrollState();
-    window.addEventListener("resize", updateScrollState);
-    return () => window.removeEventListener("resize", updateScrollState);
-  }, [visiblePhotos, loop]);
 
-  useEffect(() => {
-    const el = scrollerRef.current;
-    if (!el) return;
-
-    function onScroll() {
-      updateScrollState();
-      if (programmaticRef.current) return;
-      if (!userDraggingRef.current) scheduleNormalize();
-    }
-
-    function onPointerDown() {
-      userDraggingRef.current = true;
-    }
-
-    function onPointerUp() {
-      userDraggingRef.current = false;
-      scheduleNormalize();
-    }
-
+    const onScroll = () => updateScrollState();
     el.addEventListener("scroll", onScroll, { passive: true });
-    el.addEventListener("pointerdown", onPointerDown);
-    el.addEventListener("pointerup", onPointerUp);
-    el.addEventListener("pointercancel", onPointerUp);
     window.addEventListener("resize", updateScrollState);
 
     return () => {
       el.removeEventListener("scroll", onScroll);
-      el.removeEventListener("pointerdown", onPointerDown);
-      el.removeEventListener("pointerup", onPointerUp);
-      el.removeEventListener("pointercancel", onPointerUp);
       window.removeEventListener("resize", updateScrollState);
-      clearTimeout(normalizeTimerRef.current);
     };
-  }, [visiblePhotos, loop, scheduleNormalize]);
+  }, [visiblePhotos]);
 
   function scrollByDir(dir: -1 | 1) {
     const el = scrollerRef.current;
     if (!el) return;
-
-    const amount = Math.max(el.clientWidth * 0.75, 320);
-    el.scrollBy({
-      left: dir * amount,
-      behavior: "smooth",
-    });
+    const amount = Math.max(el.clientWidth * 0.72, 300);
+    el.scrollBy({ left: dir * amount, behavior: "smooth" });
   }
 
   return (
@@ -135,16 +68,18 @@ export function InteriorSection() {
             <button
               type="button"
               aria-label="Листать влево"
+              disabled={atStart}
               onClick={() => scrollByDir(-1)}
-              className="rounded-full border border-[var(--line)] bg-[var(--white)] p-2 text-[var(--brown)] transition-[border-color,background] duration-300 hover:border-[var(--orange)] hover:bg-[var(--orange-soft)]"
+              className="rounded-full border border-[var(--line)] bg-[var(--white)] p-2 text-[var(--brown)] transition-[border-color,background,opacity] duration-300 hover:border-[var(--orange)] hover:bg-[var(--orange-soft)] disabled:opacity-35"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
             <button
               type="button"
               aria-label="Листать вправо"
+              disabled={atEnd}
               onClick={() => scrollByDir(1)}
-              className="rounded-full border border-[var(--line)] bg-[var(--white)] p-2 text-[var(--brown)] transition-[border-color,background] duration-300 hover:border-[var(--orange)] hover:bg-[var(--orange-soft)]"
+              className="rounded-full border border-[var(--line)] bg-[var(--white)] p-2 text-[var(--brown)] transition-[border-color,background,opacity] duration-300 hover:border-[var(--orange)] hover:bg-[var(--orange-soft)] disabled:opacity-35"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
@@ -158,20 +93,22 @@ export function InteriorSection() {
         <div className="interior-viewport relative -mx-4 sm:-mx-5 md:-mx-6 lg:-mx-8">
           <div
             ref={scrollerRef}
-            className="interior-track flex gap-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="interior-track flex gap-4 overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            {track.map((photo, index) => (
+            {visiblePhotos.map((photo) => (
               <div
-                key={`${photo.id}-${index}`}
-                className="relative h-[220px] w-[min(78vw,340px)] shrink-0 overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--cream-dark)] shadow-[var(--shadow-soft)] sm:h-[300px] sm:w-[min(62vw,480px)] lg:h-[360px] lg:w-[520px]"
+                key={photo.id}
+                className="interior-card shrink-0"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={photo.src}
-                  alt=""
-                  className="h-full w-full object-cover"
-                  draggable={false}
-                />
+                <div className="interior-card-media relative h-[220px] w-[min(78vw,340px)] overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--cream-dark)] sm:h-[300px] sm:w-[min(62vw,480px)] lg:h-[360px] lg:w-[520px]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={photo.src}
+                    alt=""
+                    className="h-full w-full object-cover"
+                    draggable={false}
+                  />
+                </div>
               </div>
             ))}
           </div>

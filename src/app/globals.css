@@ -435,32 +435,48 @@ h3,
 }
 
 .interior-viewport {
+  /* мягкое затухание краёв — без резкого обрыва */
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0,
-    #000 56px,
-    #000 calc(100% - 56px),
+    #000 8%,
+    #000 92%,
     transparent 100%
   );
   mask-image: linear-gradient(
     to right,
     transparent 0,
-    #000 56px,
-    #000 calc(100% - 56px),
+    #000 8%,
+    #000 92%,
     transparent 100%
   );
 }
 
 .interior-track {
-  padding-inline: 12px;
-  scroll-padding-inline: 12px;
-  overscroll-behavior-x: none;
+  /* место под тени сверху/снизу и по бокам — иначе overflow их срезает */
+  padding: 20px 20px 28px;
+  scroll-padding-inline: 20px;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.interior-card {
+  /* тень на обёртке без overflow:hidden — не обрезается резко */
+  border-radius: 1rem;
+  box-shadow:
+    0 4px 12px rgba(40, 19, 0, 0.06),
+    0 14px 36px rgba(40, 19, 0, 0.1);
+}
+
+.interior-card-media {
+  display: block;
 }
 
 @media (min-width: 640px) {
   .interior-track {
-    padding-inline: 16px;
-    scroll-padding-inline: 16px;
+    padding: 24px 24px 32px;
+    scroll-padding-inline: 24px;
+    gap: 1.25rem;
   }
 }
 
@@ -469,15 +485,15 @@ h3,
     -webkit-mask-image: linear-gradient(
       to right,
       transparent 0,
-      #000 72px,
-      #000 calc(100% - 72px),
+      #000 6%,
+      #000 94%,
       transparent 100%
     );
     mask-image: linear-gradient(
       to right,
       transparent 0,
-      #000 72px,
-      #000 calc(100% - 72px),
+      #000 6%,
+      #000 94%,
       transparent 100%
     );
   }
