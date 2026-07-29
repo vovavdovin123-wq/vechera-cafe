@@ -22,7 +22,7 @@ const SLIDE_GAP = 16;
 
 /** Карусель акций: фото на весь блок, бесконечный цикл */
 export function PromoCarousel() {
-  const { slides } = usePromos();
+  const { slides, contentReady } = usePromos();
   const count = slides.length;
   const loop = count > 1;
 
@@ -32,7 +32,7 @@ export function PromoCarousel() {
   }, [slides, count, loop]);
 
   const [realIndex, setRealIndex] = useState(0);
-  const [trackIndex, setTrackIndex] = useState(loop ? 1 : 0);
+  const [trackIndex, setTrackIndex] = useState(1);
   const [animate, setAnimate] = useState(true);
 
   const trackRef = useRef<HTMLDivElement>(null);
@@ -199,6 +199,18 @@ export function PromoCarousel() {
     scheduleAuto();
     return () => clearTimeout(autoTimerRef.current);
   }, [count, scheduleAuto]);
+
+  if (!contentReady) {
+    return (
+      <div
+        className="relative w-full overflow-hidden bg-[var(--bg-deep)] pt-3 sm:pt-4"
+        style={{ aspectRatio: "21 / 9", minHeight: "12rem" }}
+        aria-busy
+      >
+        <div className="absolute inset-0 animate-pulse bg-[var(--espresso)]/10" />
+      </div>
+    );
+  }
 
   if (count === 0) return null;
 

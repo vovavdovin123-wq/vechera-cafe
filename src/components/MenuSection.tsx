@@ -11,7 +11,7 @@ import { useMenu } from "@/context/MenuContext";
 
 export function MenuSection() {
   const { franchise } = useFranchise();
-  const { items } = useMenu();
+  const { items, contentReady } = useMenu();
   const { addItem } = useCart();
   const [category, setCategory] = useState<MenuCategory | "all">("all");
   const [faqItem, setFaqItem] = useState<MenuItem | null>(null);
@@ -30,6 +30,14 @@ export function MenuSection() {
     if (category === "all") return list;
     return list.filter((i) => i.category === category);
   }, [items, category]);
+
+  if (!contentReady) {
+    return (
+      <section id="menu" className={`${PAGE} py-8 sm:py-10 md:py-12`} aria-busy>
+        <div className="h-40 animate-pulse rounded-2xl bg-[var(--bg-deep)]/60" />
+      </section>
+    );
+  }
 
   return (
     <section id="menu" className={`${PAGE} py-8 sm:py-10 md:py-12`}>

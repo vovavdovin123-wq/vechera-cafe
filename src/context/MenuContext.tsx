@@ -10,6 +10,11 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import {
+  CACHE_MENUS,
+  readContentCache,
+  writeContentCache,
+} from "@/lib/content-cache";
 import { debounce, fetchContent, saveContent } from "@/lib/content-sync";
 import { CATEGORY_IMAGES, INITIAL_MENUS } from "@/lib/menu-data";
 import type { FranchiseId, MenuItem } from "@/lib/types";
@@ -28,9 +33,16 @@ interface MenuContextValue {
   removeMenuItem: (id: string) => void;
   toggleAvailable: (id: string) => void;
   syncStatus: "idle" | "loading" | "saving" | "error";
+  /** true после первой загрузки с сервера или из кэша */
+  contentReady: boolean;
 }
 
 const MenuContext = createContext<MenuContextValue | null>(null);
+
+const EMPTY_MENUS: Record<FranchiseId, MenuItem[]> = {
+  center: [],
+  hippodrome: [],
+};
 
 function normalizeMenus(
   data: Partial<Record<string, MenuItem[]>>,
@@ -99,8 +111,19 @@ function normalizeMenus(
 
 export function MenuProvider({ children }: { children: ReactNode }) {
   const { franchiseId } = useFranchise();
-  const [allMenus, setAllMenus] =
-    useState<Record<FranchiseId, MenuItem[]>>(INITIAL_MENUS);
+  const [allMenus, setAllMenus] = useState<Record<FranchiseId, MenuItem[]>>(
+    () => {
+      const cached =
+        readContentCache<Record<FranchiseId, MenuItem[]>>(CACHE_MENUS);
+      if (cached?.center || cached?.hippodrome) return normalizeMenus(cached);
+      return EMPTY_MENUS;
+    },
+  );
+  const [contentReady, setContentReady] = useState(() => {
+    const cached =
+      readContentCache<Record<FranchiseId, MenuItem[]>>(CACHE_MENUS);
+    return Boolean(cached?.center?.length || cached?.hippodrome?.length);
+  });
   const [hydrated, setHydrated] = useState(false);
   const [syncStatus, setSyncStatus] = useState<
     "idle" | "loading" | "saving" | "error"
@@ -113,8 +136,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
         setSyncStatus("saving");
         const result = await saveContent("/api/content/menus", data);
         if (result.ok) {
-          // Не перезаписываем локальное меню ответом сервера —
-          // иначе гонка откатывает только что сменённое фото.
+          writeContentCache(CACHE_MENUS, data);
           setSyncStatus("idle");
         } else {
           setSyncStatus("error");
@@ -131,13 +153,21 @@ export function MenuProvider({ children }: { children: ReactNode }) {
         "/api/content/menus",
       );
       if (cancelled) return;
-      if (data) setAllMenus(normalizeMenus(data));
+      if (data) {
+        const next = normalizeMenus(data);
+        setAllMenus(next);
+        writeContentCache(CACHE_MENUS, next);
+      } else if (!contentReady) {
+        setAllMenus(INITIAL_MENUS);
+      }
+      setContentReady(true);
       setHydrated(true);
       setSyncStatus("idle");
     })();
     return () => {
       cancelled = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only on mount
   }, []);
 
   useEffect(() => {
@@ -155,7 +185,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
       setAllMenus((prev) => ({
         ...prev,
         [franchiseId]: [
-          ...prev[franchiseId],
+          ...(prev[franchiseId] ?? []),
           {
             ...item,
             id,
@@ -187,7 +217,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
     (id: string) => {
       setAllMenus((prev) => ({
         ...prev,
-        [franchiseId]: prev[franchiseId].filter((i) => i.id !== id),
+        [franchiseId]: (prev[franchiseId] ?? []).filter((i) => i.id !== id),
       }));
     },
     [franchiseId],
@@ -197,7 +227,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
     (id: string) => {
       setAllMenus((prev) => ({
         ...prev,
-        [franchiseId]: prev[franchiseId].map((i) =>
+        [franchiseId]: (prev[franchiseId] ?? []).map((i) =>
           i.id === id ? { ...i, available: !i.available } : i,
         ),
       }));
@@ -214,6 +244,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
       removeMenuItem,
       toggleAvailable,
       syncStatus,
+      contentReady,
     }),
     [
       allMenus,
@@ -223,6 +254,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
       removeMenuItem,
       toggleAvailable,
       syncStatus,
+      contentReady,
     ],
   );
 

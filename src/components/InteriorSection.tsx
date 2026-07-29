@@ -6,7 +6,7 @@ import { useInterior } from "@/context/InteriorContext";
 import { PAGE } from "@/lib/layout";
 
 export function InteriorSection() {
-  const { photos } = useInterior();
+  const { photos, contentReady } = useInterior();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canScroll, setCanScroll] = useState(false);
   const [atStart, setAtStart] = useState(true);
@@ -48,6 +48,14 @@ export function InteriorSection() {
     if (!el) return;
     const amount = Math.max(el.clientWidth * 0.72, 300);
     el.scrollBy({ left: dir * amount, behavior: "smooth" });
+  }
+
+  if (!contentReady) {
+    return (
+      <section className={`${PAGE} py-10 sm:py-12`} aria-busy>
+        <div className="h-48 animate-pulse rounded-2xl bg-[var(--bg-deep)]/60" />
+      </section>
+    );
   }
 
   return (
