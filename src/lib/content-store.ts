@@ -7,7 +7,10 @@ import { PROMO_SLIDES, type PromoSlide } from "@/lib/promos";
 import type { FranchiseId, MenuItem } from "@/lib/types";
 
 const DATA_DIR = path.join(process.cwd(), "data");
-const UPLOADS_DIR = path.join(process.cwd(), "public", "uploads");
+/** Новые загрузки — сюда (надёжно читаются через /api/uploads) */
+const UPLOADS_DIR = path.join(DATA_DIR, "uploads");
+/** Старые файлы до миграции */
+const LEGACY_UPLOADS_DIR = path.join(process.cwd(), "public", "uploads");
 
 const MENUS_FILE = path.join(DATA_DIR, "menus.json");
 const INTERIOR_FILE = path.join(DATA_DIR, "interior.json");
@@ -16,6 +19,11 @@ const PROMOS_FILE = path.join(DATA_DIR, "promos.json");
 async function ensureDirs() {
   await fs.mkdir(DATA_DIR, { recursive: true });
   await fs.mkdir(UPLOADS_DIR, { recursive: true });
+  await fs.mkdir(LEGACY_UPLOADS_DIR, { recursive: true });
+}
+
+export function getUploadsDirs() {
+  return { uploadsDir: UPLOADS_DIR, legacyUploadsDir: LEGACY_UPLOADS_DIR };
 }
 
 async function readJsonFile<T>(file: string, fallback: T): Promise<T> {
@@ -47,11 +55,14 @@ export async function persistDataUrl(dataUrl: string, prefix: string): Promise<s
   let ext = match[1].toLowerCase();
   if (ext === "jpeg") ext = "jpg";
   if (ext === "svg+xml") ext = "svg";
+  if (!/^(jpg|jpeg|png|gif|webp|svg)$/.test(ext)) ext = "jpg";
 
+  await ensureDirs();
   const buffer = Buffer.from(match[2], "base64");
   const name = `${prefix}-${Date.now().toString(36)}-${randomBytes(4).toString("hex")}.${ext}`;
   await fs.writeFile(path.join(UPLOADS_DIR, name), buffer);
-  return `/uploads/${name}`;
+  // Раздаём через API — Next.js в production не всегда отдаёт новые файлы из public/
+  return `/api/uploads/${name}`;
 }
 
 async function deepPersistImages<T>(value: T, keyPrefix: string): Promise<T> {
