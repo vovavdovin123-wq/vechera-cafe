@@ -49,9 +49,9 @@ function normalizeMenus(
         description: item?.description ?? "",
         category,
         image:
-          item?.image ||
-          CATEGORY_IMAGES[category] ||
-          CATEGORY_IMAGES.sandwiches,
+          item?.image && String(item.image).trim()
+            ? String(item.image).trim()
+            : CATEGORY_IMAGES[category] || CATEGORY_IMAGES.sandwiches,
         available: item?.available ?? true,
       };
     });
@@ -112,9 +112,9 @@ export function MenuProvider({ children }: { children: ReactNode }) {
       debounce(async (data: Record<FranchiseId, MenuItem[]>) => {
         setSyncStatus("saving");
         const result = await saveContent("/api/content/menus", data);
-        if (result.ok && result.data) {
-          skipSave.current = true;
-          setAllMenus(normalizeMenus(result.data));
+        if (result.ok) {
+          // Не перезаписываем локальное меню ответом сервера —
+          // иначе гонка откатывает только что сменённое фото.
           setSyncStatus("idle");
         } else {
           setSyncStatus("error");
@@ -170,12 +170,15 @@ export function MenuProvider({ children }: { children: ReactNode }) {
 
   const updateMenuItem = useCallback(
     (id: string, patch: Partial<MenuItem>) => {
-      setAllMenus((prev) => ({
-        ...prev,
-        [franchiseId]: prev[franchiseId].map((i) =>
-          i.id === id ? { ...i, ...patch } : i,
-        ),
-      }));
+      setAllMenus((prev) => {
+        const list = prev[franchiseId] ?? [];
+        return {
+          ...prev,
+          [franchiseId]: list.map((i) =>
+            i.id === id ? { ...i, ...patch } : i,
+          ),
+        };
+      });
     },
     [franchiseId],
   );

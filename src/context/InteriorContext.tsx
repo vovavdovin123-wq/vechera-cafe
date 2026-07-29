@@ -49,9 +49,7 @@ export function InteriorProvider({ children }: { children: ReactNode }) {
       debounce(async (data: Record<FranchiseId, InteriorPhoto[]>) => {
         setSyncStatus("saving");
         const result = await saveContent("/api/content/interior", data);
-        if (result.ok && result.data) {
-          skipSave.current = true;
-          setAllPhotos(normalizeInterior(result.data));
+        if (result.ok) {
           setSyncStatus("idle");
         } else {
           setSyncStatus("error");

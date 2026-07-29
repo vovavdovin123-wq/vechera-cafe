@@ -23,15 +23,16 @@ export async function fetchContent<T>(path: string): Promise<T | null> {
 export async function saveContent<T>(
   path: string,
   data: T,
-): Promise<{ ok: boolean; data?: T }> {
+): Promise<{ ok: boolean; data?: T; status?: number }> {
   try {
     const res = await fetch(path, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
       body: JSON.stringify(data),
     });
     const json = (await res.json()) as { ok: boolean; data?: T };
-    return { ok: res.ok && json.ok, data: json.data };
+    return { ok: res.ok && json.ok, data: json.data, status: res.status };
   } catch {
     return { ok: false };
   }

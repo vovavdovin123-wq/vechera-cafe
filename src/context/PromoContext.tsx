@@ -65,9 +65,7 @@ export function PromoProvider({ children }: { children: ReactNode }) {
       debounce(async (data: PromoSlide[]) => {
         setSyncStatus("saving");
         const result = await saveContent("/api/content/promos", data);
-        if (result.ok && result.data) {
-          skipSave.current = true;
-          setSlides(result.data.map((s) => normalizeSlide(s)));
+        if (result.ok) {
           setSyncStatus("idle");
         } else {
           setSyncStatus("error");

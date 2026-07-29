@@ -72,6 +72,7 @@ export function MenuSection() {
               {item.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
+                  key={item.image}
                   src={item.image}
                   alt={item.name}
                   className="h-full w-full object-cover"

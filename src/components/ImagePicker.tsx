@@ -48,11 +48,12 @@ export function ImagePicker({
   const inputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [previewBump, setPreviewBump] = useState(0);
 
   async function onFile(file: File | undefined) {
     if (!file) return;
     if (!file.type.startsWith("image/")) {
-      setError("Выберите изображение");
+      setError("Выберите изображение (JPG, PNG, WebP)");
       return;
     }
     if (file.size > 12 * 1024 * 1024) {
@@ -67,19 +68,30 @@ export function ImagePicker({
         const res = await fetch("/api/content/upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "same-origin",
           body: JSON.stringify({ dataUrl, prefix: uploadPrefix }),
         });
-        const json = (await res.json()) as { ok: boolean; url?: string };
+        const json = (await res.json()) as {
+          ok: boolean;
+          url?: string;
+          message?: string;
+        };
+        if (res.status === 401) {
+          setError("Сессия истекла — выйдите и войдите в админку снова");
+          return;
+        }
         if (!res.ok || !json.ok || !json.url) {
-          setError("Не удалось сохранить фото на сервере");
+          setError(json.message || "Не удалось сохранить фото на сервере");
           return;
         }
         onChange(json.url);
+        setPreviewBump((n) => n + 1);
       } else {
         onChange(dataUrl);
+        setPreviewBump((n) => n + 1);
       }
     } catch {
-      setError("Не удалось обработать фото");
+      setError("Не удалось обработать фото. Попробуйте JPG или PNG.");
     } finally {
       setLoading(false);
     }
@@ -90,8 +102,14 @@ export function ImagePicker({
     if (!confirm("Удалить фото?")) return;
     setError(null);
     onChange("");
+    setPreviewBump((n) => n + 1);
     if (inputRef.current) inputRef.current.value = "";
   }
+
+  const previewSrc =
+    value && !value.startsWith("data:")
+      ? `${value}${value.includes("?") ? "&" : "?"}v=${previewBump}`
+      : value;
 
   return (
     <div className="min-w-0 space-y-2">
@@ -99,7 +117,12 @@ export function ImagePicker({
         <div className="h-20 w-28 shrink-0 overflow-hidden rounded-xl border border-line bg-bg-deep">
           {value ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={value} alt="" className="h-full w-full object-cover" />
+            <img
+              key={`${value}-${previewBump}`}
+              src={previewSrc}
+              alt=""
+              className="h-full w-full object-cover"
+            />
           ) : (
             <div className="flex h-full items-center justify-center text-ink-muted">
               <ImagePlus className="h-6 w-6" />
