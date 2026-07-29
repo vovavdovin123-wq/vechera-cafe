@@ -4,7 +4,6 @@ export const FRANCHISES: Record<FranchiseId, Franchise> = {
   center: {
     id: "center",
     name: "Вечера",
-    kind: "cafe",
     address:
       "улица Генерала Плиева 22, Республика Северная Осетия — Алания, Правобережный район, Беслан",
     shortAddress: "Беслан, центр",
@@ -15,23 +14,9 @@ export const FRANCHISES: Record<FranchiseId, Franchise> = {
     coords: [44.540511, 43.187266],
     mapLink: "https://yandex.ru/maps/?pt=44.540511,43.187266&z=17&l=map",
   },
-  centerCoffee: {
-    id: "centerCoffee",
-    name: "Вечера",
-    kind: "coffee",
-    address:
-      "улица Генерала Плиева 22, Республика Северная Осетия — Алания, Правобережный район, Беслан (кофейня)",
-    shortAddress: "Центр · кофейня",
-    hours: "09:00 — 22:00",
-    phone: "+7 (928) 000-11-22",
-    telegram: "https://t.me/vechera_center",
-    coords: [44.5409, 43.1875],
-    mapLink: "https://yandex.ru/maps/?pt=44.5409,43.1875&z=17&l=map",
-  },
   hippodrome: {
     id: "hippodrome",
     name: "Вечера",
-    kind: "cafe",
     address:
       "Республика Северная Осетия — Алания, Правобережный район, Ипподром",
     shortAddress: "Беслан, Ипподром",
@@ -42,29 +27,13 @@ export const FRANCHISES: Record<FranchiseId, Franchise> = {
     mapLink:
       "https://yandex.ru/maps/?text=%D0%91%D0%B5%D1%81%D0%BB%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9%20%D0%B8%D0%BF%D0%BF%D0%BE%D0%B4%D1%80%D0%BE%D0%BC&z=15",
   },
-  hippodromeCoffee: {
-    id: "hippodromeCoffee",
-    name: "Вечера",
-    kind: "coffee",
-    address:
-      "Республика Северная Осетия — Алания, Правобережный район, Ипподром (кофейня)",
-    shortAddress: "Ипподром · кофейня",
-    hours: "09:00 — 23:00",
-    phone: "+7 (928) 000-33-44",
-    telegram: "https://t.me/vechera_hippodrome",
-    coords: [44.569, 43.1802],
-    mapLink:
-      "https://yandex.ru/maps/?text=%D0%91%D0%B5%D1%81%D0%BB%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9%20%D0%B8%D0%BF%D0%BF%D0%BE%D0%B4%D1%80%D0%BE%D0%BC&z=15",
-  },
 };
 
 export const FRANCHISE_LIST = Object.values(FRANCHISES);
 
 export const FRANCHISE_TAB_LABELS: Record<FranchiseId, string> = {
   center: "Центр",
-  centerCoffee: "Центр · кофейня",
   hippodrome: "Ипподром",
-  hippodromeCoffee: "Ипподром · кофейня",
 };
 
 /** Интерактивный виджет Яндекс.Карт с метками */

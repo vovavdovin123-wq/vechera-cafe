@@ -33,22 +33,38 @@ interface MenuContextValue {
 const MenuContext = createContext<MenuContextValue | null>(null);
 
 function normalizeMenus(
-  data: Record<FranchiseId, MenuItem[]>,
+  data: Partial<Record<string, MenuItem[]>>,
 ): Record<FranchiseId, MenuItem[]> {
-  const fix = (list: MenuItem[]) =>
-    list.map((item) => ({
-      ...item,
-      image:
-        item.image ||
-        CATEGORY_IMAGES[item.category] ||
-        CATEGORY_IMAGES.sandwiches,
-    }));
+  const legacyCoffee = new Set(["coffee", "tea", "cold"]);
+
+  const fix = (list: MenuItem[], fallback: MenuItem[]) => {
+    const mapped = list.map((item) => {
+      const raw = item.category as string;
+      const category = (
+        legacyCoffee.has(raw) ? "coffeeShop" : item.category
+      ) as MenuItem["category"];
+      return {
+        ...item,
+        category,
+        image:
+          item.image ||
+          CATEGORY_IMAGES[category] ||
+          CATEGORY_IMAGES.sandwiches,
+      };
+    });
+
+    if (!mapped.some((i) => i.category === "coffeeShop")) {
+      const coffee = fallback.filter((i) => i.category === "coffeeShop");
+      return [...mapped, ...coffee];
+    }
+    return mapped;
+  };
+
   return {
-    center: fix(data.center ?? INITIAL_MENUS.center),
-    centerCoffee: fix(data.centerCoffee ?? INITIAL_MENUS.centerCoffee),
-    hippodrome: fix(data.hippodrome ?? INITIAL_MENUS.hippodrome),
-    hippodromeCoffee: fix(
-      data.hippodromeCoffee ?? INITIAL_MENUS.hippodromeCoffee,
+    center: fix(data.center ?? INITIAL_MENUS.center, INITIAL_MENUS.center),
+    hippodrome: fix(
+      data.hippodrome ?? INITIAL_MENUS.hippodrome,
+      INITIAL_MENUS.hippodrome,
     ),
   };
 }

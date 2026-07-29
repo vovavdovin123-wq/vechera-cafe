@@ -4,12 +4,7 @@ import { FRANCHISE_TAB_LABELS } from "@/lib/franchises";
 import { useFranchise } from "@/context/FranchiseContext";
 import type { FranchiseId } from "@/lib/types";
 
-const LOCATIONS: FranchiseId[] = [
-  "center",
-  "centerCoffee",
-  "hippodrome",
-  "hippodromeCoffee",
-];
+const LOCATIONS: FranchiseId[] = ["center", "hippodrome"];
 
 export function AdminLocationSwitcher({ className = "" }: { className?: string }) {
   const { franchiseId, setFranchiseId } = useFranchise();

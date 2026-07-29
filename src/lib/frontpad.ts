@@ -44,37 +44,17 @@ const ERROR_MESSAGES: Record<string, string> = {
 };
 
 function affiliateFor(franchiseId: FranchiseId): string | undefined {
-  if (franchiseId === "center" || franchiseId === "centerCoffee") {
-    const coffee =
-      franchiseId === "centerCoffee"
-        ? process.env.FRONTPAD_AFFILIATE_CENTER_COFFEE?.trim()
-        : undefined;
-    return (
-      coffee || process.env.FRONTPAD_AFFILIATE_CENTER?.trim() || undefined
-    );
+  if (franchiseId === "center") {
+    return process.env.FRONTPAD_AFFILIATE_CENTER?.trim() || undefined;
   }
-  const coffee =
-    franchiseId === "hippodromeCoffee"
-      ? process.env.FRONTPAD_AFFILIATE_HIPPODROME_COFFEE?.trim()
-      : undefined;
-  return (
-    coffee || process.env.FRONTPAD_AFFILIATE_HIPPODROME?.trim() || undefined
-  );
+  return process.env.FRONTPAD_AFFILIATE_HIPPODROME?.trim() || undefined;
 }
 
 function pointFor(franchiseId: FranchiseId): string | undefined {
-  if (franchiseId === "center" || franchiseId === "centerCoffee") {
-    const coffee =
-      franchiseId === "centerCoffee"
-        ? process.env.FRONTPAD_POINT_CENTER_COFFEE?.trim()
-        : undefined;
-    return coffee || process.env.FRONTPAD_POINT_CENTER?.trim() || undefined;
+  if (franchiseId === "center") {
+    return process.env.FRONTPAD_POINT_CENTER?.trim() || undefined;
   }
-  const coffee =
-    franchiseId === "hippodromeCoffee"
-      ? process.env.FRONTPAD_POINT_HIPPODROME_COFFEE?.trim()
-      : undefined;
-  return coffee || process.env.FRONTPAD_POINT_HIPPODROME?.trim() || undefined;
+  return process.env.FRONTPAD_POINT_HIPPODROME?.trim() || undefined;
 }
 
 /** Разбор «улица дом» → street + home для FrontPad */

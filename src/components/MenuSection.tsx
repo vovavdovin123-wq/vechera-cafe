@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CircleAlert, Coffee, ShoppingBag, UtensilsCrossed, X } from "lucide-react";
-import { CATEGORY_LABELS, categoriesForVenue } from "@/lib/menu-data";
+import { CircleAlert, ShoppingBag, UtensilsCrossed, X } from "lucide-react";
+import { CATEGORY_LABELS, CATEGORY_ORDER } from "@/lib/menu-data";
 import { PAGE } from "@/lib/layout";
 import type { MenuCategory, MenuItem } from "@/lib/types";
 import { useCart } from "@/context/CartContext";
@@ -20,15 +20,10 @@ export function MenuSection() {
     setCategory("all");
   }, [franchise.id]);
 
-  const venueCategories = useMemo(
-    () => categoriesForVenue(franchise.kind),
-    [franchise.kind],
-  );
-
   const availableCategories = useMemo(() => {
     const present = new Set(items.map((i) => i.category));
-    return venueCategories.filter((c) => present.has(c));
-  }, [items, venueCategories]);
+    return CATEGORY_ORDER.filter((c) => present.has(c));
+  }, [items]);
 
   const filtered = useMemo(() => {
     const list = items.filter((i) => i.available);
@@ -36,22 +31,16 @@ export function MenuSection() {
     return list.filter((i) => i.category === category);
   }, [items, category]);
 
-  const isCoffee = franchise.kind === "coffee";
-
   return (
     <section id="menu" className={`${PAGE} py-8 sm:py-10 md:py-12`}>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="brand-section-label inline-flex items-center gap-2 text-sm">
-            {isCoffee ? (
-              <Coffee className="h-4 w-4" />
-            ) : (
-              <UtensilsCrossed className="h-4 w-4" />
-            )}
+            <UtensilsCrossed className="h-4 w-4" />
             Меню
           </p>
           <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-ink sm:text-4xl md:text-5xl">
-            {isCoffee ? "Напитки" : "Блюда"}
+            Блюда
           </h2>
         </div>
       </div>

@@ -30,10 +30,7 @@ function normalizeInterior(
 ): Record<FranchiseId, InteriorPhoto[]> {
   return {
     center: data.center ?? DEFAULT_INTERIOR.center,
-    centerCoffee: data.centerCoffee ?? DEFAULT_INTERIOR.centerCoffee,
     hippodrome: data.hippodrome ?? DEFAULT_INTERIOR.hippodrome,
-    hippodromeCoffee:
-      data.hippodromeCoffee ?? DEFAULT_INTERIOR.hippodromeCoffee,
   };
 }
 
