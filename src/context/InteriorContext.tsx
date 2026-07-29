@@ -25,6 +25,18 @@ interface InteriorContextValue {
 
 const InteriorContext = createContext<InteriorContextValue | null>(null);
 
+function normalizeInterior(
+  data: Partial<Record<FranchiseId, InteriorPhoto[]>>,
+): Record<FranchiseId, InteriorPhoto[]> {
+  return {
+    center: data.center ?? DEFAULT_INTERIOR.center,
+    centerCoffee: data.centerCoffee ?? DEFAULT_INTERIOR.centerCoffee,
+    hippodrome: data.hippodrome ?? DEFAULT_INTERIOR.hippodrome,
+    hippodromeCoffee:
+      data.hippodromeCoffee ?? DEFAULT_INTERIOR.hippodromeCoffee,
+  };
+}
+
 export function InteriorProvider({ children }: { children: ReactNode }) {
   const { franchiseId } = useFranchise();
   const [allPhotos, setAllPhotos] =
@@ -42,7 +54,7 @@ export function InteriorProvider({ children }: { children: ReactNode }) {
         const result = await saveContent("/api/content/interior", data);
         if (result.ok && result.data) {
           skipSave.current = true;
-          setAllPhotos(result.data);
+          setAllPhotos(normalizeInterior(result.data));
           setSyncStatus("idle");
         } else {
           setSyncStatus("error");
@@ -59,7 +71,8 @@ export function InteriorProvider({ children }: { children: ReactNode }) {
         "/api/content/interior",
       );
       if (cancelled) return;
-      if (data) setAllPhotos(data);
+      if (data) setAllPhotos(normalizeInterior(data));
+      else setAllPhotos(DEFAULT_INTERIOR);
       setHydrated(true);
       setSyncStatus("idle");
     })();
@@ -112,7 +125,7 @@ export function InteriorProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(
     () => ({
-      photos: allPhotos[franchiseId],
+      photos: allPhotos[franchiseId] ?? [],
       addPhoto,
       updatePhoto,
       removePhoto,

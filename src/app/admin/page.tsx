@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { AdminShell } from "@/components/AdminShell";
 import { CustomSelect } from "@/components/CustomSelect";
@@ -10,7 +10,7 @@ import { useMenu } from "@/context/MenuContext";
 import {
   CATEGORY_IMAGES,
   CATEGORY_LABELS,
-  CATEGORY_ORDER,
+  categoriesForVenue,
 } from "@/lib/menu-data";
 import type { MenuCategory, MenuItem } from "@/lib/types";
 
@@ -24,6 +24,14 @@ export default function AdminPage() {
   const [category, setCategory] = useState<MenuCategory>("sandwiches");
   const [image, setImage] = useState("");
   const [frontpadArticle, setFrontpadArticle] = useState("");
+
+  const venueCategories = categoriesForVenue(franchise.kind);
+
+  useEffect(() => {
+    if (!venueCategories.includes(category)) {
+      setCategory(venueCategories[0]);
+    }
+  }, [venueCategories, category]);
 
   function onAdd(e: FormEvent) {
     e.preventDefault();
@@ -92,7 +100,7 @@ export default function AdminPage() {
           <CustomSelect
             ariaLabel="Категория"
             value={category}
-            options={CATEGORY_ORDER.map((c) => ({
+            options={venueCategories.map((c) => ({
               value: c,
               label: CATEGORY_LABELS[c],
             }))}

@@ -22,7 +22,8 @@ export default function AdminOrdersPage() {
 
 function FranchiseBadge({ franchiseId }: { franchiseId: FranchiseId }) {
   const label = FRANCHISE_TAB_LABELS[franchiseId] ?? franchiseId;
-  const isCenter = franchiseId === "center";
+  const isCenter =
+    franchiseId === "center" || franchiseId === "centerCoffee";
 
   return (
     <span

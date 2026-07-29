@@ -1,11 +1,21 @@
-export type FranchiseId = "center" | "hippodrome";
+export type FranchiseId =
+  | "center"
+  | "centerCoffee"
+  | "hippodrome"
+  | "hippodromeCoffee";
+
+/** Кафе (еда) или кофейня рядом с точкой */
+export type VenueKind = "cafe" | "coffee";
 
 export type MenuCategory =
   | "sandwiches"
   | "burgers"
   | "rolls"
   | "pizzas"
-  | "waffles";
+  | "waffles"
+  | "coffee"
+  | "tea"
+  | "cold";
 
 export interface MenuItem {
   id: string;
@@ -28,6 +38,7 @@ export interface CartItem {
 export interface Franchise {
   id: FranchiseId;
   name: string;
+  kind: VenueKind;
   /** Полный адрес для карты и блока «Как добраться» */
   address: string;
   /** Короткое имя для переключателя в шапке */

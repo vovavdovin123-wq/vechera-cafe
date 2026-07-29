@@ -63,7 +63,7 @@ export function Header() {
               value={franchiseId}
               options={franchiseOptions}
               onChange={(v) => setFranchiseId(v as FranchiseId)}
-              className="min-w-[9rem] md:min-w-[12rem]"
+              className="min-w-[10rem] md:min-w-[14rem]"
             />
           </div>
         </div>
@@ -150,7 +150,8 @@ export function Header() {
               value={franchiseId}
               options={franchiseOptions}
               onChange={(v) => setFranchiseId(v as FranchiseId)}
-              className="min-w-0 w-[7.5rem] max-w-[9rem]"
+              menuAlign="end"
+              className="min-w-0 w-[min(42vw,11rem)]"
             />
           </div>
           <a

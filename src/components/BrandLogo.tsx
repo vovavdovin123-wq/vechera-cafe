@@ -18,19 +18,21 @@ export function BrandLogo({
 
   const sizes = {
     sm: {
-      title: "text-[1.5rem] tracking-[0.08em]",
-      subtitle: "text-[0.68rem] tracking-[0.48em]",
-      gap: "mt-0.5",
+      title: "text-[1.5rem] tracking-[0.08em] leading-none",
+      subtitle: "text-[0.68rem] tracking-[0.48em] leading-none",
+      gap: "-mt-0.5",
     },
     md: {
-      title: "text-[2.05rem] tracking-[0.08em]",
-      subtitle: "text-[0.72rem] tracking-[0.5em]",
-      gap: "mt-0.5",
+      title: "text-[2.05rem] tracking-[0.08em] leading-none",
+      subtitle: "text-[0.72rem] tracking-[0.5em] leading-none",
+      gap: "-mt-0.5",
     },
     lg: {
-      title: "text-[2.4rem] tracking-[0.06em] sm:text-[3rem] md:text-[3.75rem]",
-      subtitle: "text-[0.7rem] tracking-[0.52em] sm:text-[0.8rem] md:text-[0.9rem]",
-      gap: "mt-1",
+      title:
+        "text-[2.4rem] tracking-[0.06em] leading-none sm:text-[3rem] md:text-[3.75rem]",
+      subtitle:
+        "text-[0.7rem] tracking-[0.52em] leading-none sm:text-[0.8rem] md:text-[0.9rem]",
+      gap: "mt-0",
     },
   };
 

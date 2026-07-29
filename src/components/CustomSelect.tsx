@@ -15,6 +15,7 @@ export function CustomSelect({
   ariaLabel,
   variant = "light",
   className = "",
+  menuAlign = "start",
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -22,6 +23,8 @@ export function CustomSelect({
   ariaLabel: string;
   variant?: "light" | "dark" | "admin";
   className?: string;
+  /** Куда расширять выпадающий список относительно кнопки */
+  menuAlign?: "start" | "end";
 }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -65,7 +68,7 @@ export function CustomSelect({
               } ${open ? "ring-2 ring-[color-mix(in_srgb,var(--orange)_35%,transparent)]" : ""}`
         }
       >
-        <span className={`truncate ${isAdmin ? "" : "font-medium"}`}>
+        <span className={`min-w-0 truncate ${isAdmin ? "" : "font-medium"}`}>
           {selected?.label}
         </span>
         <ChevronDown
@@ -80,7 +83,9 @@ export function CustomSelect({
           id={listId}
           role="listbox"
           aria-label={ariaLabel}
-          className={`absolute left-0 right-0 z-50 mt-1 max-h-64 overflow-y-auto rounded-lg border p-1 ${
+          className={`absolute z-50 mt-1 max-h-64 min-w-full w-max max-w-[min(18rem,calc(100vw-1.25rem))] overflow-y-auto rounded-lg border p-1 ${
+            menuAlign === "end" ? "right-0 left-auto" : "left-0 right-auto"
+          } ${
             isAdmin
               ? "border-[#e5e5e5] bg-white shadow-sm"
               : "mt-2 rounded-2xl border-[var(--line)] bg-[var(--white)] p-1.5 shadow-[var(--shadow)] animate-fade"
@@ -96,7 +101,7 @@ export function CustomSelect({
                     onChange(opt.value);
                     setOpen(false);
                   }}
-                  className={`flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left text-base transition-colors ${
+                  className={`flex w-full items-center justify-between gap-2 rounded-md px-3 py-2.5 text-left text-sm leading-snug transition-colors sm:text-base ${
                     isAdmin
                       ? active
                         ? "bg-[#f5f5f5] text-ink"
@@ -106,7 +111,7 @@ export function CustomSelect({
                         : "rounded-xl text-ink hover:bg-[var(--green-soft)]"
                   }`}
                 >
-                  <span className="truncate">{opt.label}</span>
+                  <span className="whitespace-normal break-words">{opt.label}</span>
                   {active && (
                     <Check
                       className={`h-4 w-4 shrink-0 ${isAdmin ? "text-ink" : "text-[var(--green-deep)]"}`}

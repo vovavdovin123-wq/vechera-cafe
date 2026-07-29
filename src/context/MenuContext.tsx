@@ -45,7 +45,11 @@ function normalizeMenus(
     }));
   return {
     center: fix(data.center ?? INITIAL_MENUS.center),
+    centerCoffee: fix(data.centerCoffee ?? INITIAL_MENUS.centerCoffee),
     hippodrome: fix(data.hippodrome ?? INITIAL_MENUS.hippodrome),
+    hippodromeCoffee: fix(
+      data.hippodromeCoffee ?? INITIAL_MENUS.hippodromeCoffee,
+    ),
   };
 }
 

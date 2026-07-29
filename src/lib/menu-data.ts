@@ -1,4 +1,9 @@
-import type { FranchiseId, MenuCategory, MenuItem } from "./types";
+import type {
+  FranchiseId,
+  MenuCategory,
+  MenuItem,
+  VenueKind,
+} from "./types";
 
 export const CATEGORY_LABELS: Record<MenuCategory, string> = {
   sandwiches: "Сэндвичи",
@@ -6,15 +11,33 @@ export const CATEGORY_LABELS: Record<MenuCategory, string> = {
   rolls: "Роллы",
   pizzas: "Пиццы",
   waffles: "Вафли",
+  coffee: "Кофе",
+  tea: "Чай",
+  cold: "Холодные",
 };
 
-export const CATEGORY_ORDER: MenuCategory[] = [
+export const CAFE_CATEGORY_ORDER: MenuCategory[] = [
   "sandwiches",
   "burgers",
   "rolls",
   "pizzas",
   "waffles",
 ];
+
+export const COFFEE_CATEGORY_ORDER: MenuCategory[] = [
+  "coffee",
+  "tea",
+  "cold",
+];
+
+export const CATEGORY_ORDER: MenuCategory[] = [
+  ...CAFE_CATEGORY_ORDER,
+  ...COFFEE_CATEGORY_ORDER,
+];
+
+export function categoriesForVenue(kind: VenueKind): MenuCategory[] {
+  return kind === "coffee" ? COFFEE_CATEGORY_ORDER : CAFE_CATEGORY_ORDER;
+}
 
 /** Общее фото блюд (можно менять в админке у каждой позиции) */
 const DISH_IMAGE = "/menu/dish.png";
@@ -25,6 +48,9 @@ export const CATEGORY_IMAGES: Record<MenuCategory, string> = {
   rolls: DISH_IMAGE,
   pizzas: DISH_IMAGE,
   waffles: DISH_IMAGE,
+  coffee: DISH_IMAGE,
+  tea: DISH_IMAGE,
+  cold: DISH_IMAGE,
 };
 
 function item(
@@ -235,7 +261,143 @@ const hippodromeMenu: MenuItem[] = [
   }),
 ];
 
+const centerCoffeeMenu: MenuItem[] = [
+  item({
+    id: "cc-c-1",
+    name: "Эспрессо",
+    description: "Двойной шот",
+    price: 150,
+    category: "coffee",
+    frontpadArticle: "30001",
+  }),
+  item({
+    id: "cc-c-2",
+    name: "Американо",
+    description: "Эспрессо, вода",
+    price: 180,
+    category: "coffee",
+    frontpadArticle: "30002",
+  }),
+  item({
+    id: "cc-c-3",
+    name: "Капучино",
+    description: "Эспрессо, молоко, пенка",
+    price: 220,
+    category: "coffee",
+    frontpadArticle: "30003",
+  }),
+  item({
+    id: "cc-c-4",
+    name: "Латте",
+    description: "Эспрессо, молоко",
+    price: 240,
+    category: "coffee",
+    frontpadArticle: "30004",
+  }),
+  item({
+    id: "cc-t-1",
+    name: "Чёрный чай",
+    description: "Классический листовой",
+    price: 160,
+    category: "tea",
+    frontpadArticle: "30005",
+  }),
+  item({
+    id: "cc-t-2",
+    name: "Зелёный чай",
+    description: "Сенча",
+    price: 160,
+    category: "tea",
+    frontpadArticle: "30006",
+  }),
+  item({
+    id: "cc-d-1",
+    name: "Айс-латте",
+    description: "Холодный латте со льдом",
+    price: 260,
+    category: "cold",
+    frontpadArticle: "30007",
+  }),
+  item({
+    id: "cc-d-2",
+    name: "Лимонад домашний",
+    description: "Лимон, мята, сироп",
+    price: 230,
+    category: "cold",
+    frontpadArticle: "30008",
+  }),
+];
+
+const hippodromeCoffeeMenu: MenuItem[] = [
+  item({
+    id: "hc-c-1",
+    name: "Эспрессо",
+    description: "Двойной шот",
+    price: 150,
+    category: "coffee",
+    frontpadArticle: "40001",
+  }),
+  item({
+    id: "hc-c-2",
+    name: "Американо",
+    description: "Эспрессо, вода",
+    price: 180,
+    category: "coffee",
+    frontpadArticle: "40002",
+  }),
+  item({
+    id: "hc-c-3",
+    name: "Флэт уайт",
+    description: "Двойной эспрессо, молоко",
+    price: 250,
+    category: "coffee",
+    frontpadArticle: "40003",
+  }),
+  item({
+    id: "hc-c-4",
+    name: "Раф",
+    description: "Эспрессо, сливки, ваниль",
+    price: 280,
+    category: "coffee",
+    frontpadArticle: "40004",
+  }),
+  item({
+    id: "hc-t-1",
+    name: "Чай облепиховый",
+    description: "Облепиха, мёд",
+    price: 220,
+    category: "tea",
+    frontpadArticle: "40005",
+  }),
+  item({
+    id: "hc-t-2",
+    name: "Чай имбирный",
+    description: "Имбирь, лимон, мёд",
+    price: 220,
+    category: "tea",
+    frontpadArticle: "40006",
+  }),
+  item({
+    id: "hc-d-1",
+    name: "Айс-американо",
+    description: "Холодный американо со льдом",
+    price: 200,
+    category: "cold",
+    frontpadArticle: "40007",
+  }),
+  item({
+    id: "hc-d-2",
+    name: "Милкшейк",
+    description: "Молоко, мороженое, сироп",
+    price: 290,
+    category: "cold",
+    frontpadArticle: "40008",
+  }),
+];
+
 export const INITIAL_MENUS: Record<FranchiseId, MenuItem[]> = {
   center: centerMenu,
+  centerCoffee: centerCoffeeMenu,
   hippodrome: hippodromeMenu,
+  hippodromeCoffee: hippodromeCoffeeMenu,
 };
