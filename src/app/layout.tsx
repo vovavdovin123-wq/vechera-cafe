@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   title: "Вечера — кафе",
   description:
     "Кафе на сквере: сочное меню, вафли и сэндвичи. Заказ онлайн, доставка, две точки в Беслане.",
+  icons: {
+    icon: [{ url: "/favicon.png", type: "image/png" }],
+    apple: [{ url: "/apple-icon.png", type: "image/png" }],
+  },
 };
 
 export const viewport: Viewport = {

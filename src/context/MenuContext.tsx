@@ -38,18 +38,21 @@ function normalizeMenus(
   const legacyCoffee = new Set(["coffee", "tea", "cold"]);
 
   const fix = (list: MenuItem[], fallback: MenuItem[]) => {
-    const mapped = list.map((item) => {
-      const raw = item.category as string;
+    const mapped = (Array.isArray(list) ? list : []).map((item) => {
+      const raw = String(item?.category ?? "");
       const category = (
         legacyCoffee.has(raw) ? "coffeeShop" : item.category
       ) as MenuItem["category"];
       return {
         ...item,
+        name: item?.name ?? "",
+        description: item?.description ?? "",
         category,
         image:
-          item.image ||
+          item?.image ||
           CATEGORY_IMAGES[category] ||
           CATEGORY_IMAGES.sandwiches,
+        available: item?.available ?? true,
       };
     });
 
@@ -60,10 +63,35 @@ function normalizeMenus(
     return mapped;
   };
 
+  const mergeCoffeeVenue = (
+    cafe: MenuItem[] | undefined,
+    coffeeVenue: MenuItem[] | undefined,
+    fallback: MenuItem[],
+  ) => {
+    const base = Array.isArray(cafe) ? cafe : [];
+    const fromOldCoffee = Array.isArray(coffeeVenue)
+      ? coffeeVenue.map((item) => ({
+          ...item,
+          category: "coffeeShop" as const,
+        }))
+      : [];
+    const merged =
+      fromOldCoffee.length > 0 &&
+      !base.some((i) => i.category === "coffeeShop")
+        ? [...base, ...fromOldCoffee]
+        : base;
+    return fix(merged.length ? merged : fallback, fallback);
+  };
+
   return {
-    center: fix(data.center ?? INITIAL_MENUS.center, INITIAL_MENUS.center),
-    hippodrome: fix(
-      data.hippodrome ?? INITIAL_MENUS.hippodrome,
+    center: mergeCoffeeVenue(
+      data.center,
+      data.centerCoffee,
+      INITIAL_MENUS.center,
+    ),
+    hippodrome: mergeCoffeeVenue(
+      data.hippodrome,
+      data.hippodromeCoffee,
       INITIAL_MENUS.hippodrome,
     ),
   };
@@ -176,7 +204,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(
     () => ({
-      items: allMenus[franchiseId],
+      items: allMenus[franchiseId] ?? allMenus.center ?? [],
       allMenus,
       addMenuItem,
       updateMenuItem,

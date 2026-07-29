@@ -33,9 +33,11 @@ export function Header() {
       .filter((i) => i.available)
       .filter(
         (i) =>
-          i.name.toLowerCase().includes(q) ||
-          i.description.toLowerCase().includes(q) ||
-          CATEGORY_LABELS[i.category].toLowerCase().includes(q),
+          i.name?.toLowerCase().includes(q) ||
+          i.description?.toLowerCase().includes(q) ||
+          (CATEGORY_LABELS[i.category] ?? "")
+            .toLowerCase()
+            .includes(q),
       )
       .slice(0, 8);
   }, [items, query]);

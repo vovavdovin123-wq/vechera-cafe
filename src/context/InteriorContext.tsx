@@ -122,7 +122,7 @@ export function InteriorProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(
     () => ({
-      photos: allPhotos[franchiseId] ?? [],
+      photos: allPhotos[franchiseId] ?? allPhotos.center ?? [],
       addPhoto,
       updatePhoto,
       removePhoto,

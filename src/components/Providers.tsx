@@ -1,5 +1,6 @@
 "use client";
 
+import { FranchiseWelcomeGate } from "@/components/FranchiseWelcomeGate";
 import { CartProvider } from "@/context/CartContext";
 import { FranchiseProvider } from "@/context/FranchiseContext";
 import { InteriorProvider } from "@/context/InteriorContext";
@@ -14,7 +15,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <PromoProvider>
           <InteriorProvider>
             <SearchProvider>
-              <CartProvider>{children}</CartProvider>
+              <CartProvider>
+                <FranchiseWelcomeGate />
+                {children}
+              </CartProvider>
             </SearchProvider>
           </InteriorProvider>
         </PromoProvider>

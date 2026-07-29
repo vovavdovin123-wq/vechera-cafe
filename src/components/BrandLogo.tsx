@@ -7,7 +7,7 @@ export function BrandLogo({
   size = "md",
 }: {
   variant?: "dark" | "light";
-  href?: string;
+  href?: string | null;
   className?: string;
   size?: "sm" | "md" | "lg";
 }) {
