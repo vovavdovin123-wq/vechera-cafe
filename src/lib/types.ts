@@ -45,6 +45,8 @@ export interface OrderPayload {
   franchiseId: FranchiseId;
   customerName?: string;
   customerPhone?: string;
+  /** Email — только если в FrontPad включено автосохранение клиентов */
+  customerEmail?: string;
   comment?: string;
   fulfillment?: "delivery" | "pickup";
   address?: {
@@ -61,8 +63,26 @@ export interface OrderPayload {
     price: number;
     quantity: number;
     frontpadArticle?: string;
+    /** Индекс родителя в product[] для модификатора (product_mod) */
+    frontpadModParentIndex?: number;
   }>;
   total: number;
+  /** Скидка % (1–100). Нельзя вместе с saleAmount */
+  salePercent?: number;
+  /** Скидка суммой. Нельзя вместе с salePercent */
+  saleAmount?: number;
+  /** Баллы лояльности к списанию */
+  score?: number;
+  /** Карта клиента (до 16 цифр) */
+  card?: string;
+  /** Номер сертификата */
+  certificate?: string;
+  /** Кол-во персон */
+  person?: number;
+  /** Код варианта оплаты из справочника FrontPad */
+  pay?: string;
+  /** Предзаказ: ГГГГ-ММ-ДД ЧЧ:ММ:СС, макс. +30 дней */
+  datetime?: string;
 }
 
 export interface FeedbackPayload {
