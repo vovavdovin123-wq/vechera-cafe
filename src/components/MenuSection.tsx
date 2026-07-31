@@ -12,7 +12,7 @@ import { useMenu } from "@/context/MenuContext";
 export function MenuSection() {
   const { franchise } = useFranchise();
   const { items, contentReady } = useMenu();
-  const { addItem } = useCart();
+  const { addItem, quantityOf } = useCart();
   const [category, setCategory] = useState<MenuCategory | "all">("all");
   const [faqItem, setFaqItem] = useState<MenuItem | null>(null);
 
@@ -70,7 +70,9 @@ export function MenuSection() {
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-2.5 sm:mt-6 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
-        {filtered.map((item, index) => (
+        {filtered.map((item, index) => {
+          const qty = quantityOf(item.id);
+          return (
           <article
             key={item.id}
             className="menu-card animate-rise flex flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--white)] shadow-[var(--shadow-soft)]"
@@ -113,15 +115,24 @@ export function MenuSection() {
                 <button
                   type="button"
                   onClick={() => addItem(item)}
-                  className="btn-soft w-full gap-1.5 px-2.5 py-2 text-xs sm:w-auto sm:flex-1 sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm"
+                  className="btn-soft relative w-full gap-1.5 px-2.5 py-2 text-xs sm:w-auto sm:flex-1 sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm"
                 >
                   <ShoppingBag className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  Заказать
+                  {qty > 0 ? "Ещё" : "В корзину"}
+                  {qty > 0 && (
+                    <span
+                      className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--espresso)] px-1 text-[10px] font-bold text-[var(--gold)] shadow-sm sm:h-6 sm:min-w-6 sm:text-xs"
+                      aria-label={`В корзине ${qty}`}
+                    >
+                      {qty}
+                    </span>
+                  )}
                 </button>
               </div>
             </div>
           </article>
-        ))}
+          );
+        })}
       </div>
 
       {filtered.length === 0 && (

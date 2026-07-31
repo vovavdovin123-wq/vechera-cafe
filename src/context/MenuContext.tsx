@@ -25,6 +25,12 @@ type NewItem = Omit<MenuItem, "id" | "available" | "image"> & {
   image?: string;
 };
 
+export type FrontPadProductSync = {
+  article: string;
+  name: string;
+  price: number;
+};
+
 interface MenuContextValue {
   items: MenuItem[];
   allMenus: Record<FranchiseId, MenuItem[]>;
@@ -32,6 +38,11 @@ interface MenuContextValue {
   updateMenuItem: (id: string, patch: Partial<MenuItem>) => void;
   removeMenuItem: (id: string) => void;
   toggleAvailable: (id: string) => void;
+  /** Обновить name/price у блюд с совпадающим артикулом FrontPad */
+  applyFrontPadProducts: (products: FrontPadProductSync[]) => {
+    updated: number;
+    skipped: number;
+  };
   syncStatus: "idle" | "loading" | "saving" | "error";
   /** true после первой загрузки с сервера или из кэша */
   contentReady: boolean;
@@ -235,6 +246,53 @@ export function MenuProvider({ children }: { children: ReactNode }) {
     [franchiseId],
   );
 
+  const applyFrontPadProducts = useCallback(
+    (products: FrontPadProductSync[]) => {
+      const byArticle = new Map(
+        products
+          .filter((p) => p.article)
+          .map((p) => [String(p.article).trim(), p] as const),
+      );
+
+      let updated = 0;
+      let skipped = 0;
+      let nextMenus: Record<FranchiseId, MenuItem[]> | null = null;
+
+      setAllMenus((prev) => {
+        updated = 0;
+        skipped = 0;
+        const next = { ...prev };
+        for (const fid of Object.keys(prev) as FranchiseId[]) {
+          next[fid] = (prev[fid] ?? []).map((item) => {
+            const art = item.frontpadArticle?.trim();
+            if (!art) {
+              skipped += 1;
+              return item;
+            }
+            const fp = byArticle.get(art);
+            if (!fp) {
+              skipped += 1;
+              return item;
+            }
+            updated += 1;
+            return {
+              ...item,
+              name: fp.name?.trim() ? fp.name.trim() : item.name,
+              price: fp.price > 0 ? Math.round(fp.price) : item.price,
+            };
+          });
+        }
+        nextMenus = next;
+        return next;
+      });
+
+      // React вызывает updater синхронно — updated/skipped уже заполнены
+      void nextMenus;
+      return { updated, skipped };
+    },
+    [],
+  );
+
   const value = useMemo(
     () => ({
       items: allMenus[franchiseId] ?? allMenus.center ?? [],
@@ -243,6 +301,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
       updateMenuItem,
       removeMenuItem,
       toggleAvailable,
+      applyFrontPadProducts,
       syncStatus,
       contentReady,
     }),
@@ -253,6 +312,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
       updateMenuItem,
       removeMenuItem,
       toggleAvailable,
+      applyFrontPadProducts,
       syncStatus,
       contentReady,
     ],

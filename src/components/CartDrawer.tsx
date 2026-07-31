@@ -11,8 +11,42 @@ import {
   X,
 } from "lucide-react";
 import { CleanMap } from "@/components/CleanMap";
+import {
+  clearTrackedOrder,
+  loadTrackedOrder,
+  OrderStatusPanel,
+  saveTrackedOrder,
+  type TrackedOrder,
+} from "@/components/OrderStatusPanel";
 import { useCart } from "@/context/CartContext";
 import { useFranchise } from "@/context/FranchiseContext";
+
+type PromoState =
+  | { kind: "none" }
+  | { kind: "sale"; code: string; percent: number }
+  | { kind: "amount"; code: string; amount: number }
+  | { kind: "product"; code: string; name?: string };
+
+function toFrontPadDatetime(localValue: string): string | undefined {
+  // datetime-local: YYYY-MM-DDTHH:mm → YYYY-MM-DD HH:mm:00
+  if (!localValue) return undefined;
+  const [date, time] = localValue.split("T");
+  if (!date || !time) return undefined;
+  const hm = time.length === 5 ? `${time}:00` : time;
+  return `${date} ${hm}`;
+}
+
+function minPreorderLocal(): string {
+  const d = new Date(Date.now() + 45 * 60 * 1000);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function maxPreorderLocal(): string {
+  const d = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
 
 export function CartDrawer() {
   const { franchise, franchiseId } = useFranchise();
@@ -39,6 +73,20 @@ export function CartDrawer() {
     null,
   );
 
+  const [promoInput, setPromoInput] = useState("");
+  const [promo, setPromo] = useState<PromoState>({ kind: "none" });
+  const [promoLoading, setPromoLoading] = useState(false);
+  const [promoError, setPromoError] = useState<string | null>(null);
+
+  const [wantPreorder, setWantPreorder] = useState(false);
+  const [preorderAt, setPreorderAt] = useState("");
+
+  const [tracked, setTracked] = useState<TrackedOrder | null>(null);
+
+  useEffect(() => {
+    if (isOpen) setTracked(loadTrackedOrder());
+  }, [isOpen]);
+
   useEffect(() => {
     if (mode !== "delivery" || street.trim().length < 4) {
       setDeliveryCoords(null);
@@ -63,6 +111,18 @@ export function CartDrawer() {
     return () => clearTimeout(timer);
   }, [street, mode, franchiseId]);
 
+  const discount = useMemo(() => {
+    if (promo.kind === "sale") {
+      return Math.min(total, Math.round((total * promo.percent) / 100));
+    }
+    if (promo.kind === "amount") {
+      return Math.min(total, Math.round(promo.amount));
+    }
+    return 0;
+  }, [promo, total]);
+
+  const payable = Math.max(0, total - discount);
+
   const mapMarkers = useMemo(() => {
     const cafe = {
       coords: franchise.coords,
@@ -75,6 +135,53 @@ export function CartDrawer() {
     return [cafe];
   }, [franchise.coords, mode, deliveryCoords]);
 
+  async function applyPromo() {
+    const code = promoInput.trim();
+    if (!code) return;
+    setPromoLoading(true);
+    setPromoError(null);
+    try {
+      const res = await fetch(
+        `/api/frontpad/certificate?${new URLSearchParams({ code })}`,
+      );
+      const data = (await res.json()) as {
+        ok: boolean;
+        kind?: "product" | "sale" | "amount";
+        sale?: string;
+        amount?: string;
+        name?: string;
+        message?: string;
+      };
+      if (!res.ok || !data.ok) {
+        setPromo({ kind: "none" });
+        setPromoError(data.message || "Промокод недействителен");
+        return;
+      }
+      if (data.kind === "sale" && data.sale) {
+        setPromo({
+          kind: "sale",
+          code,
+          percent: Math.min(100, Math.max(1, Number(data.sale) || 0)),
+        });
+      } else if (data.kind === "amount" && data.amount) {
+        setPromo({
+          kind: "amount",
+          code,
+          amount: Math.max(0, Number(data.amount) || 0),
+        });
+      } else if (data.kind === "product") {
+        setPromo({ kind: "product", code, name: data.name });
+      } else {
+        setPromo({ kind: "none" });
+        setPromoError("Неизвестный тип сертификата");
+      }
+    } catch {
+      setPromoError("Сеть недоступна");
+    } finally {
+      setPromoLoading(false);
+    }
+  }
+
   async function submitOrder(e: FormEvent) {
     e.preventDefault();
     if (!items.length) return;
@@ -82,38 +189,63 @@ export function CartDrawer() {
     setResult(null);
 
     try {
+      const payload: Record<string, unknown> = {
+        franchiseId,
+        customerName: name || undefined,
+        customerPhone: phone || undefined,
+        fulfillment: mode,
+        comment: addressNote || undefined,
+        address:
+          mode === "delivery"
+            ? {
+                street: street || undefined,
+                entrance: entrance || undefined,
+                note: addressNote || undefined,
+              }
+            : { street: franchise.address },
+        items: items.map((i) => ({
+          id: i.menuItem.id,
+          name: i.menuItem.name,
+          price: i.menuItem.price,
+          quantity: i.quantity,
+          frontpadArticle: i.menuItem.frontpadArticle,
+        })),
+        total: payable,
+      };
+
+      if (promo.kind !== "none") {
+        payload.certificate = promo.code;
+        if (promo.kind === "sale") payload.salePercent = promo.percent;
+        if (promo.kind === "amount") payload.saleAmount = promo.amount;
+      }
+
+      if (wantPreorder && preorderAt) {
+        const dt = toFrontPadDatetime(preorderAt);
+        if (dt) payload.datetime = dt;
+      }
+
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          franchiseId,
-          customerName: name || undefined,
-          customerPhone: phone || undefined,
-          fulfillment: mode,
-          comment: addressNote || undefined,
-          address:
-            mode === "delivery"
-              ? {
-                  street: street || undefined,
-                  entrance: entrance || undefined,
-                  note: addressNote || undefined,
-                }
-              : { street: franchise.address },
-          items: items.map((i) => ({
-            id: i.menuItem.id,
-            name: i.menuItem.name,
-            price: i.menuItem.price,
-            quantity: i.quantity,
-            frontpadArticle: i.menuItem.frontpadArticle,
-          })),
-          total,
-        }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
         setResult(data.message || "Не удалось оформить заказ");
         return;
       }
+
+      const track: TrackedOrder = {
+        orderId: String(data.orderId),
+        orderNumber: data.orderNumber
+          ? String(data.orderNumber)
+          : undefined,
+        phone: phone || undefined,
+        at: new Date().toISOString(),
+      };
+      saveTrackedOrder(track);
+      setTracked(track);
+
       setResult(
         data.orderNumber
           ? `Заказ №${data.orderNumber} принят`
@@ -126,6 +258,10 @@ export function CartDrawer() {
       setName("");
       setPhone("");
       setDeliveryCoords(null);
+      setPromo({ kind: "none" });
+      setPromoInput("");
+      setWantPreorder(false);
+      setPreorderAt("");
     } catch {
       setResult("Сеть недоступна. Попробуйте ещё раз.");
     } finally {
@@ -194,10 +330,20 @@ export function CartDrawer() {
           </div>
 
           <div className="flex flex-1 flex-col gap-3 px-4 py-4 sm:px-7">
+            {tracked && (
+              <OrderStatusPanel
+                order={tracked}
+                onDismiss={() => {
+                  clearTrackedOrder();
+                  setTracked(null);
+                }}
+              />
+            )}
+
             {mode === "delivery" ? (
               <>
                 <input
-                  required
+                  required={items.length > 0}
                   value={street}
                   onChange={(e) => setStreet(e.target.value)}
                   placeholder="Улица и дом"
@@ -240,7 +386,80 @@ export function CartDrawer() {
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Телефон"
                 className={inputClass}
+                required={items.length > 0}
               />
+            </div>
+
+            <div className="rounded-2xl border border-line bg-bg/30 p-3">
+              <p className="mb-2 text-xs font-medium uppercase tracking-wide text-ink-muted">
+                Промокод
+              </p>
+              <div className="flex gap-2">
+                <input
+                  value={promoInput}
+                  onChange={(e) => setPromoInput(e.target.value)}
+                  placeholder="Сертификат FrontPad"
+                  className={`${inputClass} py-2.5`}
+                />
+                <button
+                  type="button"
+                  onClick={() => void applyPromo()}
+                  disabled={promoLoading || !promoInput.trim()}
+                  className="shrink-0 rounded-2xl border border-line bg-surface px-3 text-sm font-medium disabled:opacity-50"
+                >
+                  {promoLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    "ОК"
+                  )}
+                </button>
+              </div>
+              {promoError && (
+                <p className="mt-1.5 text-xs text-danger">{promoError}</p>
+              )}
+              {promo.kind === "sale" && (
+                <p className="mt-1.5 text-xs text-success">
+                  Скидка {promo.percent}%
+                </p>
+              )}
+              {promo.kind === "amount" && (
+                <p className="mt-1.5 text-xs text-success">
+                  Скидка {promo.amount} ₽
+                </p>
+              )}
+              {promo.kind === "product" && (
+                <p className="mt-1.5 text-xs text-success">
+                  Подарок: {promo.name || "товар по сертификату"}
+                </p>
+              )}
+            </div>
+
+            <div className="rounded-2xl border border-line bg-bg/30 p-3">
+              <label className="flex cursor-pointer items-center gap-2 text-sm font-medium text-ink">
+                <input
+                  type="checkbox"
+                  checked={wantPreorder}
+                  onChange={(e) => {
+                    setWantPreorder(e.target.checked);
+                    if (e.target.checked && !preorderAt) {
+                      setPreorderAt(minPreorderLocal());
+                    }
+                  }}
+                  className="h-4 w-4 accent-[var(--espresso)]"
+                />
+                Предзаказ на время
+              </label>
+              {wantPreorder && (
+                <input
+                  type="datetime-local"
+                  required
+                  value={preorderAt}
+                  min={minPreorderLocal()}
+                  max={maxPreorderLocal()}
+                  onChange={(e) => setPreorderAt(e.target.value)}
+                  className={`${inputClass} mt-2 py-2.5`}
+                />
+              )}
             </div>
 
             <div className="mt-1 rounded-2xl border border-line bg-bg/30 p-3">
@@ -292,9 +511,17 @@ export function CartDrawer() {
                   ))}
                 </ul>
               )}
-              <div className="mt-3 flex justify-between border-t border-line pt-2 text-sm font-semibold">
-                <span>Итого</span>
-                <span>{total} ₽</span>
+              <div className="mt-3 space-y-1 border-t border-line pt-2 text-sm">
+                {discount > 0 && (
+                  <div className="flex justify-between text-ink-muted">
+                    <span>Скидка</span>
+                    <span>−{discount} ₽</span>
+                  </div>
+                )}
+                <div className="flex justify-between font-semibold">
+                  <span>Итого</span>
+                  <span>{payable} ₽</span>
+                </div>
               </div>
             </div>
           </div>
@@ -308,7 +535,7 @@ export function CartDrawer() {
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                "Оплатить"
+                "Оформить заказ"
               )}
             </button>
             <p className="mt-2 text-center text-xs text-ink-muted">

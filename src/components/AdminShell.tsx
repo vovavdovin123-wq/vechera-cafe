@@ -92,7 +92,7 @@ export function AdminShell({
           className="w-full max-w-sm rounded-[22px] border border-line bg-surface p-5 shadow-[var(--shadow)] sm:p-6"
         >
           <BrandLogo href="/" size="sm" />
-          <p className="mt-4 text-lg font-semibold text-ink">Вход в админку</p>
+          <p className="mt-4 text-lg font-semibold text-ink">Вход в админ панель</p>
           <p className="mt-1 text-sm text-ink-muted">/admin</p>
           <input
             required

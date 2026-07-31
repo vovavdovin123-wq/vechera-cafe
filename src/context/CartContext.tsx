@@ -23,6 +23,8 @@ interface CartContextValue {
   removeItem: (id: string) => void;
   updateQty: (id: string, quantity: number) => void;
   clear: () => void;
+  /** Сколько штук этого блюда уже в корзине */
+  quantityOf: (id: string) => number;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -72,6 +74,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clear = useCallback(() => setItems([]), []);
 
+  const quantityOf = useCallback(
+    (id: string) => items.find((i) => i.menuItem.id === id)?.quantity ?? 0,
+    [items],
+  );
+
   const value = useMemo(() => {
     const count = items.reduce((s, i) => s + i.quantity, 0);
     const total = items.reduce(
@@ -88,8 +95,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeItem,
       updateQty,
       clear,
+      quantityOf,
     };
-  }, [items, isOpen, addItem, removeItem, updateQty, clear]);
+  }, [items, isOpen, addItem, removeItem, updateQty, clear, quantityOf]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
