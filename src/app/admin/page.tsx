@@ -15,7 +15,7 @@ import {
 import type { MenuCategory, MenuItem } from "@/lib/types";
 
 export default function AdminPage() {
-  const { franchise } = useFranchise();
+  const { franchise, franchiseId } = useFranchise();
   const {
     items,
     addMenuItem,
@@ -56,7 +56,9 @@ export default function AdminPage() {
     setSyncLoading(true);
     setSyncMsg(null);
     try {
-      const res = await fetch("/api/frontpad/products");
+      const res = await fetch(
+        `/api/frontpad/products?franchiseId=${encodeURIComponent(franchiseId)}`,
+      );
       const data = (await res.json()) as {
         ok: boolean;
         products?: Array<{ article: string; name: string; price: number }>;

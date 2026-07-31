@@ -4,17 +4,62 @@ import type { FranchiseId, OrderPayload } from "./types";
  * FrontPad API — POST form-urlencoded на
  * https://app.frontpad.ru/api/index.php?МЕТОД
  *
- * Методы: new_order | get_status | get_client | get_certificate | get_products | get_stops
- * Лимиты: ≤30 запросов/мин, ≤2/сек; get_products — не чаще 1 раза в час.
- * Документация: https://github.com/n0rn/frontpad
+ * Два аккаунта FrontPad (центр / ипподром) → два секрета в .env.
+ * Fallback: один общий FRONTPAD_SECRET на обе точки.
  */
 
-const FRONTPAD_SECRET = process.env.FRONTPAD_SECRET?.trim();
 const FRONTPAD_BASE = "https://app.frontpad.ru/api/index.php";
 const SEND_PRICES = process.env.FRONTPAD_SEND_PRICES === "1";
 
+/** Секрет для точки. Центр и ипподром — разные аккаунты FP. */
+export function secretFor(franchiseId?: FranchiseId): string | undefined {
+  const shared = process.env.FRONTPAD_SECRET?.trim();
+  if (franchiseId === "hippodrome") {
+    return (
+      process.env.FRONTPAD_SECRET_HIPPODROME?.trim() ||
+      shared ||
+      undefined
+    );
+  }
+  if (franchiseId === "center") {
+    return (
+      process.env.FRONTPAD_SECRET_CENTER?.trim() || shared || undefined
+    );
+  }
+  return (
+    process.env.FRONTPAD_SECRET_CENTER?.trim() ||
+    process.env.FRONTPAD_SECRET_HIPPODROME?.trim() ||
+    shared ||
+    undefined
+  );
+}
+
 export function isFrontPadConfigured(): boolean {
-  return Boolean(FRONTPAD_SECRET);
+  return Boolean(
+    process.env.FRONTPAD_SECRET_CENTER?.trim() ||
+      process.env.FRONTPAD_SECRET_HIPPODROME?.trim() ||
+      process.env.FRONTPAD_SECRET?.trim(),
+  );
+}
+
+export function frontPadConfigStatus() {
+  const center = Boolean(
+    process.env.FRONTPAD_SECRET_CENTER?.trim() ||
+      process.env.FRONTPAD_SECRET?.trim(),
+  );
+  const hippodrome = Boolean(
+    process.env.FRONTPAD_SECRET_HIPPODROME?.trim() ||
+      process.env.FRONTPAD_SECRET?.trim(),
+  );
+  return {
+    configured: center || hippodrome,
+    center,
+    hippodrome,
+    dualAccounts: Boolean(
+      process.env.FRONTPAD_SECRET_CENTER?.trim() &&
+        process.env.FRONTPAD_SECRET_HIPPODROME?.trim(),
+    ),
+  };
 }
 
 export interface FrontPadResult {
@@ -69,13 +114,19 @@ export const ERROR_MESSAGES: Record<string, string> = {
 async function postFrontPad(
   method: string,
   fields: Record<string, string>,
+  secret?: string,
 ): Promise<{ ok: true; raw: FrontPadApiResponse } | { ok: false; message: string; raw?: unknown; code?: string }> {
-  if (!FRONTPAD_SECRET) {
-    return { ok: false, message: "FRONTPAD_SECRET не задан в .env" };
+  const key = secret?.trim();
+  if (!key) {
+    return {
+      ok: false,
+      message:
+        "Секрет FrontPad для этой точки не задан (FRONTPAD_SECRET_CENTER / _HIPPODROME)",
+    };
   }
 
-  const form = new URLSearchParams({ secret: FRONTPAD_SECRET, ...fields });
-  const url = `https://app.frontpad.ru/api/index.php?${method}`;
+  const form = new URLSearchParams({ secret: key, ...fields });
+  const url = `${FRONTPAD_BASE}?${method}`;
 
   try {
     const res = await fetch(url, {
@@ -89,7 +140,6 @@ async function postFrontPad(
 
     const raw = (await res.json().catch(() => null)) as FrontPadApiResponse | null;
     if (!raw || raw.result !== "success") {
-      // FrontPad иногда кладёт код в error, иногда в status
       const code = String(
         raw?.error ||
           (raw?.result === "error" ? raw?.status : "") ||
@@ -209,8 +259,9 @@ export async function sendOrderToFrontPad(
   order: OrderPayload,
 ): Promise<FrontPadResult> {
   const stubId = `VC-${Date.now().toString(36).toUpperCase()}`;
+  const secret = secretFor(order.franchiseId);
 
-  if (!FRONTPAD_SECRET) {
+  if (!secret) {
     console.info("[FrontPad stub] order accepted", {
       orderId: stubId,
       franchise: order.franchiseId,
@@ -222,7 +273,7 @@ export async function sendOrderToFrontPad(
       orderId: stubId,
       mode: "stub",
       message:
-        "Заказ принят (заглушка). Добавьте FRONTPAD_SECRET в .env для боевой отправки.",
+        "Заказ принят (заглушка). Добавьте FRONTPAD_SECRET_CENTER и FRONTPAD_SECRET_HIPPODROME в .env.",
     };
   }
 
@@ -261,7 +312,7 @@ export async function sendOrderToFrontPad(
   const productPrice = lines.map((l) => l.price);
 
   const scalars: Record<string, string> = {
-    secret: FRONTPAD_SECRET,
+    secret,
   };
 
   const mods = order.items
@@ -346,6 +397,8 @@ export async function sendOrderToFrontPad(
     products: productArticles,
     qty: productQty,
     franchise: order.franchiseId,
+    account:
+      order.franchiseId === "hippodrome" ? "hippodrome" : "center",
   });
 
   try {
@@ -404,6 +457,7 @@ export async function sendOrderToFrontPad(
 export async function fetchFrontPadStatus(params: {
   orderId?: string;
   clientPhone?: string;
+  franchiseId?: FranchiseId;
 }): Promise<{
   ok: boolean;
   status?: string;
@@ -414,7 +468,6 @@ export async function fetchFrontPadStatus(params: {
   const orderId = params.orderId?.trim();
   const phone = params.clientPhone?.trim();
 
-  // Stub / нечисловой id — в FrontPad не существует
   if (orderId && (/^VC-/i.test(orderId) || !/^\d+$/.test(orderId))) {
     return {
       ok: true,
@@ -428,13 +481,36 @@ export async function fetchFrontPadStatus(params: {
   else if (phone) fields.client_phone = normalizePhone(phone);
   else return { ok: false, message: "Нужен orderId или clientPhone" };
 
-  const res = await postFrontPad("get_status", fields);
-  if (!res.ok) {
-    // Запасной вариант: по телефону, если id не сработал
+  const secretsToTry = [
+    secretFor(params.franchiseId),
+    secretFor("center"),
+    secretFor("hippodrome"),
+  ].filter((s, i, arr): s is string => Boolean(s) && arr.indexOf(s) === i);
+
+  if (!secretsToTry.length) {
+    return { ok: false, message: "Нет секрета FrontPad" };
+  }
+
+  let lastFail: { ok: false; message: string; raw?: unknown; code?: string } | null =
+    null;
+
+  for (const secret of secretsToTry) {
+    const res = await postFrontPad("get_status", fields, secret);
+    if (res.ok) {
+      return {
+        ok: true,
+        status: res.raw.status !== undefined ? String(res.raw.status) : "Принят",
+        raw: res.raw,
+      };
+    }
+    lastFail = res;
+
     if (orderId && phone && res.code !== "requests_limit") {
-      const byPhone = await postFrontPad("get_status", {
-        client_phone: normalizePhone(phone),
-      });
+      const byPhone = await postFrontPad(
+        "get_status",
+        { client_phone: normalizePhone(phone) },
+        secret,
+      );
       if (byPhone.ok) {
         return {
           ok: true,
@@ -455,19 +531,16 @@ export async function fetchFrontPadStatus(params: {
           "Автостатус временно недоступен. Обновления приходят по webhook или смотрите в программе FrontPad.",
       };
     }
-
-    return res;
   }
 
-  return {
-    ok: true,
-    status: res.raw.status !== undefined ? String(res.raw.status) : "Принят",
-    raw: res.raw,
-  };
+  return lastFail || { ok: false, message: "Не удалось получить статус" };
 }
 
 /** Карточка клиента по телефону (имя, адрес, скидка, баллы). Без циклов. */
-export async function fetchFrontPadClient(clientPhone: string): Promise<{
+export async function fetchFrontPadClient(
+  clientPhone: string,
+  franchiseId?: FranchiseId,
+): Promise<{
   ok: boolean;
   client?: {
     name?: string;
@@ -485,9 +558,11 @@ export async function fetchFrontPadClient(clientPhone: string): Promise<{
   message?: string;
   raw?: unknown;
 }> {
-  const res = await postFrontPad("get_client", {
-    client_phone: normalizePhone(clientPhone),
-  });
+  const res = await postFrontPad(
+    "get_client",
+    { client_phone: normalizePhone(clientPhone) },
+    secretFor(franchiseId),
+  );
   if (!res.ok) return res;
 
   const r = res.raw;
@@ -511,7 +586,10 @@ export async function fetchFrontPadClient(clientPhone: string): Promise<{
 }
 
 /** Проверка сертификата (товар / % / сумма). Без циклов. */
-export async function fetchFrontPadCertificate(certificate: string): Promise<{
+export async function fetchFrontPadCertificate(
+  certificate: string,
+  franchiseId?: FranchiseId,
+): Promise<{
   ok: boolean;
   kind?: "product" | "sale" | "amount";
   productId?: string;
@@ -522,9 +600,11 @@ export async function fetchFrontPadCertificate(certificate: string): Promise<{
   message?: string;
   raw?: unknown;
 }> {
-  const res = await postFrontPad("get_certificate", {
-    certificate: certificate.trim(),
-  });
+  const res = await postFrontPad(
+    "get_certificate",
+    { certificate: certificate.trim() },
+    secretFor(franchiseId),
+  );
   if (!res.ok) return res;
 
   const r = res.raw;
@@ -557,13 +637,15 @@ export interface FrontPadProduct {
  * Список товаров с артикулами из FrontPad.
  * Не чаще 1 раза в час (лимит FrontPad).
  */
-export async function fetchFrontPadProducts(): Promise<{
+export async function fetchFrontPadProducts(
+  franchiseId?: FranchiseId,
+): Promise<{
   ok: boolean;
   products: FrontPadProduct[];
   message?: string;
   raw?: unknown;
 }> {
-  const res = await postFrontPad("get_products", {});
+  const res = await postFrontPad("get_products", {}, secretFor(franchiseId));
   if (!res.ok) {
     return { ok: false, products: [], message: res.message, raw: res.raw };
   }
@@ -586,17 +668,20 @@ export async function fetchFrontPadProducts(): Promise<{
 }
 
 /** Стоп-лист: артикулы недоступных товаров. */
-export async function fetchFrontPadStops(): Promise<{
+export async function fetchFrontPadStops(
+  franchiseId?: FranchiseId,
+): Promise<{
   ok: boolean;
   articles: string[];
   message?: string;
 }> {
-  if (!FRONTPAD_SECRET) {
-    return { ok: false, articles: [], message: "Нет FRONTPAD_SECRET" };
+  const secret = secretFor(franchiseId);
+  if (!secret) {
+    return { ok: false, articles: [], message: "Нет секрета FrontPad для точки" };
   }
 
   try {
-    const form = new URLSearchParams({ secret: FRONTPAD_SECRET });
+    const form = new URLSearchParams({ secret });
     const res = await fetch(`${FRONTPAD_BASE}?get_stops`, {
       method: "POST",
       headers: {
@@ -614,7 +699,6 @@ export async function fetchFrontPadStops(): Promise<{
       return { ok: false, articles: [], message: "Пустой ответ get_stops" };
     }
 
-    // Пустой стоп-лист FrontPad иногда отдаёт как error: no_stops
     if (raw.error === "no_stops") {
       return { ok: true, articles: [] };
     }

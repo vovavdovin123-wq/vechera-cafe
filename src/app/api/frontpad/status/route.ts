@@ -46,10 +46,10 @@ export async function GET(request: Request) {
       });
     }
     if (local && !local.frontpadStatus) {
-      // Live-заказ ещё без webhook — попробуем FrontPad, иначе «Принят»
       const fp = await fetchFrontPadStatus({
         orderId,
         clientPhone: clientPhone || local.customerPhone,
+        franchiseId: local.franchiseId,
       });
       if (fp.ok && fp.status) {
         return NextResponse.json({
@@ -68,7 +68,17 @@ export async function GET(request: Request) {
     }
   }
 
-  const result = await fetchFrontPadStatus({ orderId, clientPhone });
+  const franchiseParam = url.searchParams.get("franchiseId");
+  const franchiseId =
+    franchiseParam === "center" || franchiseParam === "hippodrome"
+      ? franchiseParam
+      : undefined;
+
+  const result = await fetchFrontPadStatus({
+    orderId,
+    clientPhone,
+    franchiseId,
+  });
   if (!result.ok) {
     return NextResponse.json(result, { status: 502 });
   }

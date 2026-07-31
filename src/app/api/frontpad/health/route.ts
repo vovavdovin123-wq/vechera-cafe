@@ -1,13 +1,18 @@
 import { NextResponse } from "next/server";
-import { isFrontPadConfigured } from "@/lib/frontpad";
+import { frontPadConfigStatus } from "@/lib/frontpad";
 
-/** Диагностика: настроен ли FrontPad (без раскрытия секрета). */
+/** Диагностика: настроены ли секреты FrontPad по точкам (без раскрытия). */
 export async function GET() {
-  const configured = isFrontPadConfigured();
+  const status = frontPadConfigStatus();
   return NextResponse.json({
     ok: true,
-    configured,
-    mode: configured ? "live" : "stub",
+    configured: status.configured,
+    mode: status.configured ? "live" : "stub",
+    accounts: {
+      center: status.center,
+      hippodrome: status.hippodrome,
+      dualAccounts: status.dualAccounts,
+    },
     hooks: {
       webhook: "/api/frontpad/webhook",
       products: "/api/frontpad/products",
@@ -16,8 +21,10 @@ export async function GET() {
       certificate: "/api/frontpad/certificate",
       stops: "/api/frontpad/stops",
     },
-    message: configured
-      ? "FrontPad secret задан — заказы уходят в live"
-      : "Нет FRONTPAD_SECRET — заказы в stub-режиме",
+    message: status.dualAccounts
+      ? "Два аккаунта FrontPad: центр и ипподром — заказы уходят в нужный"
+      : status.configured
+        ? "FrontPad настроен (общий или один секрет). Для двух аккаунтов задайте FRONTPAD_SECRET_CENTER и FRONTPAD_SECRET_HIPPODROME"
+        : "Нет секретов FrontPad — заказы в stub-режиме",
   });
 }

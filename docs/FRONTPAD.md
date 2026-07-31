@@ -11,33 +11,25 @@
 
 ## 1. В FrontPad (обязательно)
 
+У вас **два аккаунта** FrontPad (центр и ипподром). В **каждом**:
+
 1. **Настройки → Общие → API** — включить API, скопировать **Секрет**.
-2. Убедиться, что тариф поддерживает API (`invalid_plant` = тариф без API).
-3. Каждому блюду, которое продаётся на сайте, в карточке товара задать **уникальный цифровой артикул**.
-4. Открыть **смену** в программе (иначе `cash_close`).
-5. Для двух точек на сайте:
-   - в справочнике **Филиалы** взять «Код API» → в `.env` как `FRONTPAD_AFFILIATE_CENTER` / `_HIPPODROME`;
-   - при необходимости **Точки продаж** → `FRONTPAD_POINT_*`.
-6. Создать **канал продаж** «Сайт» (или аналог) → код в `FRONTPAD_CHANNEL`.
-7. (Опционально) теги заказов → `FRONTPAD_TAGS=сайт,онлайн`.
-8. В справочнике **Варианты оплаты** посмотреть коды (наличные / карта / онлайн) — пригодятся для поля `pay`.
-9. Включить **автосохранение клиентов**, если нужен email (`mail`) и накопление карт/скидок.
+2. Убедиться, что тариф поддерживает API.
+3. У товаров для сайта — **цифровые артикулы** (совпадают с админкой сайта для этой точки).
+4. Смена должна быть **открыта**.
+
+Филиалы/точки внутри одного аккаунта (`FRONTPAD_AFFILIATE_*`) при двух отдельных аккаунтах обычно **не нужны**.
 
 ---
 
 ## 2. На сервере сайта (обязательно)
 
-В `/var/www/vechera-cafe/.env` (или локальном `.env`):
+В `/var/www/vechera-cafe/.env`:
 
 ```env
-FRONTPAD_SECRET=ваш_секрет_из_fp
-FRONTPAD_AFFILIATE_CENTER=...
-FRONTPAD_AFFILIATE_HIPPODROME=...
-FRONTPAD_POINT_CENTER=...
-FRONTPAD_POINT_HIPPODROME=...
-FRONTPAD_CHANNEL=...
+FRONTPAD_SECRET_CENTER=секрет_из_аккаунта_центра
+FRONTPAD_SECRET_HIPPODROME=секрет_из_аккаунта_ипподрома
 FRONTPAD_HOOK_URL=https://vechera-cafe.ru/api/frontpad/webhook
-FRONTPAD_HOOK_STATUSES=1,2,3,4,5
 FRONTPAD_SEND_PRICES=0
 ```
 
@@ -45,12 +37,15 @@ FRONTPAD_SEND_PRICES=0
 
 ```bash
 cd /var/www/vechera-cafe
-# после git pull при обновлении кода:
-npm run build && pm2 restart vechera
+git pull
+npm run build
+pm2 restart vechera
 ```
 
-Проверка: открыть `https://vechera-cafe.ru/api/frontpad/health`  
-Ожидание: `{ "configured": true, "mode": "live" }`.
+Проверка: `https://vechera-cafe.ru/api/frontpad/health`  
+Ожидание: `"dualAccounts": true`, `"center": true`, `"hippodrome": true`.
+
+Логика: заказ с точки «Центр» → секрет центра; «Ипподром» → секрет ипподрома.
 
 ---
 
