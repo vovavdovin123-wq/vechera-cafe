@@ -170,7 +170,8 @@ export function CustomDatePicker({
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
-                clear(e as unknown as React.MouseEvent);
+                e.stopPropagation();
+                onChange("");
               }
             }}
             className="rounded-full p-1 text-ink-muted transition hover:bg-[var(--gold-soft)] hover:text-ink"
