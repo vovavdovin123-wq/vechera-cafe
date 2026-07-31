@@ -1,6 +1,7 @@
 import { randomBytes } from "crypto";
 import { promises as fs } from "fs";
 import path from "path";
+import { EMPTY_COUPONS, type Coupon } from "@/lib/coupons";
 import { DEFAULT_INTERIOR, type InteriorPhoto } from "@/lib/interior-data";
 import { INITIAL_MENUS } from "@/lib/menu-data";
 import { PROMO_SLIDES, type PromoSlide } from "@/lib/promos";
@@ -15,6 +16,7 @@ const LEGACY_UPLOADS_DIR = path.join(process.cwd(), "public", "uploads");
 const MENUS_FILE = path.join(DATA_DIR, "menus.json");
 const INTERIOR_FILE = path.join(DATA_DIR, "interior.json");
 const PROMOS_FILE = path.join(DATA_DIR, "promos.json");
+const COUPONS_FILE = path.join(DATA_DIR, "coupons.json");
 
 async function ensureDirs() {
   await fs.mkdir(DATA_DIR, { recursive: true });
@@ -125,4 +127,13 @@ export async function writePromos(data: PromoSlide[]): Promise<PromoSlide[]> {
   const persisted = await deepPersistImages(data, "promo");
   await writeJsonFile(PROMOS_FILE, persisted);
   return persisted;
+}
+
+export async function readCoupons(): Promise<Coupon[]> {
+  return readJsonFile(COUPONS_FILE, EMPTY_COUPONS);
+}
+
+export async function writeCoupons(data: Coupon[]): Promise<Coupon[]> {
+  await writeJsonFile(COUPONS_FILE, data);
+  return data;
 }

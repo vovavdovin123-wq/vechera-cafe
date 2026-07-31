@@ -6,6 +6,7 @@ import {
   BadgePercent,
   MessageSquareText,
   ShoppingBag,
+  TicketPercent,
   UtensilsCrossed,
 } from "lucide-react";
 
@@ -13,6 +14,12 @@ const links = [
   { href: "/admin", id: "menu" as const, label: "Меню", icon: UtensilsCrossed },
   { href: "/admin/interior", id: "interior" as const, label: "Интерьер", icon: Armchair },
   { href: "/admin/promos", id: "promos" as const, label: "Акции", icon: BadgePercent },
+  {
+    href: "/admin/coupons",
+    id: "coupons" as const,
+    label: "Промокоды",
+    icon: TicketPercent,
+  },
   { href: "/admin/orders", id: "orders" as const, label: "Заказы", icon: ShoppingBag },
   { href: "/admin/feedback", id: "feedback" as const, label: "Связь", icon: MessageSquareText },
 ];

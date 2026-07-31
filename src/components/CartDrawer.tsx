@@ -24,11 +24,9 @@ import { useFranchise } from "@/context/FranchiseContext";
 type PromoState =
   | { kind: "none" }
   | { kind: "sale"; code: string; percent: number }
-  | { kind: "amount"; code: string; amount: number }
-  | { kind: "product"; code: string; name?: string };
+  | { kind: "amount"; code: string; amount: number };
 
 function toFrontPadDatetime(localValue: string): string | undefined {
-  // datetime-local: YYYY-MM-DDTHH:mm → YYYY-MM-DD HH:mm:00
   if (!localValue) return undefined;
   const [date, time] = localValue.split("T");
   if (!date || !time) return undefined;
@@ -72,6 +70,7 @@ export function CartDrawer() {
   const [deliveryCoords, setDeliveryCoords] = useState<[number, number] | null>(
     null,
   );
+  const [geocodeHint, setGeocodeHint] = useState<string | null>(null);
 
   const [promoInput, setPromoInput] = useState("");
   const [promo, setPromo] = useState<PromoState>({ kind: "none" });
@@ -90,9 +89,11 @@ export function CartDrawer() {
   useEffect(() => {
     if (mode !== "delivery" || street.trim().length < 4) {
       setDeliveryCoords(null);
+      setGeocodeHint(null);
       return;
     }
 
+    setGeocodeHint("Ищем адрес на карте…");
     const timer = setTimeout(() => {
       fetch(
         `/api/geocode?${new URLSearchParams({
@@ -101,12 +102,20 @@ export function CartDrawer() {
         })}`,
       )
         .then((r) => r.json())
-        .then((d: { ok: boolean; coords?: [number, number] }) => {
-          if (d.ok && d.coords) setDeliveryCoords(d.coords);
-          else setDeliveryCoords(null);
+        .then((d: { ok: boolean; coords?: [number, number]; message?: string }) => {
+          if (d.ok && d.coords) {
+            setDeliveryCoords(d.coords);
+            setGeocodeHint("Адрес отмечен на карте");
+          } else {
+            setDeliveryCoords(null);
+            setGeocodeHint(d.message || "Адрес не найден — уточните улицу и дом");
+          }
         })
-        .catch(() => setDeliveryCoords(null));
-    }, 600);
+        .catch(() => {
+          setDeliveryCoords(null);
+          setGeocodeHint("Не удалось проверить адрес");
+        });
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [street, mode, franchiseId]);
@@ -135,6 +144,8 @@ export function CartDrawer() {
     return [cafe];
   }, [franchise.coords, mode, deliveryCoords]);
 
+  const mapCenter = deliveryCoords ?? franchise.coords;
+
   async function applyPromo() {
     const code = promoInput.trim();
     if (!code) return;
@@ -142,14 +153,17 @@ export function CartDrawer() {
     setPromoError(null);
     try {
       const res = await fetch(
-        `/api/frontpad/certificate?${new URLSearchParams({ code })}`,
+        `/api/coupons/validate?${new URLSearchParams({
+          code,
+          total: String(total),
+        })}`,
       );
       const data = (await res.json()) as {
         ok: boolean;
-        kind?: "product" | "sale" | "amount";
-        sale?: string;
-        amount?: string;
-        name?: string;
+        kind?: "sale" | "amount";
+        percent?: number;
+        amount?: number;
+        code?: string;
         message?: string;
       };
       if (!res.ok || !data.ok) {
@@ -157,23 +171,21 @@ export function CartDrawer() {
         setPromoError(data.message || "Промокод недействителен");
         return;
       }
-      if (data.kind === "sale" && data.sale) {
+      if (data.kind === "sale" && data.percent) {
         setPromo({
           kind: "sale",
-          code,
-          percent: Math.min(100, Math.max(1, Number(data.sale) || 0)),
+          code: data.code || code.toUpperCase(),
+          percent: data.percent,
         });
       } else if (data.kind === "amount" && data.amount) {
         setPromo({
           kind: "amount",
-          code,
-          amount: Math.max(0, Number(data.amount) || 0),
+          code: data.code || code.toUpperCase(),
+          amount: data.amount,
         });
-      } else if (data.kind === "product") {
-        setPromo({ kind: "product", code, name: data.name });
       } else {
         setPromo({ kind: "none" });
-        setPromoError("Неизвестный тип сертификата");
+        setPromoError("Не удалось применить промокод");
       }
     } catch {
       setPromoError("Сеть недоступна");
@@ -189,12 +201,16 @@ export function CartDrawer() {
     setResult(null);
 
     try {
+      const promoNote =
+        promo.kind !== "none" ? `Промокод ${promo.code}` : undefined;
+      const commentParts = [addressNote, promoNote].filter(Boolean);
+
       const payload: Record<string, unknown> = {
         franchiseId,
         customerName: name || undefined,
         customerPhone: phone || undefined,
         fulfillment: mode,
-        comment: addressNote || undefined,
+        comment: commentParts.length ? commentParts.join(". ") : undefined,
         address:
           mode === "delivery"
             ? {
@@ -213,10 +229,10 @@ export function CartDrawer() {
         total: payable,
       };
 
-      if (promo.kind !== "none") {
-        payload.certificate = promo.code;
-        if (promo.kind === "sale") payload.salePercent = promo.percent;
-        if (promo.kind === "amount") payload.saleAmount = promo.amount;
+      if (promo.kind === "sale") {
+        payload.salePercent = promo.percent;
+      } else if (promo.kind === "amount") {
+        payload.saleAmount = promo.amount;
       }
 
       if (wantPreorder && preorderAt) {
@@ -237,9 +253,7 @@ export function CartDrawer() {
 
       const track: TrackedOrder = {
         orderId: String(data.orderId),
-        orderNumber: data.orderNumber
-          ? String(data.orderNumber)
-          : undefined,
+        orderNumber: data.orderNumber ? String(data.orderNumber) : undefined,
         phone: phone || undefined,
         at: new Date().toISOString(),
       };
@@ -258,6 +272,7 @@ export function CartDrawer() {
       setName("");
       setPhone("");
       setDeliveryCoords(null);
+      setGeocodeHint(null);
       setPromo({ kind: "none" });
       setPromoInput("");
       setWantPreorder(false);
@@ -274,6 +289,11 @@ export function CartDrawer() {
   const inputClass =
     "w-full rounded-2xl border border-line bg-bg/30 px-4 py-3 text-base outline-none placeholder:text-ink-muted focus:border-accent";
 
+  const mapTitle =
+    mode === "delivery"
+      ? "Карта адреса доставки"
+      : `Карта — ${franchise.shortAddress}`;
+
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4 md:p-6">
       <button
@@ -283,7 +303,7 @@ export function CartDrawer() {
         onClick={() => setOpen(false)}
       />
 
-      <div className="relative flex max-h-[min(920px,100dvh)] w-full max-w-5xl flex-col overflow-hidden rounded-t-[24px] border border-line bg-surface shadow-2xl animate-rise sm:max-h-[min(920px,94vh)] sm:rounded-[28px]">
+      <div className="relative flex max-h-[min(920px,100dvh)] w-full max-w-5xl flex-col overflow-hidden rounded-t-[24px] border border-line bg-surface shadow-2xl animate-rise sm:max-h-[min(920px,94vh)] sm:rounded-[28px] lg:flex-row">
         <button
           type="button"
           onClick={() => setOpen(false)}
@@ -294,7 +314,7 @@ export function CartDrawer() {
 
         <form
           onSubmit={submitOrder}
-          className="flex min-h-0 w-full flex-1 flex-col overflow-y-auto overscroll-contain lg:w-[46%] lg:shrink-0"
+          className="flex min-h-0 w-full flex-1 flex-col overflow-y-auto overscroll-contain lg:w-[46%] lg:shrink-0 lg:flex-none"
         >
           <div className="border-b border-line px-4 py-4 pr-12 sm:px-7 sm:py-5">
             <h2 className="font-display text-xl font-semibold text-ink sm:text-2xl">
@@ -361,9 +381,13 @@ export function CartDrawer() {
                   placeholder="Комментарий к адресу"
                   className={inputClass}
                 />
-                {street.trim().length >= 4 && !deliveryCoords && (
-                  <p className="text-xs text-ink-muted">
-                    Уточняем адрес на карте…
+                {geocodeHint && (
+                  <p
+                    className={`text-xs ${
+                      deliveryCoords ? "text-success" : "text-ink-muted"
+                    }`}
+                  >
+                    {geocodeHint}
                   </p>
                 )}
               </>
@@ -373,6 +397,17 @@ export function CartDrawer() {
                 <span className="font-medium text-ink">{franchise.address}</span>
               </p>
             )}
+
+            {/* Карта на телефоне — сразу под адресом */}
+            <div className="h-48 overflow-hidden rounded-2xl border border-line lg:hidden">
+              <CleanMap
+                coords={mapCenter}
+                markers={mapMarkers}
+                title={mapTitle}
+                className="h-full w-full"
+                zoom={deliveryCoords ? 15 : 16}
+              />
+            </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
               <input
@@ -397,8 +432,8 @@ export function CartDrawer() {
               <div className="flex gap-2">
                 <input
                   value={promoInput}
-                  onChange={(e) => setPromoInput(e.target.value)}
-                  placeholder="Сертификат FrontPad"
+                  onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
+                  placeholder="Введите промокод"
                   className={`${inputClass} py-2.5`}
                 />
                 <button
@@ -425,11 +460,6 @@ export function CartDrawer() {
               {promo.kind === "amount" && (
                 <p className="mt-1.5 text-xs text-success">
                   Скидка {promo.amount} ₽
-                </p>
-              )}
-              {promo.kind === "product" && (
-                <p className="mt-1.5 text-xs text-success">
-                  Подарок: {promo.name || "товар по сертификату"}
                 </p>
               )}
             </div>
@@ -547,14 +577,12 @@ export function CartDrawer() {
           </div>
         </form>
 
-        <div className="relative hidden min-h-[420px] flex-1 lg:block">
+        {/* Карта справа на десктопе */}
+        <div className="relative hidden min-h-[420px] flex-1 bg-bg-deep lg:block">
           <CleanMap
+            coords={mapCenter}
             markers={mapMarkers}
-            title={
-              mode === "delivery"
-                ? "Карта адреса доставки"
-                : `Карта — ${franchise.shortAddress}`
-            }
+            title={mapTitle}
             className="absolute inset-0 h-full w-full rounded-none"
             zoom={deliveryCoords ? 15 : 16}
           />
