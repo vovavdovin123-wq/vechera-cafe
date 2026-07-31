@@ -3,8 +3,25 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 import { AdminShell } from "@/components/AdminShell";
+import { CustomDatePicker } from "@/components/CustomDatePicker";
 import { CustomSelect } from "@/components/CustomSelect";
 import type { Coupon, CouponType } from "@/lib/coupons";
+
+function todayIso() {
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+function formatExpiresRu(iso: string) {
+  const [y, m, day] = iso.split("-").map(Number);
+  if (!y || !m || !day) return iso;
+  return new Date(y, m - 1, day).toLocaleDateString("ru-RU", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
 
 export default function AdminCouponsPage() {
   const [items, setItems] = useState<Coupon[]>([]);
@@ -43,7 +60,11 @@ export default function AdminCouponsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: next }),
       });
-      const data = (await res.json()) as { ok: boolean; items?: Coupon[]; message?: string };
+      const data = (await res.json()) as {
+        ok: boolean;
+        items?: Coupon[];
+        message?: string;
+      };
       if (!res.ok || !data.ok) {
         setMessage(data.message || "Не удалось сохранить");
         return;
@@ -139,13 +160,16 @@ export default function AdminCouponsPage() {
           placeholder="Мин. сумма заказа (необяз.)"
           className="rounded-2xl border border-line bg-bg/40 px-4 py-2.5 text-sm outline-none focus:border-accent"
         />
-        <input
-          type="date"
+
+        <CustomDatePicker
+          className="sm:col-span-2"
           value={expiresAt}
-          onChange={(e) => setExpiresAt(e.target.value)}
-          className="rounded-2xl border border-line bg-bg/40 px-4 py-2.5 text-sm outline-none focus:border-accent"
-          aria-label="Действует до"
+          onChange={setExpiresAt}
+          min={todayIso()}
+          label="Срок действия"
+          hint="До какой даты включительно промокод можно применить в корзине. После этой даты код перестанет работать. Если дату не выбрать — промокод действует бессрочно, пока вы его не выключите."
         />
+
         <input
           value={note}
           onChange={(e) => setNote(e.target.value)}
@@ -176,13 +200,17 @@ export default function AdminCouponsPage() {
               className="flex flex-wrap items-center gap-3 rounded-2xl border border-line bg-surface p-4 shadow-[var(--shadow-soft)]"
             >
               <div className="min-w-0 flex-1">
-                <p className="font-semibold tracking-wide text-ink">{item.code}</p>
+                <p className="font-semibold tracking-wide text-ink">
+                  {item.code}
+                </p>
                 <p className="mt-0.5 text-sm text-ink-muted">
                   {item.type === "percent"
                     ? `−${item.value}%`
                     : `−${item.value} ₽`}
                   {item.minOrder ? ` · от ${item.minOrder} ₽` : ""}
-                  {item.expiresAt ? ` · до ${item.expiresAt}` : ""}
+                  {item.expiresAt
+                    ? ` · до ${formatExpiresRu(item.expiresAt)}`
+                    : " · бессрочно"}
                   {item.note ? ` · ${item.note}` : ""}
                 </p>
               </div>
