@@ -63,6 +63,7 @@ export async function POST(request: Request) {
       orderNumber: frontpad.orderNumber,
       mode: frontpad.mode,
       message: frontpad.message,
+      warnings: frontpad.warnings,
     });
   } catch (error) {
     console.error("[api/orders]", error);

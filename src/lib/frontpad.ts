@@ -158,8 +158,51 @@ function appendArray(
   });
 }
 
+/**
+ * Тело как в примерах FrontPad/PHP: product[0]=…&product_kol[0]=…
+ * Скобки в ключах НЕ кодируем — иначе PHP иногда читает только первый элемент.
+ */
+function buildPhpFormBody(
+  scalars: Record<string, string>,
+  arrays: Record<string, Array<string | number>>,
+): string {
+  const parts: string[] = [];
+  for (const [key, value] of Object.entries(scalars)) {
+    if (value === "") continue;
+    parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+  }
+  for (const [key, values] of Object.entries(arrays)) {
+    values.forEach((value, index) => {
+      parts.push(`${key}[${index}]=${encodeURIComponent(String(value))}`);
+    });
+  }
+  return parts.join("&");
+}
+
 function normalizePhone(phone: string): string {
   return phone.replace(/[^\d+]/g, "").slice(0, 50);
+}
+
+function describeProductWarnings(
+  warnings: unknown,
+  articles: string[],
+): string | undefined {
+  if (!warnings || typeof warnings !== "object") return undefined;
+  const w = warnings as Record<string, unknown>;
+  const badKeys = w.invalid_product_keys;
+  if (!badKeys || typeof badKeys !== "object") return undefined;
+
+  const indexes = Object.values(badKeys as Record<string, string>).map((v) =>
+    Number(v),
+  );
+  const missing = indexes
+    .map((i) => articles[i])
+    .filter((a): a is string => Boolean(a));
+
+  if (!missing.length) {
+    return "Часть позиций не принята FrontPad (проверьте артикулы).";
+  }
+  return `В FrontPad нет товаров с артикулами: ${missing.join(", ")}. Создайте их в программе с теми же номерами.`;
 }
 
 export async function sendOrderToFrontPad(
@@ -194,25 +237,33 @@ export async function sendOrderToFrontPad(
     };
   }
 
-  const form = new URLSearchParams();
-  form.set("secret", FRONTPAD_SECRET);
-
-  appendArray(form, "product", articles);
-  appendArray(
-    form,
-    "product_kol",
-    order.items.map((item) => item.quantity),
-  );
-
-  if (SEND_PRICES) {
-    appendArray(
-      form,
-      "product_price",
-      order.items.map((item) => item.price),
-    );
+  // Склеиваем одинаковые артикулы (кол-во суммируем) — так надёжнее для FrontPad
+  const merged = new Map<
+    string,
+    { article: string; quantity: number; price: number }
+  >();
+  for (const item of order.items) {
+    const article = item.frontpadArticle!.trim();
+    const prev = merged.get(article);
+    if (prev) {
+      prev.quantity += item.quantity;
+    } else {
+      merged.set(article, {
+        article,
+        quantity: item.quantity,
+        price: item.price,
+      });
+    }
   }
+  const lines = [...merged.values()];
+  const productArticles = lines.map((l) => l.article);
+  const productQty = lines.map((l) => l.quantity);
+  const productPrice = lines.map((l) => l.price);
 
-  // Модификаторы: product_mod[i] = индекс родителя в product[]
+  const scalars: Record<string, string> = {
+    secret: FRONTPAD_SECRET,
+  };
+
   const mods = order.items
     .map((item, index) =>
       item.frontpadModParentIndex !== undefined
@@ -220,71 +271,82 @@ export async function sendOrderToFrontPad(
         : null,
     )
     .filter(Boolean) as Array<{ index: number; parent: number }>;
-  if (mods.length) {
-    // FrontPad ждёт product_mod как параллельный массив ключей родителя —
-    // заполняем только позиции модификаторов (остальные не отправляем через sparse append)
-    for (const m of mods) {
-      form.append(`product_mod[${m.index}]`, String(m.parent));
-    }
-  }
 
-  if (order.customerName) form.set("name", order.customerName.slice(0, 50));
+  if (order.customerName) scalars.name = order.customerName.slice(0, 50);
   if (order.customerPhone) {
-    form.set("phone", normalizePhone(order.customerPhone));
+    scalars.phone = normalizePhone(order.customerPhone);
   }
-  if (order.customerEmail) form.set("mail", order.customerEmail.slice(0, 50));
+  if (order.customerEmail) scalars.mail = order.customerEmail.slice(0, 50);
 
   const descr = buildDescr(order);
-  if (descr) form.set("descr", descr);
+  if (descr) scalars.descr = descr;
 
   if (order.fulfillment === "delivery" && order.address?.street) {
     const { street, home } = splitAddress(order.address.street);
-    if (street) form.set("street", street);
-    if (home) form.set("home", home);
+    if (street) scalars.street = street;
+    if (home) scalars.home = home;
     if (order.address.entrance) {
-      form.set("pod", order.address.entrance.slice(0, 2));
+      scalars.pod = order.address.entrance.slice(0, 2);
     }
-    if (order.address.floor) form.set("et", order.address.floor.slice(0, 2));
+    if (order.address.floor) scalars.et = order.address.floor.slice(0, 2);
     if (order.address.apartment) {
-      form.set("apart", order.address.apartment.slice(0, 50));
+      scalars.apart = order.address.apartment.slice(0, 50);
     }
   }
 
   if (order.salePercent && order.salePercent >= 1 && order.salePercent <= 100) {
-    form.set("sale", String(Math.floor(order.salePercent)));
+    scalars.sale = String(Math.floor(order.salePercent));
   } else if (order.saleAmount && order.saleAmount > 0) {
-    form.set("sale_amount", String(Math.floor(order.saleAmount)));
+    scalars.sale_amount = String(Math.floor(order.saleAmount));
   }
 
-  if (order.score && order.score > 0) form.set("score", String(Math.floor(order.score)));
-  if (order.card) form.set("card", order.card.replace(/\D/g, "").slice(0, 16));
-  if (order.certificate) form.set("certificate", order.certificate.slice(0, 50));
-  if (order.person) form.set("person", String(order.person).slice(0, 2));
-  if (order.pay) form.set("pay", order.pay.slice(0, 50));
-  if (order.datetime) form.set("datetime", order.datetime);
+  if (order.score && order.score > 0) {
+    scalars.score = String(Math.floor(order.score));
+  }
+  if (order.card) scalars.card = order.card.replace(/\D/g, "").slice(0, 16);
+  if (order.certificate) scalars.certificate = order.certificate.slice(0, 50);
+  if (order.person) scalars.person = String(order.person).slice(0, 2);
+  if (order.pay) scalars.pay = order.pay.slice(0, 50);
+  if (order.datetime) scalars.datetime = order.datetime;
 
   const affiliate = affiliateFor(order.franchiseId);
   const point = pointFor(order.franchiseId);
-  if (affiliate) form.set("affiliate", affiliate);
-  if (point) form.set("point", point);
+  if (affiliate) scalars.affiliate = affiliate;
+  if (point) scalars.point = point;
 
   const channel = process.env.FRONTPAD_CHANNEL?.trim();
-  if (channel) form.set("channel", channel);
+  if (channel) scalars.channel = channel;
 
   const tags = process.env.FRONTPAD_TAGS?.split(",")
     .map((t) => t.trim())
     .filter(Boolean);
-  if (tags?.length) appendArray(form, "tags", tags.slice(0, 10));
 
   const hookStatuses = process.env.FRONTPAD_HOOK_STATUSES?.split(",")
     .map((t) => t.trim())
     .filter(Boolean);
-  if (hookStatuses?.length) {
-    appendArray(form, "hook_status", hookStatuses.slice(0, 5));
-  }
 
   const hookUrl = process.env.FRONTPAD_HOOK_URL?.trim();
-  if (hookUrl) form.set("hook_url", hookUrl);
+  if (hookUrl) scalars.hook_url = hookUrl;
+
+  let body = buildPhpFormBody(scalars, {
+    product: productArticles,
+    product_kol: productQty,
+    ...(SEND_PRICES ? { product_price: productPrice } : {}),
+    ...(tags?.length ? { tags: tags.slice(0, 10) } : {}),
+    ...(hookStatuses?.length ? { hook_status: hookStatuses.slice(0, 5) } : {}),
+  });
+
+  if (mods.length && lines.length === order.items.length) {
+    for (const m of mods) {
+      body += `&product_mod[${m.index}]=${encodeURIComponent(String(m.parent))}`;
+    }
+  }
+
+  console.info("[FrontPad new_order]", {
+    products: productArticles,
+    qty: productQty,
+    franchise: order.franchiseId,
+  });
 
   try {
     const res = await fetch(`${FRONTPAD_BASE}?new_order`, {
@@ -292,14 +354,14 @@ export async function sendOrderToFrontPad(
       headers: {
         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
       },
-      body: form.toString(),
+      body,
       cache: "no-store",
     });
 
     const raw = (await res.json().catch(() => null)) as FrontPadApiResponse | null;
 
     if (!raw || raw.result !== "success") {
-      const code = raw?.error || "unknown";
+      const code = String(raw?.error || "unknown");
       return {
         ok: false,
         orderId: stubId,
@@ -313,14 +375,17 @@ export async function sendOrderToFrontPad(
     const orderNumber =
       raw.order_number !== undefined ? String(raw.order_number) : undefined;
 
+    const warnText = describeProductWarnings(raw.warnings, productArticles);
+    const baseMsg = orderNumber
+      ? `Заказ №${orderNumber} отправлен в FrontPad`
+      : "Заказ отправлен в FrontPad";
+
     return {
       ok: true,
       orderId,
       orderNumber,
       mode: "live",
-      message: orderNumber
-        ? `Заказ №${orderNumber} отправлен в FrontPad`
-        : "Заказ отправлен в FrontPad",
+      message: warnText ? `${baseMsg}. ${warnText}` : baseMsg,
       warnings: raw.warnings,
       raw,
     };
