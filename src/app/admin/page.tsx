@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Loader2, Plus, RefreshCw, Trash2 } from "lucide-react";
 import { AdminShell } from "@/components/AdminShell";
 import { CustomSelect } from "@/components/CustomSelect";
 import { ImagePicker } from "@/components/ImagePicker";
@@ -16,14 +16,22 @@ import type { MenuCategory, MenuItem } from "@/lib/types";
 
 export default function AdminPage() {
   const { franchise } = useFranchise();
-  const { items, addMenuItem, updateMenuItem, removeMenuItem, toggleAvailable } =
-    useMenu();
+  const {
+    items,
+    addMenuItem,
+    updateMenuItem,
+    removeMenuItem,
+    toggleAvailable,
+    applyFrontPadProducts,
+  } = useMenu();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("300");
   const [category, setCategory] = useState<MenuCategory>("sandwiches");
   const [image, setImage] = useState("");
   const [frontpadArticle, setFrontpadArticle] = useState("");
+  const [syncLoading, setSyncLoading] = useState(false);
+  const [syncMsg, setSyncMsg] = useState<string | null>(null);
 
   function onAdd(e: FormEvent) {
     e.preventDefault();
@@ -44,6 +52,31 @@ export default function AdminPage() {
     setFrontpadArticle("");
   }
 
+  async function syncFromFrontPad() {
+    setSyncLoading(true);
+    setSyncMsg(null);
+    try {
+      const res = await fetch("/api/frontpad/products");
+      const data = (await res.json()) as {
+        ok: boolean;
+        products?: Array<{ article: string; name: string; price: number }>;
+        message?: string;
+      };
+      if (!res.ok || !data.ok || !data.products) {
+        setSyncMsg(data.message || "Не удалось загрузить товары FrontPad");
+        return;
+      }
+      const { updated, skipped } = applyFrontPadProducts(data.products);
+      setSyncMsg(
+        `Синхронизация: обновлено ${updated}, без совпадения артикула ${skipped}. В FrontPad товаров: ${data.products.length}. Не чаще 1 раза в час.`,
+      );
+    } catch {
+      setSyncMsg("Сеть недоступна");
+    } finally {
+      setSyncLoading(false);
+    }
+  }
+
   return (
     <AdminShell
       active="menu"
@@ -51,6 +84,25 @@ export default function AdminPage() {
       subtitle={`${franchise.shortAddress} · добавляйте позиции, меняйте цены и фото`}
       showLocation
     >
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={() => void syncFromFrontPad()}
+          disabled={syncLoading}
+          className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-ink shadow-[var(--shadow-soft)] transition hover:border-[var(--gold)] disabled:opacity-50"
+        >
+          {syncLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <RefreshCw className="h-4 w-4" />
+          )}
+          Синхронизировать с FrontPad
+        </button>
+        {syncMsg && (
+          <p className="max-w-xl text-xs text-ink-muted">{syncMsg}</p>
+        )}
+      </div>
+
       <form
         onSubmit={onAdd}
         className="mt-6 grid max-w-full gap-3 rounded-[22px] border border-line bg-surface p-4 shadow-[var(--shadow)] sm:mt-8 sm:grid-cols-2 sm:p-5"
