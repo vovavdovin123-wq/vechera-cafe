@@ -62,21 +62,23 @@ export const ERROR_MESSAGES: Record<string, string> = {
   invalid_client_phone: "Клиент с таким телефоном не найден",
   invalid_order_id: "Заказ не найден в FrontPad",
   invalid_products: "В FrontPad нет товаров с артикулами для выгрузки",
+  invalid_method: "Метод статуса FrontPad недоступен",
   no_stops: "Стоп-лист пуст",
 };
 
 async function postFrontPad(
   method: string,
   fields: Record<string, string>,
-): Promise<{ ok: true; raw: FrontPadApiResponse } | { ok: false; message: string; raw?: unknown }> {
+): Promise<{ ok: true; raw: FrontPadApiResponse } | { ok: false; message: string; raw?: unknown; code?: string }> {
   if (!FRONTPAD_SECRET) {
     return { ok: false, message: "FRONTPAD_SECRET не задан в .env" };
   }
 
   const form = new URLSearchParams({ secret: FRONTPAD_SECRET, ...fields });
+  const url = `https://app.frontpad.ru/api/index.php?${method}`;
 
   try {
-    const res = await fetch(`${FRONTPAD_BASE}?${method}`, {
+    const res = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
@@ -87,9 +89,15 @@ async function postFrontPad(
 
     const raw = (await res.json().catch(() => null)) as FrontPadApiResponse | null;
     if (!raw || raw.result !== "success") {
-      const code = raw?.error || "unknown";
+      // FrontPad иногда кладёт код в error, иногда в status
+      const code = String(
+        raw?.error ||
+          (raw?.result === "error" ? raw?.status : "") ||
+          "unknown",
+      );
       return {
         ok: false,
+        code,
         message: ERROR_MESSAGES[code] || `Ошибка FrontPad: ${code}`,
         raw,
       };
@@ -331,20 +339,64 @@ export async function sendOrderToFrontPad(
 export async function fetchFrontPadStatus(params: {
   orderId?: string;
   clientPhone?: string;
-}): Promise<{ ok: boolean; status?: string; message?: string; raw?: unknown }> {
-  const fields: Record<string, string> = {};
-  if (params.orderId) fields.order_id = params.orderId;
-  else if (params.clientPhone) {
-    fields.client_phone = normalizePhone(params.clientPhone);
-  } else {
-    return { ok: false, message: "Нужен orderId или clientPhone" };
+}): Promise<{
+  ok: boolean;
+  status?: string;
+  message?: string;
+  raw?: unknown;
+  code?: string;
+}> {
+  const orderId = params.orderId?.trim();
+  const phone = params.clientPhone?.trim();
+
+  // Stub / нечисловой id — в FrontPad не существует
+  if (orderId && (/^VC-/i.test(orderId) || !/^\d+$/.test(orderId))) {
+    return {
+      ok: true,
+      status: "Принят",
+      message: "Локальный заказ (без live-id FrontPad)",
+    };
   }
 
+  const fields: Record<string, string> = {};
+  if (orderId) fields.order_id = orderId;
+  else if (phone) fields.client_phone = normalizePhone(phone);
+  else return { ok: false, message: "Нужен orderId или clientPhone" };
+
   const res = await postFrontPad("get_status", fields);
-  if (!res.ok) return res;
+  if (!res.ok) {
+    // Запасной вариант: по телефону, если id не сработал
+    if (orderId && phone && res.code !== "requests_limit") {
+      const byPhone = await postFrontPad("get_status", {
+        client_phone: normalizePhone(phone),
+      });
+      if (byPhone.ok) {
+        return {
+          ok: true,
+          status:
+            byPhone.raw.status !== undefined
+              ? String(byPhone.raw.status)
+              : "Принят",
+          raw: byPhone.raw,
+        };
+      }
+    }
+
+    if (res.code === "invalid_method") {
+      return {
+        ok: true,
+        status: "Принят в FrontPad",
+        message:
+          "Автостатус временно недоступен. Обновления приходят по webhook или смотрите в программе FrontPad.",
+      };
+    }
+
+    return res;
+  }
+
   return {
     ok: true,
-    status: res.raw.status !== undefined ? String(res.raw.status) : undefined,
+    status: res.raw.status !== undefined ? String(res.raw.status) : "Принят",
     raw: res.raw,
   };
 }

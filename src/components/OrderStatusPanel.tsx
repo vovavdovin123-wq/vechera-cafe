@@ -9,6 +9,7 @@ export type TrackedOrder = {
   orderId: string;
   orderNumber?: string;
   phone?: string;
+  mode?: "live" | "stub";
   at: string;
 };
 
@@ -38,7 +39,7 @@ export function clearTrackedOrder() {
   }
 }
 
-/** Статус заказа из FrontPad — только по кнопке / редкий опрос, без циклов. */
+/** Статус заказа — webhook / FrontPad / локально. Без циклов. */
 export function OrderStatusPanel({
   order,
   onDismiss,
@@ -47,29 +48,33 @@ export function OrderStatusPanel({
   onDismiss?: () => void;
 }) {
   const [status, setStatus] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
+  const [hint, setHint] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const refresh = useCallback(async () => {
     setLoading(true);
-    setMessage(null);
+    setHint(null);
     try {
       const qs = new URLSearchParams();
       if (order.orderId) qs.set("orderId", order.orderId);
-      else if (order.phone) qs.set("phone", order.phone);
+      if (order.phone) qs.set("phone", order.phone);
       const res = await fetch(`/api/frontpad/status?${qs}`);
       const data = (await res.json()) as {
         ok: boolean;
         status?: string;
         message?: string;
+        source?: string;
       };
       if (!res.ok || !data.ok) {
-        setMessage(data.message || "Не удалось получить статус");
+        setStatus("Принят");
+        setHint(data.message || "Не удалось обновить статус из FrontPad");
         return;
       }
       setStatus(data.status || "Принят");
+      if (data.message) setHint(data.message);
     } catch {
-      setMessage("Сеть недоступна");
+      setStatus("Принят");
+      setHint("Сеть недоступна — статус обновится позже");
     } finally {
       setLoading(false);
     }
@@ -79,6 +84,12 @@ export function OrderStatusPanel({
     void refresh();
   }, [refresh]);
 
+  const title = order.orderNumber
+    ? `№${order.orderNumber}`
+    : /^\d+$/.test(order.orderId)
+      ? `ID ${order.orderId}`
+      : "Ваш заказ";
+
   return (
     <div className="rounded-2xl border border-[var(--gold)]/40 bg-[var(--gold-soft)]/40 p-4">
       <div className="flex items-start justify-between gap-2">
@@ -87,9 +98,7 @@ export function OrderStatusPanel({
             Статус заказа
           </p>
           <p className="mt-1 font-display text-lg font-semibold text-ink">
-            {order.orderNumber
-              ? `№${order.orderNumber}`
-              : `ID ${order.orderId}`}
+            {title}
           </p>
         </div>
         <button
@@ -109,9 +118,9 @@ export function OrderStatusPanel({
       <p className="mt-3 text-base font-medium text-ink">
         {status ?? (loading ? "Загружаем…" : "—")}
       </p>
-      {message && <p className="mt-1 text-xs text-danger">{message}</p>}
+      {hint && <p className="mt-1 text-xs text-ink-muted">{hint}</p>}
       <p className="mt-2 text-xs text-ink-muted">
-        Статус обновляется из FrontPad. Нажмите кнопку обновления.
+        Статус подтягивается из FrontPad. Нажмите обновление при необходимости.
       </p>
       {onDismiss && (
         <button

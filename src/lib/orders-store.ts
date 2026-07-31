@@ -71,6 +71,13 @@ export async function updateOrderByFrontPadId(
   return list[idx];
 }
 
+export async function findOrderByFrontPadId(
+  frontpadOrderId: string,
+): Promise<StoredOrder | null> {
+  const list = await readOrders();
+  return list.find((o) => o.orderId === String(frontpadOrderId)) ?? null;
+}
+
 export async function deleteOrder(id: string): Promise<boolean> {
   const list = await readOrders();
   const next = list.filter((item) => item.id !== id);
