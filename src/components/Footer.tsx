@@ -17,7 +17,7 @@ export function Footer() {
         <div className="flex flex-col gap-3">
           <BrandLogo variant="light" href="" size="sm" />
           <p className="text-sm text-white/55 sm:text-base">
-            {year} · Вечера на сквере
+            {year} · Вечера
           </p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-5">

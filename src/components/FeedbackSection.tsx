@@ -5,19 +5,6 @@ import { Headset, Loader2, Phone, Send } from "lucide-react";
 import { useFranchise } from "@/context/FranchiseContext";
 import { PAGE } from "@/lib/layout";
 
-function TelegramIcon({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden
-    >
-      <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.458.02.702-.15 1.568-.828 5.36-1.17 7.12-.144.742-.426 1.99-.8 1.99-.337.01-.586-.3-.917-.59-.52-.46-1.594-1.403-2.248-1.96-.914-.78-.32-1.21.203-1.91.137-.184 2.504-2.31 2.55-2.51.006-.025.014-.117-.043-.166s-.15-.03-.214-.018c-.093.024-1.555.99-4.39 2.91-.415.285-.79.424-1.125.417-.37-.008-1.082-.209-1.61-.38-.65-.21-1.166-.32-1.122-.677.023-.186.35-.377.964-.573 3.78-1.647 6.3-2.733 7.566-3.26 3.605-1.5 4.355-1.76 4.846-1.77z" />
-    </svg>
-  );
-}
-
 function InstagramIcon({ className = "" }: { className?: string }) {
   return (
     <svg
@@ -38,16 +25,16 @@ function InstagramIcon({ className = "" }: { className?: string }) {
 }
 
 export function FeedbackSection() {
-  const { franchise, franchiseId } = useFranchise();
+  const { franchiseId } = useFranchise();
   const [message, setMessage] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
 
-  const telegramUrl = franchise.telegram || "https://t.me/vechera_cafe";
-  const instagramUrl = "https://instagram.com/vechera.cafe";
-  const phoneDisplay = franchise.phone || "+7 (928) 555-12-34";
+  const instagramUrl =
+    "https://www.instagram.com/vechera_cafe?igsh=MXZvazd4aG4zNW1jaA==";
+  const phoneDisplay = "+7 918 705-01-90";
   const phoneHref = `tel:${phoneDisplay.replace(/[^\d+]/g, "")}`;
 
   async function onSubmit(e: FormEvent) {
@@ -97,16 +84,6 @@ export function FeedbackSection() {
           >
             <Phone className="h-4 w-4 shrink-0 text-[var(--gold)]" />
             <span className="truncate">{phoneDisplay}</span>
-          </a>
-          <a
-            href={telegramUrl}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Telegram"
-            className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-[var(--white)] px-3.5 py-2 text-sm text-ink transition hover:border-[var(--gold)] sm:px-4 sm:py-2.5 sm:text-base"
-          >
-            <TelegramIcon className="h-4 w-4 text-[var(--gold)]" />
-            Telegram
           </a>
           <a
             href={instagramUrl}

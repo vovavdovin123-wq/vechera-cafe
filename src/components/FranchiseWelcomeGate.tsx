@@ -54,10 +54,10 @@ export function FranchiseWelcomeGate() {
             id="franchise-pick-title"
             className="mt-6 font-display text-3xl font-semibold tracking-tight text-white sm:text-4xl"
           >
-            Куда заказать?
+            Откуда заказать?
           </h1>
           <p className="mx-auto mt-3 max-w-sm text-base leading-relaxed text-white/70">
-            Выберите точку — меню, адрес и доставка зависят от неё
+            Выберите точку — меню, адрес и доставка подстроятся под неё
           </p>
         </div>
 

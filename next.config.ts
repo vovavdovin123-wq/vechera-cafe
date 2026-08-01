@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
         source: "/uploads/:name*",
         destination: "/api/uploads/:name*",
       },
+      {
+        source: "/favicon.ico",
+        destination: "/favicon-32.png",
+      },
     ];
   },
 };

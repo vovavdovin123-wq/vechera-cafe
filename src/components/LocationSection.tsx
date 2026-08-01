@@ -15,9 +15,6 @@ export function LocationSection() {
           <MapPin className="h-7 w-7 shrink-0 text-[var(--gold)] sm:h-8 sm:w-8" />
           Где мы
         </h2>
-        <p className="mt-2 max-w-xl text-base text-ink-muted sm:text-lg">
-          Мы на сквере — зайдите с улицы или откройте маршрут на карте.
-        </p>
         <div className="mt-3 flex flex-col gap-2 text-sm text-ink-muted sm:flex-row sm:flex-wrap sm:gap-4 sm:text-base">
           <span className="inline-flex items-center gap-2">
             <Clock className="h-4 w-4 shrink-0 text-[var(--gold)]" />

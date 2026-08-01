@@ -7,7 +7,7 @@ export const FRANCHISES: Record<FranchiseId, Franchise> = {
     address:
       "улица Генерала Плиева 22, Республика Северная Осетия — Алания, Правобережный район, Беслан",
     shortAddress: "Беслан, центр",
-    hours: "12:00 — 23:00",
+    hours: "11:00 — 22:30",
     phone: "+7 (928) 000-11-22",
     telegram: "https://t.me/vechera_center",
     // Яндекс: ул. Генерала Плиева, 22 — 43.187266, 44.540511
@@ -20,7 +20,7 @@ export const FRANCHISES: Record<FranchiseId, Franchise> = {
     address:
       "Республика Северная Осетия — Алания, Правобережный район, Ипподром",
     shortAddress: "Беслан, Ипподром",
-    hours: "12:00 — 00:00",
+    hours: "10:00 — 23:00",
     phone: "+7 (928) 000-33-44",
     telegram: "https://t.me/vechera_hippodrome",
     coords: [44.5685, 43.1798],
