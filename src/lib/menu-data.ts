@@ -2,19 +2,29 @@ import type { FranchiseId, MenuCategory, MenuItem } from "./types";
 
 export const CATEGORY_LABELS: Record<MenuCategory, string> = {
   sandwiches: "Сэндвичи",
-  burgers: "Гамбургеры",
+  burgers: "Бургеры",
+  panini: "Панини",
+  fryBoxes: "Фри-боксы",
+  waffles: "Венские вафли",
+  salads: "Салаты",
+  fried: "Фритюр",
+  sauces: "Соусы",
   rolls: "Роллы",
-  pizzas: "Пиццы",
-  waffles: "Вафли",
+  pizzas: "Пицца",
   coffeeShop: "Кофейня",
 };
 
 export const CATEGORY_ORDER: MenuCategory[] = [
   "sandwiches",
   "burgers",
+  "panini",
+  "fryBoxes",
+  "waffles",
+  "salads",
+  "fried",
+  "sauces",
   "rolls",
   "pizzas",
-  "waffles",
   "coffeeShop",
 ];
 
@@ -24,323 +34,147 @@ const DISH_IMAGE = "/menu/dish.png";
 export const CATEGORY_IMAGES: Record<MenuCategory, string> = {
   sandwiches: DISH_IMAGE,
   burgers: DISH_IMAGE,
+  panini: DISH_IMAGE,
+  fryBoxes: DISH_IMAGE,
+  waffles: DISH_IMAGE,
+  salads: DISH_IMAGE,
+  fried: DISH_IMAGE,
+  sauces: DISH_IMAGE,
   rolls: DISH_IMAGE,
   pizzas: DISH_IMAGE,
-  waffles: DISH_IMAGE,
   coffeeShop: DISH_IMAGE,
 };
 
+const CATEGORY_ID: Record<MenuCategory, string> = {
+  sandwiches: "sw",
+  burgers: "bg",
+  panini: "pn",
+  fryBoxes: "fb",
+  waffles: "wf",
+  salads: "sl",
+  fried: "fr",
+  sauces: "sc",
+  rolls: "rl",
+  pizzas: "pz",
+  coffeeShop: "cs",
+};
+
 function item(
-  partial: Omit<MenuItem, "image" | "available"> & { image?: string },
+  partial: Omit<MenuItem, "image" | "available" | "description"> & {
+    image?: string;
+    description?: string;
+  },
 ): MenuItem {
   return {
     ...partial,
+    description: partial.description ?? "Состав уточняется",
     image: partial.image ?? CATEGORY_IMAGES[partial.category],
     available: true,
   };
 }
 
-const centerMenu: MenuItem[] = [
-  item({
-    id: "c-s-1",
-    name: "Классический сэндвич",
-    description: "Ветчина, сыр, свежие овощи",
-    price: 320,
-    category: "sandwiches",
-    frontpadArticle: "10001",
-  }),
-  item({
-    id: "c-s-2",
-    name: "Куриный сэндвич",
-    description: "Курица, салат, фирменный соус",
-    price: 350,
-    category: "sandwiches",
-    frontpadArticle: "10002",
-  }),
-  item({
-    id: "c-s-3",
-    name: "Сэндвич с тунцом",
-    description: "Тунец, яйцо, зелёный лук",
-    price: 380,
-    category: "sandwiches",
-    frontpadArticle: "10003",
-  }),
-  item({
-    id: "c-b-1",
-    name: "Чизбургер",
-    description: "Говядина, чеддер, соус",
-    price: 420,
-    category: "burgers",
-    frontpadArticle: "10004",
-  }),
-  item({
-    id: "c-b-2",
-    name: "Чикенбургер",
-    description: "Куриная котлета, салат, майонез",
-    price: 390,
-    category: "burgers",
-    frontpadArticle: "10005",
-  }),
-  item({
-    id: "c-r-1",
-    name: "Филадельфия",
-    description: "Лосось, сыр, огурец",
-    price: 520,
-    category: "rolls",
-    frontpadArticle: "10006",
-  }),
-  item({
-    id: "c-r-2",
-    name: "Калифорния",
-    description: "Краб, авокадо, икра тобико",
-    price: 480,
-    category: "rolls",
-    frontpadArticle: "10007",
-  }),
-  item({
-    id: "c-p-1",
-    name: "Маргарита",
-    description: "Томаты, моцарелла, базилик",
-    price: 450,
-    category: "pizzas",
-    frontpadArticle: "10008",
-  }),
-  item({
-    id: "c-p-2",
-    name: "Пепперони",
-    description: "Колбаса пепперони, сыр",
-    price: 520,
-    category: "pizzas",
-    frontpadArticle: "10009",
-  }),
-  item({
-    id: "c-w-1",
-    name: "Вафля с нутеллой",
-    description: "Вафля, нутелла, банан",
-    price: 280,
-    category: "waffles",
-    frontpadArticle: "10010",
-  }),
-  item({
-    id: "c-w-2",
-    name: "Вафля с ягодами",
-    description: "Свежие ягоды, сливки",
-    price: 310,
-    category: "waffles",
-    frontpadArticle: "10011",
-  }),
-  item({
-    id: "c-w-3",
-    name: "Вафля карамель",
-    description: "Карамель, орехи, мороженое",
-    price: 340,
-    category: "waffles",
-    frontpadArticle: "10012",
-  }),
+/** Позиции с фото меню (обе точки) */
+const MENU_CATALOG: Array<{
+  name: string;
+  price: number;
+  category: MenuCategory;
+}> = [
+  // Сэндвичи
+  { name: "Сендвич с курицей", price: 290, category: "sandwiches" },
+  { name: "Двойной с курицей", price: 370, category: "sandwiches" },
+  { name: "Сендвич с говядиной", price: 350, category: "sandwiches" },
+  { name: "Двойной с говядиной", price: 420, category: "sandwiches" },
+  { name: "Смешанный", price: 390, category: "sandwiches" },
+  { name: "Сендвич с семгой", price: 300, category: "sandwiches" },
+  // Бургеры
+  { name: "Чизбургер", price: 330, category: "burgers" },
+  { name: "Чикен бургер", price: 270, category: "burgers" },
+  { name: "«Бейрут» бургер", price: 350, category: "burgers" },
+  // Панини
+  { name: "Панини с курицей", price: 280, category: "panini" },
+  { name: "Панини с ветчиной", price: 300, category: "panini" },
+  // Фри-боксы
+  { name: "Баварский", price: 350, category: "fryBoxes" },
+  { name: "Чикен", price: 300, category: "fryBoxes" },
+  { name: "Деревенский", price: 250, category: "fryBoxes" },
+  // Венские вафли
+  { name: "Вафля с нутеллой", price: 200, category: "waffles" },
+  { name: "Вафля банан-нутелла", price: 250, category: "waffles" },
+  { name: "Вафля клубника нутелла", price: 300, category: "waffles" },
+  { name: "Вафля банан-клубника", price: 270, category: "waffles" },
+  { name: "Доп. мороженое", price: 50, category: "waffles" },
+  // Салаты
+  { name: "Цезарь с курицей", price: 270, category: "salads" },
+  { name: "Цезарь с креветками", price: 300, category: "salads" },
+  { name: "Свежий", price: 230, category: "salads" },
+  { name: "Греческий", price: 250, category: "salads" },
+  // Фритюр
+  { name: "Картофель фри", price: 180, category: "fried" },
+  { name: "Наггетсы", price: 200, category: "fried" },
+  { name: "Стрипсы", price: 190, category: "fried" },
+  { name: "Сырные палочки", price: 180, category: "fried" },
+  // Соусы
+  { name: "Сырный", price: 40, category: "sauces" },
+  { name: "Томатный", price: 40, category: "sauces" },
+  { name: "Основной", price: 40, category: "sauces" },
+  { name: "Доп. Халапеньо", price: 40, category: "sauces" },
+  // Роллы
+  { name: "Филадельфия", price: 370, category: "rolls" },
+  { name: "Филадельфия люкс", price: 380, category: "rolls" },
+  { name: "Филадельфия с креветкой", price: 420, category: "rolls" },
+  { name: "Запеченная Филадельфия", price: 400, category: "rolls" },
+  { name: "Филадельфия с угрем", price: 390, category: "rolls" },
+  { name: "Калифорния с семгой", price: 370, category: "rolls" },
+  { name: "Калифорния с креветкой", price: 370, category: "rolls" },
+  { name: "Калифорния с крабом", price: 330, category: "rolls" },
+  { name: "Калифорния с угрем", price: 390, category: "rolls" },
+  { name: "Жареный с семгой", price: 370, category: "rolls" },
+  { name: "Жареный с креветкой", price: 370, category: "rolls" },
+  { name: "Жареный с крабом", price: 330, category: "rolls" },
+  { name: "Жареный с угрем", price: 390, category: "rolls" },
+  { name: "Жареный Цезарь", price: 340, category: "rolls" },
+  { name: "Спайси с семгой", price: 350, category: "rolls" },
+  { name: "Спайси с креветкой", price: 350, category: "rolls" },
+  { name: "Спайси с крабом", price: 330, category: "rolls" },
+  { name: "Спайси с угрем", price: 370, category: "rolls" },
+  { name: "Запеченный краб", price: 350, category: "rolls" },
+  { name: "Запеченный с креветкой", price: 370, category: "rolls" },
+  { name: "Запеченный с семгой", price: 370, category: "rolls" },
+  { name: "Запеченный с угрем", price: 400, category: "rolls" },
+  { name: "Онигири с семгой", price: 380, category: "rolls" },
+  { name: "Онигири с креветкой", price: 370, category: "rolls" },
+  { name: "Онигири с крабом", price: 350, category: "rolls" },
+  { name: "Онигири цезарь", price: 320, category: "rolls" },
+  { name: "Онигири с угрем", price: 430, category: "rolls" },
+  // Пицца
+  { name: "Маргарита", price: 470, category: "pizzas" },
+  { name: "Пепперони", price: 530, category: "pizzas" },
+  { name: "5 сыров", price: 530, category: "pizzas" },
+  { name: "Ветчина-грибы", price: 550, category: "pizzas" },
+  { name: "Цезарь", price: 480, category: "pizzas" },
 ];
 
-const hippodromeMenu: MenuItem[] = [
-  item({
-    id: "h-s-1",
-    name: "Сэндвич BBQ",
-    description: "Говядина, BBQ-соус, лук",
-    price: 360,
-    category: "sandwiches",
-    frontpadArticle: "20001",
-  }),
-  item({
-    id: "h-s-2",
-    name: "Вегетарианский",
-    description: "Хумус, овощи гриль, зелень",
-    price: 300,
-    category: "sandwiches",
-    frontpadArticle: "20002",
-  }),
-  item({
-    id: "h-b-1",
-    name: "Дабл бургер",
-    description: "Две котлеты, двойной сыр",
-    price: 560,
-    category: "burgers",
-    frontpadArticle: "20003",
-  }),
-  item({
-    id: "h-b-2",
-    name: "Острый бургер",
-    description: "Халапеньо, острый соус",
-    price: 470,
-    category: "burgers",
-    frontpadArticle: "20004",
-  }),
-  item({
-    id: "h-b-3",
-    name: "Классик бургер",
-    description: "Говядина, огурец, кетчуп",
-    price: 410,
-    category: "burgers",
-    frontpadArticle: "20005",
-  }),
-  item({
-    id: "h-r-1",
-    name: "Дракон",
-    description: "Угорь, авокадо, унаги",
-    price: 590,
-    category: "rolls",
-    frontpadArticle: "20006",
-  }),
-  item({
-    id: "h-r-2",
-    name: "Спайси ролл",
-    description: "Лосось, спайси-майонез",
-    price: 510,
-    category: "rolls",
-    frontpadArticle: "20007",
-  }),
-  item({
-    id: "h-r-3",
-    name: "Овощной ролл",
-    description: "Огурец, авокадо, перец",
-    price: 350,
-    category: "rolls",
-    frontpadArticle: "20008",
-  }),
-  item({
-    id: "h-p-1",
-    name: "Четыре сыра",
-    description: "Моцарелла, дорблю, пармезан, чеддер",
-    price: 580,
-    category: "pizzas",
-    frontpadArticle: "20009",
-  }),
-  item({
-    id: "h-p-2",
-    name: "Мясная",
-    description: "Салями, бекон, ветчина",
-    price: 620,
-    category: "pizzas",
-    frontpadArticle: "20010",
-  }),
-  item({
-    id: "h-w-1",
-    name: "Вафля шоколад",
-    description: "Тёмный шоколад, стружка",
-    price: 290,
-    category: "waffles",
-    frontpadArticle: "20011",
-  }),
-  item({
-    id: "h-w-2",
-    name: "Вафля мёд-орех",
-    description: "Мёд, грецкий орех, сливки",
-    price: 320,
-    category: "waffles",
-    frontpadArticle: "20012",
-  }),
-];
+function buildFranchiseMenu(
+  prefix: "c" | "h",
+  articleBase: number,
+): MenuItem[] {
+  const counters: Partial<Record<MenuCategory, number>> = {};
 
-const centerCoffeeItems: MenuItem[] = [
-  item({
-    id: "c-cs-1",
-    name: "Эспрессо",
-    description: "Двойной шот",
-    price: 150,
-    category: "coffeeShop",
-    frontpadArticle: "30001",
-  }),
-  item({
-    id: "c-cs-2",
-    name: "Американо",
-    description: "Эспрессо, вода",
-    price: 180,
-    category: "coffeeShop",
-    frontpadArticle: "30002",
-  }),
-  item({
-    id: "c-cs-3",
-    name: "Капучино",
-    description: "Эспрессо, молоко, пенка",
-    price: 220,
-    category: "coffeeShop",
-    frontpadArticle: "30003",
-  }),
-  item({
-    id: "c-cs-4",
-    name: "Латте",
-    description: "Эспрессо, молоко",
-    price: 240,
-    category: "coffeeShop",
-    frontpadArticle: "30004",
-  }),
-  item({
-    id: "c-cs-5",
-    name: "Чёрный чай",
-    description: "Классический листовой",
-    price: 160,
-    category: "coffeeShop",
-    frontpadArticle: "30005",
-  }),
-  item({
-    id: "c-cs-6",
-    name: "Айс-латте",
-    description: "Холодный латте со льдом",
-    price: 260,
-    category: "coffeeShop",
-    frontpadArticle: "30007",
-  }),
-];
+  return MENU_CATALOG.map((entry, index) => {
+    const next = (counters[entry.category] ?? 0) + 1;
+    counters[entry.category] = next;
 
-const hippodromeCoffeeItems: MenuItem[] = [
-  item({
-    id: "h-cs-1",
-    name: "Эспрессо",
-    description: "Двойной шот",
-    price: 150,
-    category: "coffeeShop",
-    frontpadArticle: "40001",
-  }),
-  item({
-    id: "h-cs-2",
-    name: "Американо",
-    description: "Эспрессо, вода",
-    price: 180,
-    category: "coffeeShop",
-    frontpadArticle: "40002",
-  }),
-  item({
-    id: "h-cs-3",
-    name: "Флэт уайт",
-    description: "Двойной эспрессо, молоко",
-    price: 250,
-    category: "coffeeShop",
-    frontpadArticle: "40003",
-  }),
-  item({
-    id: "h-cs-4",
-    name: "Раф",
-    description: "Эспрессо, сливки, ваниль",
-    price: 280,
-    category: "coffeeShop",
-    frontpadArticle: "40004",
-  }),
-  item({
-    id: "h-cs-5",
-    name: "Чай облепиховый",
-    description: "Облепиха, мёд",
-    price: 220,
-    category: "coffeeShop",
-    frontpadArticle: "40005",
-  }),
-  item({
-    id: "h-cs-6",
-    name: "Милкшейк",
-    description: "Молоко, мороженое, сироп",
-    price: 290,
-    category: "coffeeShop",
-    frontpadArticle: "40008",
-  }),
-];
+    return item({
+      id: `${prefix}-${CATEGORY_ID[entry.category]}-${next}`,
+      name: entry.name,
+      price: entry.price,
+      category: entry.category,
+      frontpadArticle: String(articleBase + index + 1),
+    });
+  });
+}
 
 export const INITIAL_MENUS: Record<FranchiseId, MenuItem[]> = {
-  center: [...centerMenu, ...centerCoffeeItems],
-  hippodrome: [...hippodromeMenu, ...hippodromeCoffeeItems],
+  center: buildFranchiseMenu("c", 10000),
+  hippodrome: buildFranchiseMenu("h", 20000),
 };

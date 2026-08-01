@@ -3,9 +3,14 @@ export type FranchiseId = "center" | "hippodrome";
 export type MenuCategory =
   | "sandwiches"
   | "burgers"
+  | "panini"
+  | "fryBoxes"
+  | "waffles"
+  | "salads"
+  | "fried"
+  | "sauces"
   | "rolls"
   | "pizzas"
-  | "waffles"
   | "coffeeShop";
 
 export interface MenuItem {

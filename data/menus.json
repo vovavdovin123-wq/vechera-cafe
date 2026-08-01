@@ -1,0 +1,1266 @@
+{
+  "center": [
+    {
+      "id": "c-sw-1",
+      "name": "Сендвич с курицей",
+      "price": 290,
+      "category": "sandwiches",
+      "frontpadArticle": "10001",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-sw-2",
+      "name": "Двойной с курицей",
+      "price": 370,
+      "category": "sandwiches",
+      "frontpadArticle": "10002",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-sw-3",
+      "name": "Сендвич с говядиной",
+      "price": 350,
+      "category": "sandwiches",
+      "frontpadArticle": "10003",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-sw-4",
+      "name": "Двойной с говядиной",
+      "price": 420,
+      "category": "sandwiches",
+      "frontpadArticle": "10004",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-sw-5",
+      "name": "Смешанный",
+      "price": 390,
+      "category": "sandwiches",
+      "frontpadArticle": "10005",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-sw-6",
+      "name": "Сендвич с семгой",
+      "price": 300,
+      "category": "sandwiches",
+      "frontpadArticle": "10006",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-bg-1",
+      "name": "Чизбургер",
+      "price": 330,
+      "category": "burgers",
+      "frontpadArticle": "10007",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-bg-2",
+      "name": "Чикен бургер",
+      "price": 270,
+      "category": "burgers",
+      "frontpadArticle": "10008",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-bg-3",
+      "name": "«Бейрут» бургер",
+      "price": 350,
+      "category": "burgers",
+      "frontpadArticle": "10009",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-pn-1",
+      "name": "Панини с курицей",
+      "price": 280,
+      "category": "panini",
+      "frontpadArticle": "10010",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-pn-2",
+      "name": "Панини с ветчиной",
+      "price": 300,
+      "category": "panini",
+      "frontpadArticle": "10011",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-fb-1",
+      "name": "Баварский",
+      "price": 350,
+      "category": "fryBoxes",
+      "frontpadArticle": "10012",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-fb-2",
+      "name": "Чикен",
+      "price": 300,
+      "category": "fryBoxes",
+      "frontpadArticle": "10013",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-fb-3",
+      "name": "Деревенский",
+      "price": 250,
+      "category": "fryBoxes",
+      "frontpadArticle": "10014",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-wf-1",
+      "name": "Вафля с нутеллой",
+      "price": 200,
+      "category": "waffles",
+      "frontpadArticle": "10015",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-wf-2",
+      "name": "Вафля банан-нутелла",
+      "price": 250,
+      "category": "waffles",
+      "frontpadArticle": "10016",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-wf-3",
+      "name": "Вафля клубника нутелла",
+      "price": 300,
+      "category": "waffles",
+      "frontpadArticle": "10017",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-wf-4",
+      "name": "Вафля банан-клубника",
+      "price": 270,
+      "category": "waffles",
+      "frontpadArticle": "10018",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-wf-5",
+      "name": "Доп. мороженое",
+      "price": 50,
+      "category": "waffles",
+      "frontpadArticle": "10019",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-sl-1",
+      "name": "Цезарь с курицей",
+      "price": 270,
+      "category": "salads",
+      "frontpadArticle": "10020",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-sl-2",
+      "name": "Цезарь с креветками",
+      "price": 300,
+      "category": "salads",
+      "frontpadArticle": "10021",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-sl-3",
+      "name": "Свежий",
+      "price": 230,
+      "category": "salads",
+      "frontpadArticle": "10022",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-sl-4",
+      "name": "Греческий",
+      "price": 250,
+      "category": "salads",
+      "frontpadArticle": "10023",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-fr-1",
+      "name": "Картофель фри",
+      "price": 180,
+      "category": "fried",
+      "frontpadArticle": "10024",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-fr-2",
+      "name": "Наггетсы",
+      "price": 200,
+      "category": "fried",
+      "frontpadArticle": "10025",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-fr-3",
+      "name": "Стрипсы",
+      "price": 190,
+      "category": "fried",
+      "frontpadArticle": "10026",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-fr-4",
+      "name": "Сырные палочки",
+      "price": 180,
+      "category": "fried",
+      "frontpadArticle": "10027",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-sc-1",
+      "name": "Сырный",
+      "price": 40,
+      "category": "sauces",
+      "frontpadArticle": "10028",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-sc-2",
+      "name": "Томатный",
+      "price": 40,
+      "category": "sauces",
+      "frontpadArticle": "10029",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-sc-3",
+      "name": "Основной",
+      "price": 40,
+      "category": "sauces",
+      "frontpadArticle": "10030",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-sc-4",
+      "name": "Доп. Халапеньо",
+      "price": 40,
+      "category": "sauces",
+      "frontpadArticle": "10031",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-1",
+      "name": "Филадельфия",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "10032",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-2",
+      "name": "Филадельфия люкс",
+      "price": 380,
+      "category": "rolls",
+      "frontpadArticle": "10033",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-3",
+      "name": "Филадельфия с креветкой",
+      "price": 420,
+      "category": "rolls",
+      "frontpadArticle": "10034",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-4",
+      "name": "Запеченная Филадельфия",
+      "price": 400,
+      "category": "rolls",
+      "frontpadArticle": "10035",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-5",
+      "name": "Филадельфия с угрем",
+      "price": 390,
+      "category": "rolls",
+      "frontpadArticle": "10036",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-6",
+      "name": "Калифорния с семгой",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "10037",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-7",
+      "name": "Калифорния с креветкой",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "10038",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-8",
+      "name": "Калифорния с крабом",
+      "price": 330,
+      "category": "rolls",
+      "frontpadArticle": "10039",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-9",
+      "name": "Калифорния с угрем",
+      "price": 390,
+      "category": "rolls",
+      "frontpadArticle": "10040",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-10",
+      "name": "Жареный с семгой",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "10041",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-11",
+      "name": "Жареный с креветкой",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "10042",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-12",
+      "name": "Жареный с крабом",
+      "price": 330,
+      "category": "rolls",
+      "frontpadArticle": "10043",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-13",
+      "name": "Жареный с угрем",
+      "price": 390,
+      "category": "rolls",
+      "frontpadArticle": "10044",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-14",
+      "name": "Жареный Цезарь",
+      "price": 340,
+      "category": "rolls",
+      "frontpadArticle": "10045",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-15",
+      "name": "Спайси с семгой",
+      "price": 350,
+      "category": "rolls",
+      "frontpadArticle": "10046",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-16",
+      "name": "Спайси с креветкой",
+      "price": 350,
+      "category": "rolls",
+      "frontpadArticle": "10047",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-17",
+      "name": "Спайси с крабом",
+      "price": 330,
+      "category": "rolls",
+      "frontpadArticle": "10048",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-18",
+      "name": "Спайси с угрем",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "10049",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-19",
+      "name": "Запеченный краб",
+      "price": 350,
+      "category": "rolls",
+      "frontpadArticle": "10050",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-20",
+      "name": "Запеченный с креветкой",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "10051",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-21",
+      "name": "Запеченный с семгой",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "10052",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-22",
+      "name": "Запеченный с угрем",
+      "price": 400,
+      "category": "rolls",
+      "frontpadArticle": "10053",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-23",
+      "name": "Онигири с семгой",
+      "price": 380,
+      "category": "rolls",
+      "frontpadArticle": "10054",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-24",
+      "name": "Онигири с креветкой",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "10055",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-25",
+      "name": "Онигири с крабом",
+      "price": 350,
+      "category": "rolls",
+      "frontpadArticle": "10056",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-26",
+      "name": "Онигири цезарь",
+      "price": 320,
+      "category": "rolls",
+      "frontpadArticle": "10057",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-rl-27",
+      "name": "Онигири с угрем",
+      "price": 430,
+      "category": "rolls",
+      "frontpadArticle": "10058",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-pz-1",
+      "name": "Маргарита",
+      "price": 470,
+      "category": "pizzas",
+      "frontpadArticle": "10059",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-pz-2",
+      "name": "Пепперони",
+      "price": 530,
+      "category": "pizzas",
+      "frontpadArticle": "10060",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-pz-3",
+      "name": "5 сыров",
+      "price": 530,
+      "category": "pizzas",
+      "frontpadArticle": "10061",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-pz-4",
+      "name": "Ветчина-грибы",
+      "price": 550,
+      "category": "pizzas",
+      "frontpadArticle": "10062",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "c-pz-5",
+      "name": "Цезарь",
+      "price": 480,
+      "category": "pizzas",
+      "frontpadArticle": "10063",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    }
+  ],
+  "hippodrome": [
+    {
+      "id": "h-sw-1",
+      "name": "Сендвич с курицей",
+      "price": 290,
+      "category": "sandwiches",
+      "frontpadArticle": "20001",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-sw-2",
+      "name": "Двойной с курицей",
+      "price": 370,
+      "category": "sandwiches",
+      "frontpadArticle": "20002",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-sw-3",
+      "name": "Сендвич с говядиной",
+      "price": 350,
+      "category": "sandwiches",
+      "frontpadArticle": "20003",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-sw-4",
+      "name": "Двойной с говядиной",
+      "price": 420,
+      "category": "sandwiches",
+      "frontpadArticle": "20004",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-sw-5",
+      "name": "Смешанный",
+      "price": 390,
+      "category": "sandwiches",
+      "frontpadArticle": "20005",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-sw-6",
+      "name": "Сендвич с семгой",
+      "price": 300,
+      "category": "sandwiches",
+      "frontpadArticle": "20006",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-bg-1",
+      "name": "Чизбургер",
+      "price": 330,
+      "category": "burgers",
+      "frontpadArticle": "20007",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-bg-2",
+      "name": "Чикен бургер",
+      "price": 270,
+      "category": "burgers",
+      "frontpadArticle": "20008",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-bg-3",
+      "name": "«Бейрут» бургер",
+      "price": 350,
+      "category": "burgers",
+      "frontpadArticle": "20009",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-pn-1",
+      "name": "Панини с курицей",
+      "price": 280,
+      "category": "panini",
+      "frontpadArticle": "20010",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-pn-2",
+      "name": "Панини с ветчиной",
+      "price": 300,
+      "category": "panini",
+      "frontpadArticle": "20011",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-fb-1",
+      "name": "Баварский",
+      "price": 350,
+      "category": "fryBoxes",
+      "frontpadArticle": "20012",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-fb-2",
+      "name": "Чикен",
+      "price": 300,
+      "category": "fryBoxes",
+      "frontpadArticle": "20013",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-fb-3",
+      "name": "Деревенский",
+      "price": 250,
+      "category": "fryBoxes",
+      "frontpadArticle": "20014",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-wf-1",
+      "name": "Вафля с нутеллой",
+      "price": 200,
+      "category": "waffles",
+      "frontpadArticle": "20015",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-wf-2",
+      "name": "Вафля банан-нутелла",
+      "price": 250,
+      "category": "waffles",
+      "frontpadArticle": "20016",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-wf-3",
+      "name": "Вафля клубника нутелла",
+      "price": 300,
+      "category": "waffles",
+      "frontpadArticle": "20017",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-wf-4",
+      "name": "Вафля банан-клубника",
+      "price": 270,
+      "category": "waffles",
+      "frontpadArticle": "20018",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-wf-5",
+      "name": "Доп. мороженое",
+      "price": 50,
+      "category": "waffles",
+      "frontpadArticle": "20019",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-sl-1",
+      "name": "Цезарь с курицей",
+      "price": 270,
+      "category": "salads",
+      "frontpadArticle": "20020",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-sl-2",
+      "name": "Цезарь с креветками",
+      "price": 300,
+      "category": "salads",
+      "frontpadArticle": "20021",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-sl-3",
+      "name": "Свежий",
+      "price": 230,
+      "category": "salads",
+      "frontpadArticle": "20022",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-sl-4",
+      "name": "Греческий",
+      "price": 250,
+      "category": "salads",
+      "frontpadArticle": "20023",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-fr-1",
+      "name": "Картофель фри",
+      "price": 180,
+      "category": "fried",
+      "frontpadArticle": "20024",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-fr-2",
+      "name": "Наггетсы",
+      "price": 200,
+      "category": "fried",
+      "frontpadArticle": "20025",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-fr-3",
+      "name": "Стрипсы",
+      "price": 190,
+      "category": "fried",
+      "frontpadArticle": "20026",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-fr-4",
+      "name": "Сырные палочки",
+      "price": 180,
+      "category": "fried",
+      "frontpadArticle": "20027",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-sc-1",
+      "name": "Сырный",
+      "price": 40,
+      "category": "sauces",
+      "frontpadArticle": "20028",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-sc-2",
+      "name": "Томатный",
+      "price": 40,
+      "category": "sauces",
+      "frontpadArticle": "20029",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-sc-3",
+      "name": "Основной",
+      "price": 40,
+      "category": "sauces",
+      "frontpadArticle": "20030",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-sc-4",
+      "name": "Доп. Халапеньо",
+      "price": 40,
+      "category": "sauces",
+      "frontpadArticle": "20031",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-1",
+      "name": "Филадельфия",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "20032",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-2",
+      "name": "Филадельфия люкс",
+      "price": 380,
+      "category": "rolls",
+      "frontpadArticle": "20033",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-3",
+      "name": "Филадельфия с креветкой",
+      "price": 420,
+      "category": "rolls",
+      "frontpadArticle": "20034",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-4",
+      "name": "Запеченная Филадельфия",
+      "price": 400,
+      "category": "rolls",
+      "frontpadArticle": "20035",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-5",
+      "name": "Филадельфия с угрем",
+      "price": 390,
+      "category": "rolls",
+      "frontpadArticle": "20036",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-6",
+      "name": "Калифорния с семгой",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "20037",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-7",
+      "name": "Калифорния с креветкой",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "20038",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-8",
+      "name": "Калифорния с крабом",
+      "price": 330,
+      "category": "rolls",
+      "frontpadArticle": "20039",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-9",
+      "name": "Калифорния с угрем",
+      "price": 390,
+      "category": "rolls",
+      "frontpadArticle": "20040",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-10",
+      "name": "Жареный с семгой",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "20041",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-11",
+      "name": "Жареный с креветкой",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "20042",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-12",
+      "name": "Жареный с крабом",
+      "price": 330,
+      "category": "rolls",
+      "frontpadArticle": "20043",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-13",
+      "name": "Жареный с угрем",
+      "price": 390,
+      "category": "rolls",
+      "frontpadArticle": "20044",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-14",
+      "name": "Жареный Цезарь",
+      "price": 340,
+      "category": "rolls",
+      "frontpadArticle": "20045",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-15",
+      "name": "Спайси с семгой",
+      "price": 350,
+      "category": "rolls",
+      "frontpadArticle": "20046",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-16",
+      "name": "Спайси с креветкой",
+      "price": 350,
+      "category": "rolls",
+      "frontpadArticle": "20047",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-17",
+      "name": "Спайси с крабом",
+      "price": 330,
+      "category": "rolls",
+      "frontpadArticle": "20048",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-18",
+      "name": "Спайси с угрем",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "20049",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-19",
+      "name": "Запеченный краб",
+      "price": 350,
+      "category": "rolls",
+      "frontpadArticle": "20050",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-20",
+      "name": "Запеченный с креветкой",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "20051",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-21",
+      "name": "Запеченный с семгой",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "20052",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-22",
+      "name": "Запеченный с угрем",
+      "price": 400,
+      "category": "rolls",
+      "frontpadArticle": "20053",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-23",
+      "name": "Онигири с семгой",
+      "price": 380,
+      "category": "rolls",
+      "frontpadArticle": "20054",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-24",
+      "name": "Онигири с креветкой",
+      "price": 370,
+      "category": "rolls",
+      "frontpadArticle": "20055",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-25",
+      "name": "Онигири с крабом",
+      "price": 350,
+      "category": "rolls",
+      "frontpadArticle": "20056",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-26",
+      "name": "Онигири цезарь",
+      "price": 320,
+      "category": "rolls",
+      "frontpadArticle": "20057",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-rl-27",
+      "name": "Онигири с угрем",
+      "price": 430,
+      "category": "rolls",
+      "frontpadArticle": "20058",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-pz-1",
+      "name": "Маргарита",
+      "price": 470,
+      "category": "pizzas",
+      "frontpadArticle": "20059",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-pz-2",
+      "name": "Пепперони",
+      "price": 530,
+      "category": "pizzas",
+      "frontpadArticle": "20060",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-pz-3",
+      "name": "5 сыров",
+      "price": 530,
+      "category": "pizzas",
+      "frontpadArticle": "20061",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-pz-4",
+      "name": "Ветчина-грибы",
+      "price": 550,
+      "category": "pizzas",
+      "frontpadArticle": "20062",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "id": "h-pz-5",
+      "name": "Цезарь",
+      "price": 480,
+      "category": "pizzas",
+      "frontpadArticle": "20063",
+      "description": "Состав уточняется",
+      "image": "/menu/dish.png",
+      "available": true
+    }
+  ]
+}
