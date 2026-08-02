@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Loader2, RefreshCw } from "lucide-react";
-import { formatFrontPadStatus } from "@/lib/frontpad-status";
 
 const STORAGE_KEY = "vechera-last-order";
 
@@ -75,7 +74,7 @@ export function OrderStatusPanel({
         setHint(data.message || "Не удалось обновить статус");
         return;
       }
-      setStatus(formatFrontPadStatus(data.status || "Принят"));
+      setStatus(data.status || "Принят");
       setUpdatedAt(data.updatedAt ?? null);
       if (data.source === "webhook") {
         setHint(null);
