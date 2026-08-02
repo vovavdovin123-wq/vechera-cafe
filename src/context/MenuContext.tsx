@@ -6,7 +6,6 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -15,7 +14,7 @@ import {
   readContentCache,
   writeContentCache,
 } from "@/lib/content-cache";
-import { debounce, fetchContent, saveContent } from "@/lib/content-sync";
+import { fetchContent, saveContent } from "@/lib/content-sync";
 import { CATEGORY_IMAGES, INITIAL_MENUS } from "@/lib/menu-data";
 import type { FranchiseId, MenuItem } from "@/lib/types";
 import { useFranchise } from "./FranchiseContext";
@@ -43,6 +42,9 @@ interface MenuContextValue {
     updated: number;
     skipped: number;
   };
+  /** Явное сохранение на сервер (админка) */
+  saveMenus: () => Promise<boolean>;
+  isDirty: boolean;
   syncStatus: "idle" | "loading" | "saving" | "error";
   /** true после первой загрузки с сервера или из кэша */
   contentReady: boolean;
@@ -139,22 +141,31 @@ export function MenuProvider({ children }: { children: ReactNode }) {
   const [syncStatus, setSyncStatus] = useState<
     "idle" | "loading" | "saving" | "error"
   >("loading");
-  const skipSave = useRef(true);
+  const [savedMenus, setSavedMenus] = useState<Record<
+    FranchiseId,
+    MenuItem[]
+  > | null>(null);
 
-  const persist = useMemo(
-    () =>
-      debounce(async (data: Record<FranchiseId, MenuItem[]>) => {
-        setSyncStatus("saving");
-        const result = await saveContent("/api/content/menus", data);
-        if (result.ok) {
-          writeContentCache(CACHE_MENUS, data);
-          setSyncStatus("idle");
-        } else {
-          setSyncStatus("error");
-        }
-      }, 600),
-    [],
-  );
+  const snapshot = (data: Record<FranchiseId, MenuItem[]>) =>
+    JSON.stringify(data);
+
+  const saveMenus = useCallback(async (): Promise<boolean> => {
+    setSyncStatus("saving");
+    const result = await saveContent("/api/content/menus", allMenus);
+    if (result.ok) {
+      writeContentCache(CACHE_MENUS, allMenus);
+      setSavedMenus(allMenus);
+      setSyncStatus("idle");
+      return true;
+    }
+    setSyncStatus("error");
+    return false;
+  }, [allMenus]);
+
+  const isDirty = useMemo(() => {
+    if (!hydrated || !savedMenus) return false;
+    return snapshot(allMenus) !== snapshot(savedMenus);
+  }, [allMenus, savedMenus, hydrated]);
 
   useEffect(() => {
     let cancelled = false;
@@ -168,8 +179,10 @@ export function MenuProvider({ children }: { children: ReactNode }) {
         const next = normalizeMenus(data);
         setAllMenus(next);
         writeContentCache(CACHE_MENUS, next);
+        setSavedMenus(next);
       } else if (!contentReady) {
         setAllMenus(INITIAL_MENUS);
+        setSavedMenus(INITIAL_MENUS);
       }
       setContentReady(true);
       setHydrated(true);
@@ -180,15 +193,6 @@ export function MenuProvider({ children }: { children: ReactNode }) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only on mount
   }, []);
-
-  useEffect(() => {
-    if (!hydrated) return;
-    if (skipSave.current) {
-      skipSave.current = false;
-      return;
-    }
-    persist(allMenus);
-  }, [allMenus, hydrated, persist]);
 
   const addMenuItem = useCallback(
     (item: NewItem) => {
@@ -302,6 +306,8 @@ export function MenuProvider({ children }: { children: ReactNode }) {
       removeMenuItem,
       toggleAvailable,
       applyFrontPadProducts,
+      saveMenus,
+      isDirty,
       syncStatus,
       contentReady,
     }),
@@ -313,6 +319,8 @@ export function MenuProvider({ children }: { children: ReactNode }) {
       removeMenuItem,
       toggleAvailable,
       applyFrontPadProducts,
+      saveMenus,
+      isDirty,
       syncStatus,
       contentReady,
     ],

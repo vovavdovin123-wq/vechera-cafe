@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, type FormEvent } from "react";
-import { Loader2, Plus, RefreshCw, Search, Trash2 } from "lucide-react";
+import { Loader2, Plus, RefreshCw, Save, Search, Trash2 } from "lucide-react";
 import { AdminCategorySelect } from "@/components/AdminCategorySelect";
 import { AdminShell } from "@/components/AdminShell";
 import { CustomSelect } from "@/components/CustomSelect";
@@ -26,7 +26,12 @@ export default function AdminPage() {
     removeMenuItem,
     toggleAvailable,
     applyFrontPadProducts,
+    saveMenus,
+    isDirty,
+    syncStatus,
   } = useMenu();
+
+  const [saveMsg, setSaveMsg] = useState<string | null>(null);
 
   const [filterCategory, setFilterCategory] = useState(ALL_CATEGORIES);
   const [search, setSearch] = useState("");
@@ -117,6 +122,12 @@ export default function AdminPage() {
     setFilterCategory(addCategory);
   }
 
+  async function onSaveAll() {
+    setSaveMsg(null);
+    const ok = await saveMenus();
+    setSaveMsg(ok ? "Меню сохранено на сервере" : "Не удалось сохранить — войдите заново");
+  }
+
   async function syncFromFrontPad() {
     setSyncLoading(true);
     setSyncMsg(null);
@@ -135,7 +146,7 @@ export default function AdminPage() {
       }
       const { updated, skipped } = applyFrontPadProducts(data.products);
       setSyncMsg(
-        `Синхронизация: обновлено ${updated}, без совпадения артикула ${skipped}. В FrontPad товаров: ${data.products.length}.`,
+        `Синхронизация: обновлено ${updated}, без совпадения артикула ${skipped}. Нажмите «Сохранить меню».`,
       );
     } catch {
       setSyncMsg("Сеть недоступна");
@@ -151,6 +162,36 @@ export default function AdminPage() {
       subtitle={`${franchise.shortAddress} · категории как на сайте`}
       showLocation
     >
+      <div
+        className={`mt-4 flex flex-wrap items-center gap-3 rounded-2xl border px-4 py-3 ${
+          isDirty
+            ? "border-[var(--gold)]/50 bg-[var(--gold-soft)]/30"
+            : "border-line bg-surface"
+        }`}
+      >
+        <button
+          type="button"
+          onClick={() => void onSaveAll()}
+          disabled={!isDirty || syncStatus === "saving"}
+          className="btn-soft inline-flex items-center gap-2 disabled:opacity-50"
+        >
+          {syncStatus === "saving" ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Save className="h-4 w-4" />
+          )}
+          Сохранить меню
+        </button>
+        <p className="text-sm text-ink-muted">
+          {isDirty
+            ? "Есть несохранённые изменения"
+            : "Все изменения сохранены"}
+        </p>
+        {saveMsg && (
+          <p className="w-full text-xs text-ink-muted">{saveMsg}</p>
+        )}
+      </div>
+
       <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
         <div className="min-w-0 flex-1 sm:max-w-xs">
           <AdminCategorySelect
@@ -164,12 +205,12 @@ export default function AdminPage() {
           />
         </div>
         <div className="relative min-w-0 flex-1 sm:max-w-sm">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-ink-muted" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Поиск по названию или артикулу"
-            className="admin-input w-full pl-9"
+            className="admin-input admin-input-search w-full"
           />
         </div>
         <button
@@ -274,7 +315,7 @@ export default function AdminPage() {
           </div>
           <div className="flex flex-wrap gap-2 sm:col-span-2">
             <button type="submit" className="btn-soft">
-              Сохранить
+              Добавить в меню
             </button>
             <button
               type="button"

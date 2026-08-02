@@ -5,7 +5,6 @@ import {
   Armchair,
   BadgePercent,
   MessageSquareText,
-  Plug,
   ShoppingBag,
   TicketPercent,
   UtensilsCrossed,
@@ -22,12 +21,6 @@ const links = [
     icon: TicketPercent,
   },
   { href: "/admin/orders", id: "orders" as const, label: "Заказы", icon: ShoppingBag },
-  {
-    href: "/admin/frontpad",
-    id: "frontpad" as const,
-    label: "FrontPad",
-    icon: Plug,
-  },
   { href: "/admin/feedback", id: "feedback" as const, label: "Связь", icon: MessageSquareText },
 ];
 
