@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Сборка во временную папку (deploy.sh), чтобы не удалять .next пока сайт работает
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   // Убирает логотип Next.js Dev Tools в левом нижнем углу (только в dev)
   devIndicators: false,
   // Запросы через nginx/домен (не только localhost)

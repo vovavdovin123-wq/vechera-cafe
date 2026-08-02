@@ -1,5 +1,6 @@
 "use client";
 
+import { ChunkLoadRecovery } from "@/components/ChunkLoadRecovery";
 import { FranchiseWelcomeGate } from "@/components/FranchiseWelcomeGate";
 import { CartProvider } from "@/context/CartContext";
 import { FranchiseProvider } from "@/context/FranchiseContext";
@@ -16,6 +17,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           <InteriorProvider>
             <SearchProvider>
               <CartProvider>
+                <ChunkLoadRecovery />
                 <FranchiseWelcomeGate />
                 {children}
               </CartProvider>
