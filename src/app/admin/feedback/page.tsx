@@ -45,9 +45,9 @@ function FeedbackList() {
   }
 
   useEffect(() => {
-    if (auth !== "ok") return;
+    if (auth.status !== "ok") return;
     load();
-  }, [auth]);
+  }, [auth.status]);
 
   async function remove(id: string) {
     if (!confirm("Удалить это сообщение?")) return;

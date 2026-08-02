@@ -16,8 +16,15 @@ import { AdminOrderAlerts } from "@/components/AdminOrderAlerts";
 import { AdminSyncIndicator } from "@/components/AdminSyncIndicator";
 import { BrandLogo } from "@/components/BrandLogo";
 import { PAGE } from "@/lib/layout";
+import type { AdminScope } from "@/lib/admin-auth";
+import { useFranchise } from "@/context/FranchiseContext";
+import type { FranchiseId } from "@/lib/types";
 
-const AdminAuthContext = createContext<"loading" | "guest" | "ok">("loading");
+const AdminAuthContext = createContext<{
+  status: "loading" | "guest" | "ok";
+  scope: AdminScope;
+  login: string | null;
+}>({ status: "loading", scope: "all", login: null });
 
 export function AdminShell({
   active,
@@ -35,6 +42,9 @@ export function AdminShell({
   children: ReactNode;
 }) {
   const [auth, setAuth] = useState<"loading" | "guest" | "ok">("loading");
+  const [adminScope, setAdminScope] = useState<AdminScope>("all");
+  const [adminLogin, setAdminLogin] = useState<string | null>(null);
+  const { setFranchiseId } = useFranchise();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState<string | null>(null);
@@ -43,9 +53,25 @@ export function AdminShell({
   useEffect(() => {
     fetch("/api/admin/session")
       .then((r) => r.json())
-      .then((d: { ok: boolean }) => setAuth(d.ok ? "ok" : "guest"))
+      .then(
+        (d: {
+          ok: boolean;
+          scope?: AdminScope;
+          login?: string;
+          franchiseId?: FranchiseId | null;
+        }) => {
+          if (!d.ok) {
+            setAuth("guest");
+            return;
+          }
+          setAuth("ok");
+          setAdminScope(d.scope ?? "all");
+          setAdminLogin(d.login ?? null);
+          if (d.franchiseId) setFranchiseId(d.franchiseId);
+        },
+      )
       .catch(() => setAuth("guest"));
-  }, []);
+  }, [setFranchiseId]);
 
   async function onLogin(e: FormEvent) {
     e.preventDefault();
@@ -57,12 +83,22 @@ export function AdminShell({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ login, password }),
       });
-      const data = (await res.json()) as { ok: boolean; message?: string };
+      const data = (await res.json()) as {
+        ok: boolean;
+        message?: string;
+        scope?: AdminScope;
+        login?: string;
+      };
       if (!res.ok || !data.ok) {
         setAuthError(data.message || "Ошибка входа");
         return;
       }
       setAuth("ok");
+      setAdminScope(data.scope ?? "all");
+      setAdminLogin(data.login ?? null);
+      if (data.scope === "center" || data.scope === "hippodrome") {
+        setFranchiseId(data.scope);
+      }
       setPassword("");
     } catch {
       setAuthError("Сеть недоступна");
@@ -74,6 +110,8 @@ export function AdminShell({
   async function onLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
     setAuth("guest");
+    setAdminScope("all");
+    setAdminLogin(null);
   }
 
   if (auth === "loading") {
@@ -137,7 +175,9 @@ export function AdminShell({
   }
 
   return (
-    <AdminAuthContext.Provider value={auth}>
+    <AdminAuthContext.Provider
+      value={{ status: auth, scope: adminScope, login: adminLogin }}
+    >
       <AdminOrderAlerts />
       <div className="min-h-screen min-h-[100dvh]">
         <header className="admin-top sticky top-0 z-40 border-b border-white/10 bg-[color-mix(in_srgb,var(--espresso)_92%,black)] text-white shadow-[var(--shadow-soft)] backdrop-blur-md pt-[env(safe-area-inset-top)]">
@@ -167,7 +207,10 @@ export function AdminShell({
               </div>
               <div className="hidden shrink-0 items-center gap-2 sm:flex">
                 {showLocationSwitcher && (
-                  <AdminLocationSwitcher className="hidden lg:inline-flex" />
+                  <AdminLocationSwitcher
+                    className="hidden lg:inline-flex"
+                    lockedScope={adminScope}
+                  />
                 )}
                 <Link
                   href="/"
@@ -186,7 +229,10 @@ export function AdminShell({
               </div>
             </div>
             {showLocationSwitcher && (
-              <AdminLocationSwitcher className="mt-2.5 lg:hidden" />
+              <AdminLocationSwitcher
+                className="mt-2.5 lg:hidden"
+                lockedScope={adminScope}
+              />
             )}
           </div>
         </header>

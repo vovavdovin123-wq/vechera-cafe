@@ -2,12 +2,29 @@
 
 import { FRANCHISE_TAB_LABELS } from "@/lib/franchises";
 import { useFranchise } from "@/context/FranchiseContext";
+import type { AdminScope } from "@/lib/admin-auth";
 import type { FranchiseId } from "@/lib/types";
 
 const LOCATIONS: FranchiseId[] = ["center", "hippodrome"];
 
-export function AdminLocationSwitcher({ className = "" }: { className?: string }) {
+export function AdminLocationSwitcher({
+  className = "",
+  lockedScope = "all",
+}: {
+  className?: string;
+  lockedScope?: AdminScope;
+}) {
   const { franchiseId, setFranchiseId } = useFranchise();
+
+  if (lockedScope !== "all") {
+    return (
+      <div
+        className={`inline-flex max-w-full items-center rounded-full border border-white/20 bg-black/15 px-3 py-1.5 text-xs font-medium text-white/90 ${className}`}
+      >
+        {FRANCHISE_TAB_LABELS[lockedScope]}
+      </div>
+    );
+  }
 
   return (
     <div

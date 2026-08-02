@@ -55,11 +55,11 @@ function OrdersList() {
   }
 
   useEffect(() => {
-    if (auth !== "ok") return;
+    if (auth.status !== "ok") return;
     load();
     const id = setInterval(load, 15000);
     return () => clearInterval(id);
-  }, [auth]);
+  }, [auth.status]);
 
   async function remove(id: string) {
     if (!confirm("Удалить этот заказ?")) return;

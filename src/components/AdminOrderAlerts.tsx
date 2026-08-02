@@ -11,7 +11,7 @@ export function AdminOrderAlerts() {
   const seenRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
-    if (auth !== "ok") return;
+    if (auth.status !== "ok") return;
 
     try {
       const saved = localStorage.getItem(SEEN_KEY);
@@ -72,7 +72,7 @@ export function AdminOrderAlerts() {
     void poll();
     const id = setInterval(poll, POLL_MS);
     return () => clearInterval(id);
-  }, [auth]);
+  }, [auth.status]);
 
   return null;
 }

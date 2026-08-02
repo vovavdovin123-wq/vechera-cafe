@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
-import { Loader2, Plus, RefreshCw, Trash2 } from "lucide-react";
+import { useMemo, useState, type FormEvent } from "react";
+import { Loader2, Plus, RefreshCw, Search, Trash2 } from "lucide-react";
+import { AdminCategorySelect } from "@/components/AdminCategorySelect";
 import { AdminShell } from "@/components/AdminShell";
 import { CustomSelect } from "@/components/CustomSelect";
 import { ImagePicker } from "@/components/ImagePicker";
@@ -14,6 +15,8 @@ import {
 } from "@/lib/menu-data";
 import type { MenuCategory, MenuItem } from "@/lib/types";
 
+const ALL_CATEGORIES = "all";
+
 export default function AdminPage() {
   const { franchise, franchiseId } = useFranchise();
   const {
@@ -24,14 +27,75 @@ export default function AdminPage() {
     toggleAvailable,
     applyFrontPadProducts,
   } = useMenu();
+
+  const [filterCategory, setFilterCategory] = useState(ALL_CATEGORIES);
+  const [search, setSearch] = useState("");
+  const [addCategory, setAddCategory] = useState<MenuCategory>("sandwiches");
+  const [showAddForm, setShowAddForm] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("300");
-  const [category, setCategory] = useState<MenuCategory>("sandwiches");
   const [image, setImage] = useState("");
   const [frontpadArticle, setFrontpadArticle] = useState("");
   const [syncLoading, setSyncLoading] = useState(false);
   const [syncMsg, setSyncMsg] = useState<string | null>(null);
+
+  const counts = useMemo(() => {
+    const map: Record<string, number> = { [ALL_CATEGORIES]: items.length };
+    for (const cat of CATEGORY_ORDER) map[cat] = 0;
+    for (const item of items) {
+      map[item.category] = (map[item.category] ?? 0) + 1;
+    }
+    return map;
+  }, [items]);
+
+  const categoryOptions = useMemo(
+    () => [
+      { value: ALL_CATEGORIES, label: "Все категории", count: counts[ALL_CATEGORIES] },
+      ...CATEGORY_ORDER.map((c) => ({
+        value: c,
+        label: CATEGORY_LABELS[c],
+        count: counts[c] ?? 0,
+      })),
+    ],
+    [counts],
+  );
+
+  const filteredItems = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return items.filter((item) => {
+      if (filterCategory !== ALL_CATEGORIES && item.category !== filterCategory) {
+        return false;
+      }
+      if (!q) return true;
+      return (
+        item.name.toLowerCase().includes(q) ||
+        item.description.toLowerCase().includes(q) ||
+        (item.frontpadArticle ?? "").includes(q)
+      );
+    });
+  }, [items, filterCategory, search]);
+
+  const sections = useMemo(() => {
+    const order =
+      filterCategory === ALL_CATEGORIES
+        ? CATEGORY_ORDER
+        : [filterCategory as MenuCategory];
+
+    return order
+      .map((cat) => ({
+        category: cat,
+        label: CATEGORY_LABELS[cat],
+        items: filteredItems.filter((i) => i.category === cat),
+      }))
+      .filter((s) => s.items.length > 0 || filterCategory === s.category);
+  }, [filterCategory, filteredItems]);
+
+  function openAddFor(category: MenuCategory) {
+    setAddCategory(category);
+    setImage(CATEGORY_IMAGES[category]);
+    setShowAddForm(true);
+  }
 
   function onAdd(e: FormEvent) {
     e.preventDefault();
@@ -41,15 +105,16 @@ export default function AdminPage() {
       name: name.trim(),
       description: description.trim() || "Состав уточняется",
       price: Math.round(parsed),
-      category,
-      image: image || "",
+      category: addCategory,
+      image: image || CATEGORY_IMAGES[addCategory],
       frontpadArticle: frontpadArticle.trim() || undefined,
     });
     setName("");
     setDescription("");
     setPrice("300");
-    setImage("");
     setFrontpadArticle("");
+    setImage(CATEGORY_IMAGES[addCategory]);
+    setFilterCategory(addCategory);
   }
 
   async function syncFromFrontPad() {
@@ -70,7 +135,7 @@ export default function AdminPage() {
       }
       const { updated, skipped } = applyFrontPadProducts(data.products);
       setSyncMsg(
-        `Синхронизация: обновлено ${updated}, без совпадения артикула ${skipped}. В FrontPad товаров: ${data.products.length}. Не чаще 1 раза в час.`,
+        `Синхронизация: обновлено ${updated}, без совпадения артикула ${skipped}. В FrontPad товаров: ${data.products.length}.`,
       );
     } catch {
       setSyncMsg("Сеть недоступна");
@@ -83,108 +148,186 @@ export default function AdminPage() {
     <AdminShell
       active="menu"
       title="Управление меню"
-      subtitle={`${franchise.shortAddress} · добавляйте позиции, меняйте цены и фото`}
+      subtitle={`${franchise.shortAddress} · категории как на сайте`}
       showLocation
     >
-      <div className="mt-4 flex flex-wrap items-center gap-3">
+      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+        <div className="min-w-0 flex-1 sm:max-w-xs">
+          <AdminCategorySelect
+            value={filterCategory}
+            onChange={(v) => {
+              setFilterCategory(v);
+              if (v !== ALL_CATEGORIES) setAddCategory(v as MenuCategory);
+            }}
+            options={categoryOptions}
+            ariaLabel="Фильтр по категории"
+          />
+        </div>
+        <div className="relative min-w-0 flex-1 sm:max-w-sm">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Поиск по названию или артикулу"
+            className="admin-input w-full pl-9"
+          />
+        </div>
         <button
           type="button"
           onClick={() => void syncFromFrontPad()}
           disabled={syncLoading}
-          className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-ink shadow-[var(--shadow-soft)] transition hover:border-[var(--gold)] disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-2 rounded-full border border-line bg-surface px-4 py-2.5 text-sm font-medium text-ink shadow-[var(--shadow-soft)] transition hover:border-[var(--gold)] disabled:opacity-50"
         >
           {syncLoading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             <RefreshCw className="h-4 w-4" />
           )}
-          Синхронизировать с FrontPad
+          FrontPad
         </button>
-        {syncMsg && (
-          <p className="max-w-xl text-xs text-ink-muted">{syncMsg}</p>
-        )}
       </div>
 
-      <form
-        onSubmit={onAdd}
-        className="mt-6 grid max-w-full gap-3 rounded-[22px] border border-line bg-surface p-4 shadow-[var(--shadow)] sm:mt-8 sm:grid-cols-2 sm:p-5"
-      >
-        <h2 className="sm:col-span-2 flex items-center gap-2 text-lg font-semibold">
-          <Plus className="h-5 w-5 text-accent" />
-          Добавить позицию
-        </h2>
-        <input
-          required
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Название"
-          className="rounded-2xl border border-line bg-bg/40 px-4 py-2.5 text-base outline-none focus:border-accent sm:text-sm"
-        />
-        <input
-          required
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          type="number"
-          min={1}
-          placeholder="Цена"
-          className="rounded-2xl border border-line bg-bg/40 px-4 py-2.5 text-base outline-none focus:border-accent sm:text-sm"
-        />
-        <input
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Состав"
-          className="rounded-2xl border border-line bg-bg/40 px-4 py-2.5 text-sm outline-none focus:border-accent sm:col-span-2"
-        />
-        <input
-          value={frontpadArticle}
-          onChange={(e) => setFrontpadArticle(e.target.value.replace(/\D/g, ""))}
-          placeholder="Артикул FrontPad (цифры)"
-          inputMode="numeric"
-          className="rounded-2xl border border-line bg-bg/40 px-4 py-2.5 text-sm outline-none focus:border-accent sm:col-span-2"
-        />
-        <div className="sm:col-span-2">
-          <CustomSelect
-            ariaLabel="Категория"
-            value={category}
-            options={CATEGORY_ORDER.map((c) => ({
-              value: c,
-              label: CATEGORY_LABELS[c],
-            }))}
-            onChange={(v) => {
-              const next = v as MenuCategory;
-              setCategory(next);
-              if (
-                Object.values(CATEGORY_IMAGES).includes(image as (typeof CATEGORY_IMAGES)[MenuCategory])
-              ) {
-                setImage(CATEGORY_IMAGES[next]);
-              }
-            }}
-          />
-        </div>
-        <div className="sm:col-span-2">
-          <ImagePicker
-            persistOnServer
-            uploadPrefix="menu"
-            value={image}
-            onChange={setImage}
-          />
-        </div>
-        <button type="submit" className="btn-soft sm:col-span-2 justify-self-start">
-          Добавить
-        </button>
-      </form>
+      {syncMsg && <p className="mt-2 text-xs text-ink-muted">{syncMsg}</p>}
 
-      <ul className="mt-8 space-y-4">
-        {items.map((item) => (
-          <AdminItemRow
-            key={item.id}
-            item={item}
-            onUpdate={updateMenuItem}
-            onToggle={() => toggleAvailable(item.id)}
-            onRemove={() => removeMenuItem(item.id)}
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() =>
+            openAddFor(
+              filterCategory === ALL_CATEGORIES
+                ? "sandwiches"
+                : (filterCategory as MenuCategory),
+            )
+          }
+          className="btn-soft inline-flex items-center gap-2"
+        >
+          <Plus className="h-4 w-4" />
+          Добавить в{" "}
+          {filterCategory === ALL_CATEGORIES
+            ? "меню"
+            : CATEGORY_LABELS[filterCategory as MenuCategory]}
+        </button>
+      </div>
+
+      {showAddForm && (
+        <form
+          onSubmit={onAdd}
+          className="mt-4 grid gap-3 rounded-[22px] border border-[var(--gold)]/40 bg-[var(--gold-soft)]/20 p-4 shadow-[var(--shadow-soft)] sm:grid-cols-2 sm:p-5"
+        >
+          <h2 className="sm:col-span-2 text-base font-semibold text-ink">
+            Новая позиция · {CATEGORY_LABELS[addCategory]}
+          </h2>
+          <div className="sm:col-span-2">
+            <CustomSelect
+              variant="admin"
+              ariaLabel="Категория новой позиции"
+              value={addCategory}
+              options={CATEGORY_ORDER.map((c) => ({
+                value: c,
+                label: CATEGORY_LABELS[c],
+              }))}
+              onChange={(v) => {
+                const next = v as MenuCategory;
+                setAddCategory(next);
+                setImage(CATEGORY_IMAGES[next]);
+              }}
+            />
+          </div>
+          <input
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Название"
+            className="admin-input"
           />
-        ))}
-      </ul>
+          <input
+            required
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            type="number"
+            min={1}
+            placeholder="Цена"
+            className="admin-input"
+          />
+          <input
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Состав"
+            className="admin-input sm:col-span-2"
+          />
+          <input
+            value={frontpadArticle}
+            onChange={(e) =>
+              setFrontpadArticle(e.target.value.replace(/\D/g, ""))
+            }
+            placeholder="Артикул FrontPad"
+            inputMode="numeric"
+            className="admin-input sm:col-span-2"
+          />
+          <div className="sm:col-span-2">
+            <ImagePicker
+              persistOnServer
+              uploadPrefix="menu"
+              value={image}
+              onChange={setImage}
+            />
+          </div>
+          <div className="flex flex-wrap gap-2 sm:col-span-2">
+            <button type="submit" className="btn-soft">
+              Сохранить
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowAddForm(false)}
+              className="btn-ghost"
+            >
+              Отмена
+            </button>
+          </div>
+        </form>
+      )}
+
+      <div className="mt-8 space-y-8">
+        {sections.length === 0 ? (
+          <p className="text-sm text-ink-muted">
+            {search.trim()
+              ? "Ничего не найдено"
+              : "В этой категории пока нет блюд"}
+          </p>
+        ) : (
+          sections.map((section) => (
+            <section key={section.category}>
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-line pb-2">
+                <h2 className="font-display text-lg font-semibold text-[var(--espresso)]">
+                  {section.label}
+                  <span className="ml-2 text-sm font-normal text-ink-muted">
+                    {section.items.length}
+                  </span>
+                </h2>
+                <button
+                  type="button"
+                  onClick={() => openAddFor(section.category)}
+                  className="inline-flex items-center gap-1 text-xs font-medium text-[var(--espresso-soft)] hover:text-ink"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Добавить
+                </button>
+              </div>
+              <ul className="space-y-3">
+                {section.items.map((item) => (
+                  <AdminItemRow
+                    key={item.id}
+                    item={item}
+                    onUpdate={updateMenuItem}
+                    onToggle={() => toggleAvailable(item.id)}
+                    onRemove={() => removeMenuItem(item.id)}
+                  />
+                ))}
+              </ul>
+            </section>
+          ))
+        )}
+      </div>
     </AdminShell>
   );
 }
@@ -214,7 +357,7 @@ function AdminItemRow({
           <input
             value={item.name}
             onChange={(e) => onUpdate(item.id, { name: e.target.value })}
-            className="rounded-xl border border-line bg-bg/40 px-3 py-2 text-sm outline-none focus:border-accent"
+            className="admin-input"
             placeholder="Название"
           />
           <input
@@ -224,13 +367,27 @@ function AdminItemRow({
             onChange={(e) =>
               onUpdate(item.id, { price: Number(e.target.value) || item.price })
             }
-            className="rounded-xl border border-line bg-bg/40 px-3 py-2 text-sm outline-none focus:border-accent"
+            className="admin-input"
             placeholder="Цена"
           />
+          <div className="sm:col-span-2">
+            <CustomSelect
+              variant="admin"
+              ariaLabel="Категория блюда"
+              value={item.category}
+              options={CATEGORY_ORDER.map((c) => ({
+                value: c,
+                label: CATEGORY_LABELS[c],
+              }))}
+              onChange={(v) =>
+                onUpdate(item.id, { category: v as MenuCategory })
+              }
+            />
+          </div>
           <input
             value={item.description}
             onChange={(e) => onUpdate(item.id, { description: e.target.value })}
-            className="rounded-xl border border-line bg-bg/40 px-3 py-2 text-sm outline-none focus:border-accent sm:col-span-2"
+            className="admin-input sm:col-span-2"
             placeholder="Состав"
           />
           <input
@@ -240,13 +397,14 @@ function AdminItemRow({
                 frontpadArticle: e.target.value.replace(/\D/g, "") || undefined,
               })
             }
-            className="rounded-xl border border-line bg-bg/40 px-3 py-2 text-sm outline-none focus:border-accent sm:col-span-2"
+            className="admin-input sm:col-span-2"
             placeholder="Артикул FrontPad"
             inputMode="numeric"
           />
           <p className="text-xs text-ink-muted sm:col-span-2">
-            {CATEGORY_LABELS[item.category]}
-            {item.frontpadArticle ? ` · арт. ${item.frontpadArticle}` : " · нет артикула FrontPad"}
+            {item.frontpadArticle
+              ? `Артикул ${item.frontpadArticle}`
+              : "Нет артикула FrontPad"}
           </p>
         </div>
       </div>
