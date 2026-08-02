@@ -1,4 +1,8 @@
 import { resolveFrontPadHookStatuses } from "@/lib/frontpad-status";
+import {
+  readFrontPadSecretSync,
+  resolveFrontPadSecret,
+} from "@/lib/frontpad-accounts-store";
 import type { FranchiseId, OrderPayload } from "./types";
 
 /**
@@ -13,55 +17,61 @@ const FRONTPAD_BASE = "https://app.frontpad.ru/api/index.php";
 const SEND_PRICES = process.env.FRONTPAD_SEND_PRICES === "1";
 const DEFAULT_HOOK_URL = "https://vechera-cafe.ru/api/frontpad/webhook";
 
-/** Секрет для точки. Центр и ипподром — разные аккаунты FP. */
+/** Секрет для точки. Админка → .env → общий FRONTPAD_SECRET. */
 export function secretFor(franchiseId?: FranchiseId): string | undefined {
-  const shared = process.env.FRONTPAD_SECRET?.trim();
   if (franchiseId === "hippodrome") {
-    return (
-      process.env.FRONTPAD_SECRET_HIPPODROME?.trim() ||
-      shared ||
-      undefined
-    );
+    return resolveFrontPadSecret("hippodrome").secret;
   }
   if (franchiseId === "center") {
-    return (
-      process.env.FRONTPAD_SECRET_CENTER?.trim() || shared || undefined
-    );
+    return resolveFrontPadSecret("center").secret;
   }
   return (
+    readFrontPadSecretSync("center") ||
+    readFrontPadSecretSync("hippodrome") ||
     process.env.FRONTPAD_SECRET_CENTER?.trim() ||
     process.env.FRONTPAD_SECRET_HIPPODROME?.trim() ||
-    shared ||
+    process.env.FRONTPAD_SECRET?.trim() ||
     undefined
   );
 }
 
 export function isFrontPadConfigured(): boolean {
   return Boolean(
-    process.env.FRONTPAD_SECRET_CENTER?.trim() ||
-      process.env.FRONTPAD_SECRET_HIPPODROME?.trim() ||
-      process.env.FRONTPAD_SECRET?.trim(),
+    resolveFrontPadSecret("center").secret ||
+      resolveFrontPadSecret("hippodrome").secret,
   );
 }
 
 export function frontPadConfigStatus() {
-  const center = Boolean(
-    process.env.FRONTPAD_SECRET_CENTER?.trim() ||
-      process.env.FRONTPAD_SECRET?.trim(),
-  );
-  const hippodrome = Boolean(
-    process.env.FRONTPAD_SECRET_HIPPODROME?.trim() ||
-      process.env.FRONTPAD_SECRET?.trim(),
-  );
+  const centerResolved = resolveFrontPadSecret("center");
+  const hippodromeResolved = resolveFrontPadSecret("hippodrome");
   return {
-    configured: center || hippodrome,
-    center,
-    hippodrome,
-    dualAccounts: Boolean(
-      process.env.FRONTPAD_SECRET_CENTER?.trim() &&
-        process.env.FRONTPAD_SECRET_HIPPODROME?.trim(),
-    ),
+    configured: Boolean(centerResolved.secret || hippodromeResolved.secret),
+    center: Boolean(centerResolved.secret),
+    hippodrome: Boolean(hippodromeResolved.secret),
+    dualAccounts: Boolean(centerResolved.secret && hippodromeResolved.secret),
+    sources: {
+      center: centerResolved.source,
+      hippodrome: hippodromeResolved.source,
+    },
   };
+}
+
+/** Проверка секрета (invalid_secret → ошибка). */
+export async function verifyFrontPadSecret(
+  secret: string,
+): Promise<{ ok: boolean; message: string }> {
+  const res = await postFrontPad("get_status", { order_id: "1" }, secret);
+  if (!res.ok && res.code === "invalid_secret") {
+    return { ok: false, message: "Неверный секрет FrontPad" };
+  }
+  if (!res.ok && res.code === "api_off") {
+    return { ok: false, message: "API выключен в настройках FrontPad" };
+  }
+  if (!res.ok && res.code === "invalid_plant") {
+    return { ok: false, message: "На тарифе FrontPad API недоступен" };
+  }
+  return { ok: true, message: "Секрет принят, API доступен" };
 }
 
 export interface FrontPadResult {
