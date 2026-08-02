@@ -499,7 +499,7 @@ export async function fetchFrontPadStatus(params: {
     if (res.ok) {
       return {
         ok: true,
-        status: res.raw.status !== undefined ? String(res.raw.status) : "Принят",
+        status: res.raw.status !== undefined ? String(res.raw.status) : "1",
         raw: res.raw,
       };
     }
@@ -517,7 +517,7 @@ export async function fetchFrontPadStatus(params: {
           status:
             byPhone.raw.status !== undefined
               ? String(byPhone.raw.status)
-              : "Принят",
+              : "1",
           raw: byPhone.raw,
         };
       }
@@ -526,9 +526,10 @@ export async function fetchFrontPadStatus(params: {
     if (res.code === "invalid_method") {
       return {
         ok: true,
-        status: "Принят в FrontPad",
+        code: "invalid_method",
+        status: "1",
         message:
-          "Автостатус временно недоступен. Обновления приходят по webhook или смотрите в программе FrontPad.",
+          "Заказ принят. Статус обновится автоматически при смене в FrontPad.",
       };
     }
   }

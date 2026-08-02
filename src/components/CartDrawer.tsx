@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { CleanMap } from "@/components/CleanMap";
+import { CustomDateTimePicker } from "@/components/CustomDateTimePicker";
 import {
   clearTrackedOrder,
   loadTrackedOrder,
@@ -37,12 +38,24 @@ function toFrontPadDatetime(localValue: string): string | undefined {
 function minPreorderLocal(): string {
   const d = new Date(Date.now() + 45 * 60 * 1000);
   const pad = (n: number) => String(n).padStart(2, "0");
+  const minutes = d.getMinutes();
+  const rounded = Math.ceil(minutes / 30) * 30;
+  if (rounded === 60) {
+    d.setHours(d.getHours() + 1);
+    d.setMinutes(0);
+  } else {
+    d.setMinutes(rounded);
+  }
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
 function maxPreorderLocal(): string {
-  const d = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+  const d = new Date(Date.now() + 24 * 60 * 60 * 1000);
   const pad = (n: number) => String(n).padStart(2, "0");
+  const minutes = d.getMinutes();
+  const rounded = Math.floor(minutes / 30) * 30;
+  d.setMinutes(rounded);
+  d.setSeconds(0, 0);
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
@@ -468,30 +481,47 @@ export function CartDrawer() {
             </div>
 
             <div className="rounded-2xl border border-line bg-bg/30 p-3">
-              <label className="flex cursor-pointer items-center gap-2 text-sm font-medium text-ink">
-                <input
-                  type="checkbox"
-                  checked={wantPreorder}
-                  onChange={(e) => {
-                    setWantPreorder(e.target.checked);
-                    if (e.target.checked && !preorderAt) {
-                      setPreorderAt(minPreorderLocal());
-                    }
-                  }}
-                  className="h-4 w-4 accent-[var(--espresso)]"
-                />
-                Предзаказ на время
+              <label className="flex cursor-pointer items-center gap-3">
+                <span
+                  className={`relative flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-300 ${
+                    wantPreorder ? "bg-[var(--espresso)]" : "bg-[var(--line)]"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={wantPreorder}
+                    onChange={(e) => {
+                      setWantPreorder(e.target.checked);
+                      if (e.target.checked && !preorderAt) {
+                        setPreorderAt(minPreorderLocal());
+                      }
+                    }}
+                    className="peer sr-only"
+                  />
+                  <span
+                    className={`absolute h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-300 ${
+                      wantPreorder ? "translate-x-[22px]" : "translate-x-0.5"
+                    }`}
+                  />
+                </span>
+                <span className="text-sm font-medium text-ink">
+                  Предзаказ на время
+                </span>
               </label>
               {wantPreorder && (
-                <input
-                  type="datetime-local"
-                  required
-                  value={preorderAt}
-                  min={minPreorderLocal()}
-                  max={maxPreorderLocal()}
-                  onChange={(e) => setPreorderAt(e.target.value)}
-                  className={`${inputClass} mt-2 py-2.5`}
-                />
+                <div className="mt-3">
+                  <CustomDateTimePicker
+                    value={preorderAt}
+                    onChange={setPreorderAt}
+                    min={minPreorderLocal()}
+                    max={maxPreorderLocal()}
+                    required
+                  />
+                  <p className="mt-2 text-xs text-ink-muted">
+                    Можно заказать не раньше чем через 45 минут и не позже чем на
+                    24 часа вперёд.
+                  </p>
+                </div>
               )}
             </div>
 

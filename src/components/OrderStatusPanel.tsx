@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Loader2, RefreshCw } from "lucide-react";
+import { formatFrontPadStatus } from "@/lib/frontpad-status";
 
 const STORAGE_KEY = "vechera-last-order";
 
@@ -70,8 +71,12 @@ export function OrderStatusPanel({
         setHint(data.message || "Не удалось обновить статус из FrontPad");
         return;
       }
-      setStatus(data.status || "Принят");
-      if (data.message) setHint(data.message);
+      setStatus(formatFrontPadStatus(data.status || "1"));
+      if (data.message && data.source !== "webhook") {
+        setHint(data.message);
+      } else if (data.source === "webhook") {
+        setHint(null);
+      }
     } catch {
       setStatus("Принят");
       setHint("Сеть недоступна — статус обновится позже");
@@ -118,10 +123,13 @@ export function OrderStatusPanel({
       <p className="mt-3 text-base font-medium text-ink">
         {status ?? (loading ? "Загружаем…" : "—")}
       </p>
-      {hint && <p className="mt-1 text-xs text-ink-muted">{hint}</p>}
-      <p className="mt-2 text-xs text-ink-muted">
-        Статус подтягивается из FrontPad. Нажмите обновление при необходимости.
-      </p>
+      {hint ? (
+        <p className="mt-1 text-xs text-ink-muted">{hint}</p>
+      ) : (
+        <p className="mt-2 text-xs text-ink-muted">
+          Статус обновляется при смене заказа в FrontPad.
+        </p>
+      )}
       {onDismiss && (
         <button
           type="button"

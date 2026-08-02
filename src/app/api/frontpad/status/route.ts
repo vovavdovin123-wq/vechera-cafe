@@ -1,14 +1,7 @@
 import { NextResponse } from "next/server";
 import { fetchFrontPadStatus } from "@/lib/frontpad";
+import { formatFrontPadStatus } from "@/lib/frontpad-status";
 import { findOrderByFrontPadId } from "@/lib/orders-store";
-
-const STATUS_HINTS: Record<string, string> = {
-  "1": "Новый",
-  "2": "В производстве",
-  "3": "В пути",
-  "4": "Выполнен",
-  "5": "Отменён",
-};
 
 /**
  * GET /api/frontpad/status?orderId=… | ?phone=…
@@ -29,11 +22,9 @@ export async function GET(request: Request) {
   if (orderId) {
     const local = await findOrderByFrontPadId(orderId);
     if (local?.frontpadStatus) {
-      const raw = String(local.frontpadStatus);
-      const label = STATUS_HINTS[raw] || raw;
       return NextResponse.json({
         ok: true,
-        status: label,
+        status: formatFrontPadStatus(local.frontpadStatus),
         source: "webhook",
         updatedAt: local.frontpadStatusAt,
       });
@@ -45,7 +36,7 @@ export async function GET(request: Request) {
         source: "local",
       });
     }
-    if (local && !local.frontpadStatus) {
+    if (local?.frontpadMode === "live") {
       const fp = await fetchFrontPadStatus({
         orderId,
         clientPhone: clientPhone || local.customerPhone,
@@ -54,16 +45,17 @@ export async function GET(request: Request) {
       if (fp.ok && fp.status) {
         return NextResponse.json({
           ok: true,
-          status: fp.status,
-          source: "frontpad",
+          status: formatFrontPadStatus(fp.status),
+          source: fp.code === "invalid_method" ? "local" : "frontpad",
           message: fp.message,
         });
       }
       return NextResponse.json({
         ok: true,
-        status: "Принят",
+        status: "Новый",
         source: "local",
-        message: fp.message,
+        message:
+          "Заказ принят. Статус обновится автоматически при смене в FrontPad.",
       });
     }
   }
@@ -82,5 +74,9 @@ export async function GET(request: Request) {
   if (!result.ok) {
     return NextResponse.json(result, { status: 502 });
   }
-  return NextResponse.json({ ...result, source: "frontpad" });
+  return NextResponse.json({
+    ...result,
+    status: formatFrontPadStatus(result.status),
+    source: "frontpad",
+  });
 }

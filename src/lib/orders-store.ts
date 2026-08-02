@@ -53,6 +53,12 @@ export async function appendOrder(
     status: meta.mode === "live" ? "frontpad" : "paid_stub",
     frontpadMode: meta.mode,
     frontpadOrderNumber: meta.orderNumber,
+    ...(meta.mode === "live"
+      ? {
+          frontpadStatus: "1",
+          frontpadStatusAt: new Date().toISOString(),
+        }
+      : {}),
   };
   list.unshift(entry);
   await fs.writeFile(FILE, JSON.stringify(list, null, 2), "utf8");
