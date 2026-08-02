@@ -46,6 +46,46 @@ export const FRONTPAD_DEFAULT_HOOK_STATUSES = [
   "11",
 ];
 
+/** Устаревший конфиг на сервере — без кодов «Вечера» 3 и 4. */
+const LEGACY_HOOK_STATUSES = new Set(["13", "14", "15"]);
+
+/**
+ * Коды hook_status для new_order.
+ * none/off = не передавать (только глобальный webhook в FrontPad).
+ * Авто-исправляет старый .env с 13–15 вместо 3,4.
+ */
+export function resolveFrontPadHookStatuses(): {
+  codes: string[];
+  source: "none" | "env" | "default" | "fixed";
+  envRaw?: string;
+} {
+  const raw = process.env.FRONTPAD_HOOK_STATUSES?.trim();
+  if (raw === "none" || raw === "off") {
+    return { codes: [], source: "none", envRaw: raw };
+  }
+  if (!raw) {
+    return { codes: [...FRONTPAD_DEFAULT_HOOK_STATUSES], source: "default" };
+  }
+
+  const codes = raw.split(",").map((s) => s.trim()).filter(Boolean);
+  const hasLegacy = codes.some((c) => LEGACY_HOOK_STATUSES.has(c));
+  const missingVechera = !codes.includes("3") || !codes.includes("4");
+
+  if (hasLegacy && missingVechera) {
+    console.warn(
+      "[FrontPad] FRONTPAD_HOOK_STATUSES устарел, используем 1,3,4,12,10,11:",
+      raw,
+    );
+    return {
+      codes: [...FRONTPAD_DEFAULT_HOOK_STATUSES],
+      source: "fixed",
+      envRaw: raw,
+    };
+  }
+
+  return { codes, source: "env", envRaw: raw };
+}
+
 export const DEFAULT_CUSTOMER_STATUS = "Принят";
 
 function labelsFromEnv(): Record<string, string> {

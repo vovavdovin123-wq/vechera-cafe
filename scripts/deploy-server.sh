@@ -6,7 +6,14 @@ git pull origin main
 npm run build
 if [ -f .env ]; then
   grep -q '^FRONTPAD_HOOK_URL=' .env || echo 'FRONTPAD_HOOK_URL=https://vechera-cafe.ru/api/frontpad/webhook' >> .env
-  grep -q '^FRONTPAD_HOOK_STATUSES=' .env || echo 'FRONTPAD_HOOK_STATUSES=1,3,4,12,10,11' >> .env
+  if grep -q '^FRONTPAD_HOOK_STATUSES=' .env; then
+    if grep -qE '^FRONTPAD_HOOK_STATUSES=.*(13|14|15)' .env; then
+      sed -i 's/^FRONTPAD_HOOK_STATUSES=.*/FRONTPAD_HOOK_STATUSES=1,3,4,12,10,11/' .env
+      echo "Updated FRONTPAD_HOOK_STATUSES to 1,3,4,12,10,11"
+    fi
+  else
+    echo 'FRONTPAD_HOOK_STATUSES=1,3,4,12,10,11' >> .env
+  fi
 fi
 pm2 restart vechera --update-env
 sleep 2

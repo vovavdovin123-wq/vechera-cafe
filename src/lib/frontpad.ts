@@ -1,6 +1,4 @@
-import {
-  FRONTPAD_DEFAULT_HOOK_STATUSES,
-} from "@/lib/frontpad-status";
+import { resolveFrontPadHookStatuses } from "@/lib/frontpad-status";
 import type { FranchiseId, OrderPayload } from "./types";
 
 /**
@@ -376,13 +374,7 @@ export async function sendOrderToFrontPad(
     .map((t) => t.trim())
     .filter(Boolean);
 
-  const hookStatusesFromEnv = process.env.FRONTPAD_HOOK_STATUSES?.trim();
-  const hookStatuses =
-    hookStatusesFromEnv === "none" || hookStatusesFromEnv === "off"
-      ? []
-      : hookStatusesFromEnv
-        ? hookStatusesFromEnv.split(",").map((t) => t.trim()).filter(Boolean)
-        : FRONTPAD_DEFAULT_HOOK_STATUSES;
+  const { codes: hookStatuses } = resolveFrontPadHookStatuses();
 
   const hookUrl = process.env.FRONTPAD_HOOK_URL?.trim() || DEFAULT_HOOK_URL;
   scalars.hook_url = hookUrl;

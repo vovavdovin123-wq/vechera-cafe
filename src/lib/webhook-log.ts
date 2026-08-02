@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { updateOrderByFrontPadId } from "@/lib/orders-store";
 
 export type WebhookLogEntry = {
   at: string;
@@ -43,4 +44,32 @@ export async function readWebhookLog(limit = 10): Promise<WebhookLogEntry[]> {
   } catch {
     return [];
   }
+}
+
+/** Webhook мог прийти до сохранения заказа — применяем последний пропущенный. */
+export async function applyPendingWebhooks(
+  orderId: string,
+  orderNumber?: string,
+): Promise<boolean> {
+  const log = await readWebhookLog(MAX);
+  const ids = new Set([orderId, orderNumber].filter(Boolean) as string[]);
+
+  for (const entry of log) {
+    if (entry.matched || !entry.orderId || !entry.status) continue;
+    if (!ids.has(entry.orderId)) continue;
+
+    const updated = await updateOrderByFrontPadId(entry.orderId, {
+      frontpadStatus: entry.status,
+      frontpadStatusAt: entry.at,
+    });
+    if (updated) {
+      console.info("[FrontPad webhook] applied pending", {
+        orderId: entry.orderId,
+        status: entry.status,
+      });
+      return true;
+    }
+  }
+
+  return false;
 }

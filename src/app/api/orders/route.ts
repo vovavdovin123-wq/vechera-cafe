@@ -4,6 +4,7 @@ import { COOKIE_NAME, verifySessionToken } from "@/lib/admin-auth";
 import { sendOrderToFrontPad } from "@/lib/frontpad";
 import { notifyNewOrder } from "@/lib/notify";
 import { appendOrder, deleteOrder, readOrders } from "@/lib/orders-store";
+import { applyPendingWebhooks } from "@/lib/webhook-log";
 import type { OrderPayload } from "@/lib/types";
 
 export async function GET() {
@@ -55,6 +56,7 @@ export async function POST(request: Request) {
       mode: frontpad.mode,
       orderNumber: frontpad.orderNumber,
     });
+    await applyPendingWebhooks(frontpad.orderId, frontpad.orderNumber);
     await notifyNewOrder(body, frontpad.orderId);
 
     return NextResponse.json({
