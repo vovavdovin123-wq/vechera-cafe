@@ -57,13 +57,11 @@ function readStoredFranchise(): {
 export function FranchiseProvider({ children }: { children: ReactNode }) {
   const [franchiseId, setFranchiseIdState] = useState<FranchiseId>("center");
   const [needsPick, setNeedsPick] = useState(false);
-  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const stored = readStoredFranchise();
     if (stored.id) setFranchiseIdState(stored.id);
     setNeedsPick(stored.needsPick);
-    setReady(true);
   }, []);
 
   const setFranchiseId = useCallback((id: FranchiseId) => {
@@ -88,14 +86,6 @@ export function FranchiseProvider({ children }: { children: ReactNode }) {
     }),
     [franchise, setFranchiseId, needsPick],
   );
-
-  if (!ready) {
-    return (
-      <div className="flex min-h-screen items-center justify-center text-ink-muted">
-        Загрузка…
-      </div>
-    );
-  }
 
   return (
     <FranchiseContext.Provider value={value}>

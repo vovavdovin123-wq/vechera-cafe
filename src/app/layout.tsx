@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { ChunkLoadRecoveryScript } from "@/components/ChunkLoadRecoveryScript";
 import { Providers } from "@/components/Providers";
 import "./globals.css";
 
@@ -32,6 +33,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className="antialiased">
+        <ChunkLoadRecoveryScript />
         <Providers>{children}</Providers>
       </body>
     </html>

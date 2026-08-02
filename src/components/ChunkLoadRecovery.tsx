@@ -19,19 +19,34 @@ function isChunkLoadError(value: unknown): boolean {
   );
 }
 
-/**
- * После деплоя у части пользователей остаётся старая вкладка —
- * перезагружаем страницу один раз при ошибке загрузки JS-чанка.
- */
+/** Дублирует inline-скрипт из layout — подстраховка после монтирования React. */
 export function ChunkLoadRecovery() {
   useEffect(() => {
+    try {
+      sessionStorage.removeItem(RELOAD_KEY);
+    } catch {
+      /* private mode */
+    }
+
     function reloadOnce() {
-      if (sessionStorage.getItem(RELOAD_KEY)) return;
-      sessionStorage.setItem(RELOAD_KEY, "1");
+      try {
+        if (sessionStorage.getItem(RELOAD_KEY)) return;
+        sessionStorage.setItem(RELOAD_KEY, "1");
+      } catch {
+        /* private mode */
+      }
       window.location.reload();
     }
 
     function onError(event: ErrorEvent) {
+      const target = event.target;
+      if (
+        target instanceof HTMLScriptElement &&
+        target.src.includes("/_next/static/chunks/")
+      ) {
+        reloadOnce();
+        return;
+      }
       if (isChunkLoadError(event.error ?? event.message)) {
         reloadOnce();
       }
@@ -43,10 +58,10 @@ export function ChunkLoadRecovery() {
       }
     }
 
-    window.addEventListener("error", onError);
+    window.addEventListener("error", onError, true);
     window.addEventListener("unhandledrejection", onUnhandledRejection);
     return () => {
-      window.removeEventListener("error", onError);
+      window.removeEventListener("error", onError, true);
       window.removeEventListener("unhandledrejection", onUnhandledRejection);
     };
   }, []);
