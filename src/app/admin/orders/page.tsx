@@ -6,6 +6,7 @@ import { AdminShell, useAdminAuth } from "@/components/AdminShell";
 import { FRANCHISE_TAB_LABELS } from "@/lib/franchises";
 import type { StoredOrder } from "@/lib/orders-store";
 import type { FranchiseId } from "@/lib/types";
+import { formatFrontPadStatus } from "@/lib/frontpad-status";
 
 export default function AdminOrdersPage() {
   return (
@@ -130,7 +131,9 @@ function OrdersList() {
                   {order.fulfillment === "pickup" ? "Самовывоз" : "Доставка"}
                 </span>
                 {order.frontpadStatus !== undefined && (
-                  <span>Статус FP: {order.frontpadStatus}</span>
+                  <span>
+                    Статус FP: {formatFrontPadStatus(order.frontpadStatus)}
+                  </span>
                 )}
               </div>
               {(order.customerName || order.customerPhone) && (

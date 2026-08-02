@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import { updateOrderByFrontPadId } from "@/lib/orders-store";
+import { appendWebhookLog } from "@/lib/webhook-log";
 
 type WebhookPayload = {
   action?: string;
   order_id?: string | number;
+  order_number?: string | number;
   status?: string | number;
   datetime?: string;
 };
@@ -23,6 +25,7 @@ async function parseWebhookPayload(request: Request): Promise<WebhookPayload> {
     return {
       action: String(form.get("action") ?? ""),
       order_id: form.get("order_id")?.toString(),
+      order_number: form.get("order_number")?.toString(),
       status: form.get("status")?.toString(),
       datetime: form.get("datetime")?.toString(),
     };
@@ -52,19 +55,28 @@ export async function POST(request: Request) {
   try {
     const body = await parseWebhookPayload(request);
 
-    // FrontPad проверяет URL пустым POST при настройке — нужен 200, не 400.
-    if (!body.order_id) {
+    if (!body.order_id && !body.order_number) {
       console.info("[FrontPad webhook] ping / validation", body);
+      await appendWebhookLog({ matched: false, raw: body as Record<string, unknown> });
       return NextResponse.json({ ok: true, ping: true });
     }
 
-    const updated = await updateOrderByFrontPadId(String(body.order_id), {
+    const lookupId = String(body.order_id || body.order_number);
+    const updated = await updateOrderByFrontPadId(lookupId, {
       frontpadStatus: body.status !== undefined ? String(body.status) : undefined,
       frontpadStatusAt: body.datetime || new Date().toISOString(),
     });
 
+    await appendWebhookLog({
+      orderId: lookupId,
+      status: body.status !== undefined ? String(body.status) : undefined,
+      action: body.action,
+      matched: Boolean(updated),
+      raw: body as Record<string, unknown>,
+    });
+
     if (!updated) {
-      console.warn("[FrontPad webhook] unknown order", body.order_id, body);
+      console.warn("[FrontPad webhook] unknown order", lookupId, body);
       return NextResponse.json({ ok: true, matched: false });
     }
 
@@ -80,7 +92,7 @@ export async function POST(request: Request) {
   }
 }
 
-/** FrontPad иногда проверяет URL методом GET при настройке. */
+/** FrontPad проверяет URL методом GET при настройке. */
 export async function GET() {
   return NextResponse.json({ ok: true, service: "vechera-frontpad-webhook" });
 }

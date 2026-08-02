@@ -271,6 +271,7 @@ export function CartDrawer() {
         orderId: String(data.orderId),
         orderNumber: data.orderNumber ? String(data.orderNumber) : undefined,
         phone: phone || undefined,
+        franchiseId,
         mode: data.mode === "live" ? "live" : "stub",
         at: new Date().toISOString(),
       };

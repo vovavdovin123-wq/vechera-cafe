@@ -1,9 +1,20 @@
 import { NextResponse } from "next/server";
+import { FRONTPAD_DEFAULT_HOOK_STATUSES } from "@/lib/frontpad-status";
 import { frontPadConfigStatus } from "@/lib/frontpad";
+import { readWebhookLog } from "@/lib/webhook-log";
+
+const DEFAULT_HOOK_URL = "https://vechera-cafe.ru/api/frontpad/webhook";
 
 /** Диагностика: настроены ли секреты FrontPad по точкам (без раскрытия). */
 export async function GET() {
   const status = frontPadConfigStatus();
+  const hookUrl = process.env.FRONTPAD_HOOK_URL?.trim() || DEFAULT_HOOK_URL;
+  const hookStatuses =
+    process.env.FRONTPAD_HOOK_STATUSES?.split(",")
+      .map((s) => s.trim())
+      .filter(Boolean) || FRONTPAD_DEFAULT_HOOK_STATUSES;
+  const recentWebhooks = await readWebhookLog(5);
+
   return NextResponse.json({
     ok: true,
     configured: status.configured,
@@ -12,6 +23,11 @@ export async function GET() {
       center: status.center,
       hippodrome: status.hippodrome,
       dualAccounts: status.dualAccounts,
+    },
+    webhook: {
+      url: hookUrl,
+      statuses: hookStatuses,
+      recent: recentWebhooks,
     },
     hooks: {
       webhook: "/api/frontpad/webhook",

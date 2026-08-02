@@ -13,6 +13,7 @@ import type { FranchiseId, OrderPayload } from "./types";
 
 const FRONTPAD_BASE = "https://app.frontpad.ru/api/index.php";
 const SEND_PRICES = process.env.FRONTPAD_SEND_PRICES === "1";
+const DEFAULT_HOOK_URL = "https://vechera-cafe.ru/api/frontpad/webhook";
 
 /** Секрет для точки. Центр и ипподром — разные аккаунты FP. */
 export function secretFor(franchiseId?: FranchiseId): string | undefined {
@@ -375,15 +376,16 @@ export async function sendOrderToFrontPad(
     .map((t) => t.trim())
     .filter(Boolean);
 
-  const hookStatusesFromEnv = process.env.FRONTPAD_HOOK_STATUSES?.split(",")
-    .map((t) => t.trim())
-    .filter(Boolean);
-  const hookStatuses = hookStatusesFromEnv?.length
-    ? hookStatusesFromEnv
-    : FRONTPAD_DEFAULT_HOOK_STATUSES;
+  const hookStatusesFromEnv = process.env.FRONTPAD_HOOK_STATUSES?.trim();
+  const hookStatuses =
+    hookStatusesFromEnv === "none" || hookStatusesFromEnv === "off"
+      ? []
+      : hookStatusesFromEnv
+        ? hookStatusesFromEnv.split(",").map((t) => t.trim()).filter(Boolean)
+        : FRONTPAD_DEFAULT_HOOK_STATUSES;
 
-  const hookUrl = process.env.FRONTPAD_HOOK_URL?.trim();
-  if (hookUrl) scalars.hook_url = hookUrl;
+  const hookUrl = process.env.FRONTPAD_HOOK_URL?.trim() || DEFAULT_HOOK_URL;
+  scalars.hook_url = hookUrl;
 
   let body = buildPhpFormBody(scalars, {
     product: productArticles,
@@ -405,6 +407,8 @@ export async function sendOrderToFrontPad(
     franchise: order.franchiseId,
     account:
       order.franchiseId === "hippodrome" ? "hippodrome" : "center",
+    hookUrl,
+    hookStatuses: hookStatuses.length ? hookStatuses : "(all via global webhook)",
   });
 
   try {

@@ -10,6 +10,7 @@ export type TrackedOrder = {
   orderId: string;
   orderNumber?: string;
   phone?: string;
+  franchiseId?: "center" | "hippodrome";
   mode?: "live" | "stub";
   at: string;
 };
@@ -50,44 +51,51 @@ export function OrderStatusPanel({
 }) {
   const [status, setStatus] = useState<string | null>(null);
   const [hint, setHint] = useState<string | null>(null);
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const refresh = useCallback(async () => {
     setLoading(true);
-    setHint(null);
     try {
       const qs = new URLSearchParams();
       if (order.orderId) qs.set("orderId", order.orderId);
       if (order.orderNumber) qs.set("orderNumber", order.orderNumber);
       if (order.phone) qs.set("phone", order.phone);
+      if (order.franchiseId) qs.set("franchiseId", order.franchiseId);
       const res = await fetch(`/api/frontpad/status?${qs}`);
       const data = (await res.json()) as {
         ok: boolean;
         status?: string;
         message?: string;
         source?: string;
+        updatedAt?: string;
       };
       if (!res.ok || !data.ok) {
         setStatus("Принят");
-        setHint(data.message || "Не удалось обновить статус из FrontPad");
+        setHint(data.message || "Не удалось обновить статус");
         return;
       }
       setStatus(formatFrontPadStatus(data.status || "Принят"));
-      if (data.message && data.source !== "webhook") {
-        setHint(data.message);
-      } else if (data.source === "webhook") {
+      setUpdatedAt(data.updatedAt ?? null);
+      if (data.source === "webhook") {
         setHint(null);
+      } else if (data.message) {
+        setHint(data.message);
+      } else {
+        setHint("Ожидаем обновление из FrontPad…");
       }
     } catch {
       setStatus("Принят");
-      setHint("Сеть недоступна — статус обновится позже");
+      setHint("Сеть недоступна — попробуйте позже");
     } finally {
       setLoading(false);
     }
-  }, [order.orderId, order.phone]);
+  }, [order.orderId, order.orderNumber, order.phone, order.franchiseId]);
 
   useEffect(() => {
     void refresh();
+    const id = setInterval(() => void refresh(), 15000);
+    return () => clearInterval(id);
   }, [refresh]);
 
   const title = order.orderNumber
@@ -126,11 +134,11 @@ export function OrderStatusPanel({
       </p>
       {hint ? (
         <p className="mt-1 text-xs text-ink-muted">{hint}</p>
-      ) : (
-        <p className="mt-2 text-xs text-ink-muted">
-          Статус обновляется при смене заказа в FrontPad.
+      ) : updatedAt ? (
+        <p className="mt-1 text-xs text-ink-muted">
+          Обновлено: {new Date(updatedAt).toLocaleString("ru-RU")}
         </p>
-      )}
+      ) : null}
       {onDismiss && (
         <button
           type="button"
