@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { fetchFrontPadStatus } from "@/lib/frontpad";
-import { formatFrontPadStatus } from "@/lib/frontpad-status";
+import { formatFrontPadStatus, DEFAULT_CUSTOMER_STATUS } from "@/lib/frontpad-status";
 import { findOrderByFrontPadId } from "@/lib/orders-store";
 
 /**
@@ -20,14 +20,29 @@ export async function GET(request: Request) {
     );
   }
 
+  const franchiseParam = url.searchParams.get("franchiseId");
+  const franchiseId =
+    franchiseParam === "center" || franchiseParam === "hippodrome"
+      ? franchiseParam
+      : undefined;
+  const fulfillmentParam = url.searchParams.get("fulfillment");
+  const fulfillmentFromQuery =
+    fulfillmentParam === "delivery" || fulfillmentParam === "pickup"
+      ? fulfillmentParam
+      : undefined;
+
   const lookupId = orderId || orderNumber;
 
   if (lookupId) {
     const local = await findOrderByFrontPadId(lookupId);
+    const fulfillment = local?.fulfillment ?? fulfillmentFromQuery;
+    const fmt = (status: string) =>
+      formatFrontPadStatus(status, { fulfillment });
+
     if (local?.frontpadStatus) {
       return NextResponse.json({
         ok: true,
-        status: formatFrontPadStatus(local.frontpadStatus),
+        status: fmt(local.frontpadStatus),
         source: "webhook",
         updatedAt: local.frontpadStatusAt,
       });
@@ -35,7 +50,7 @@ export async function GET(request: Request) {
     if (local?.frontpadMode === "stub" || local?.status === "paid_stub") {
       return NextResponse.json({
         ok: true,
-        status: "Принят",
+        status: DEFAULT_CUSTOMER_STATUS,
         source: "local",
       });
     }
@@ -48,26 +63,20 @@ export async function GET(request: Request) {
       if (fp.ok && fp.status) {
         return NextResponse.json({
           ok: true,
-          status: formatFrontPadStatus(fp.status),
+          status: fmt(fp.status),
           source: fp.code === "invalid_method" ? "local" : "frontpad",
           message: fp.message,
         });
       }
       return NextResponse.json({
         ok: true,
-        status: "Принят",
+        status: DEFAULT_CUSTOMER_STATUS,
         source: "local",
         message:
           "Заказ в FrontPad. Статус обновится при смене в программе.",
       });
     }
   }
-
-  const franchiseParam = url.searchParams.get("franchiseId");
-  const franchiseId =
-    franchiseParam === "center" || franchiseParam === "hippodrome"
-      ? franchiseParam
-      : undefined;
 
   const result = await fetchFrontPadStatus({
     orderId,
@@ -79,7 +88,9 @@ export async function GET(request: Request) {
   }
   return NextResponse.json({
     ...result,
-    status: formatFrontPadStatus(result.status),
+    status: formatFrontPadStatus(result.status, {
+      fulfillment: fulfillmentFromQuery,
+    }),
     source: "frontpad",
   });
 }

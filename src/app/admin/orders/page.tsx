@@ -132,7 +132,10 @@ function OrdersList() {
                 </span>
                 {order.frontpadStatus !== undefined && (
                   <span>
-                    Статус FP: {formatFrontPadStatus(order.frontpadStatus)}
+                    Статус:{" "}
+                    {formatFrontPadStatus(order.frontpadStatus, {
+                      fulfillment: order.fulfillment,
+                    })}
                   </span>
                 )}
               </div>

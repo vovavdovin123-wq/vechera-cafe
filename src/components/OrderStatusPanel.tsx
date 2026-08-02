@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Loader2, RefreshCw } from "lucide-react";
+import { DEFAULT_CUSTOMER_STATUS } from "@/lib/frontpad-status";
 
 const STORAGE_KEY = "vechera-last-order";
 
@@ -10,6 +11,7 @@ export type TrackedOrder = {
   orderNumber?: string;
   phone?: string;
   franchiseId?: "center" | "hippodrome";
+  fulfillment?: "delivery" | "pickup";
   mode?: "live" | "stub";
   at: string;
 };
@@ -61,6 +63,7 @@ export function OrderStatusPanel({
       if (order.orderNumber) qs.set("orderNumber", order.orderNumber);
       if (order.phone) qs.set("phone", order.phone);
       if (order.franchiseId) qs.set("franchiseId", order.franchiseId);
+      if (order.fulfillment) qs.set("fulfillment", order.fulfillment);
       const res = await fetch(`/api/frontpad/status?${qs}`);
       const data = (await res.json()) as {
         ok: boolean;
@@ -70,11 +73,11 @@ export function OrderStatusPanel({
         updatedAt?: string;
       };
       if (!res.ok || !data.ok) {
-        setStatus("Принят");
+        setStatus(DEFAULT_CUSTOMER_STATUS);
         setHint(data.message || "Не удалось обновить статус");
         return;
       }
-      setStatus(data.status || "Принят");
+      setStatus(data.status || DEFAULT_CUSTOMER_STATUS);
       setUpdatedAt(data.updatedAt ?? null);
       if (data.source === "webhook") {
         setHint(null);
@@ -84,12 +87,12 @@ export function OrderStatusPanel({
         setHint("Ожидаем обновление из FrontPad…");
       }
     } catch {
-      setStatus("Принят");
+      setStatus(DEFAULT_CUSTOMER_STATUS);
       setHint("Сеть недоступна — попробуйте позже");
     } finally {
       setLoading(false);
     }
-  }, [order.orderId, order.orderNumber, order.phone, order.franchiseId]);
+  }, [order.orderId, order.orderNumber, order.phone, order.franchiseId, order.fulfillment]);
 
   useEffect(() => {
     void refresh();

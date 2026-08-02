@@ -272,6 +272,7 @@ export function CartDrawer() {
         orderNumber: data.orderNumber ? String(data.orderNumber) : undefined,
         phone: phone || undefined,
         franchiseId,
+        fulfillment: mode,
         mode: data.mode === "live" ? "live" : "stub",
         at: new Date().toISOString(),
       };
