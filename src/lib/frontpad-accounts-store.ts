@@ -60,11 +60,10 @@ function secretHint(secret: string): string {
 }
 
 function envSecret(franchiseId: FranchiseId): string | undefined {
-  const shared = process.env.FRONTPAD_SECRET?.trim();
   if (franchiseId === "center") {
-    return process.env.FRONTPAD_SECRET_CENTER?.trim() || shared || undefined;
+    return process.env.FRONTPAD_SECRET_CENTER?.trim() || undefined;
   }
-  return process.env.FRONTPAD_SECRET_HIPPODROME?.trim() || shared || undefined;
+  return process.env.FRONTPAD_SECRET_HIPPODROME?.trim() || undefined;
 }
 
 export function resolveFrontPadSecret(

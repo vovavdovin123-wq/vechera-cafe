@@ -47,9 +47,9 @@ export async function GET() {
       stops: "/api/frontpad/stops",
     },
     message: status.dualAccounts
-      ? "Два аккаунта FrontPad: центр и ипподром — заказы уходят в нужный"
+      ? "Два аккаунта FrontPad: центр и ипподром — заказы уходят строго в свой аккаунт"
       : status.configured
-        ? "FrontPad настроен (общий или один секрет). Для двух аккаунтов задайте FRONTPAD_SECRET_CENTER и FRONTPAD_SECRET_HIPPODROME"
+        ? "Настроен только один аккаунт FrontPad — заказы второй точки будут отклонены"
         : "Нет секретов FrontPad — заказы в stub-режиме",
   });
 }

@@ -5,7 +5,18 @@ import { sendOrderToFrontPad } from "@/lib/frontpad";
 import { notifyNewOrder } from "@/lib/notify";
 import { appendOrder, deleteOrder, readOrders } from "@/lib/orders-store";
 import { applyPendingWebhooks } from "@/lib/webhook-log";
-import type { OrderPayload } from "@/lib/types";
+import type { FranchiseId, OrderPayload } from "@/lib/types";
+
+function isFranchiseId(value: unknown): value is FranchiseId {
+  return value === "center" || value === "hippodrome";
+}
+
+function itemMatchesFranchise(itemId: string, franchiseId: FranchiseId): boolean {
+  if (franchiseId === "hippodrome") {
+    return itemId.startsWith("h-") || itemId.startsWith("hippodrome-");
+  }
+  return itemId.startsWith("c-") || itemId.startsWith("center-");
+}
 
 export async function GET() {
   const jar = await cookies();
@@ -42,6 +53,25 @@ export async function POST(request: Request) {
     if (!body?.items?.length || !body.franchiseId || !body.total) {
       return NextResponse.json(
         { ok: false, message: "Пустой или некорректный заказ" },
+        { status: 400 },
+      );
+    }
+
+    if (!isFranchiseId(body.franchiseId)) {
+      return NextResponse.json(
+        { ok: false, message: "Некорректная точка заказа" },
+        { status: 400 },
+      );
+    }
+
+    if (
+      body.items.some((item) => !itemMatchesFranchise(item.id, body.franchiseId))
+    ) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Состав заказа не соответствует выбранной точке",
+        },
         { status: 400 },
       );
     }

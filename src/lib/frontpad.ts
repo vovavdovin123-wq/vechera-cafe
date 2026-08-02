@@ -1,6 +1,5 @@
 import { resolveFrontPadHookStatuses } from "@/lib/frontpad-status";
 import {
-  readFrontPadSecretSync,
   resolveFrontPadSecret,
 } from "@/lib/frontpad-accounts-store";
 import type { FranchiseId, OrderPayload } from "./types";
@@ -9,15 +8,15 @@ import type { FranchiseId, OrderPayload } from "./types";
  * FrontPad API — POST form-urlencoded на
  * https://app.frontpad.ru/api/index.php?МЕТОД
  *
- * Два аккаунта FrontPad (центр / ипподром) → два секрета в .env.
- * Fallback: один общий FRONTPAD_SECRET на обе точки.
+ * Два аккаунта FrontPad (центр / ипподром) → отдельный секрет на каждую точку.
+ * Заказ с ипподрома уходит только в FRONTPAD_SECRET_HIPPODROME, с центра — только в _CENTER.
  */
 
 const FRONTPAD_BASE = "https://app.frontpad.ru/api/index.php";
 const SEND_PRICES = process.env.FRONTPAD_SEND_PRICES === "1";
 const DEFAULT_HOOK_URL = "https://vechera-cafe.ru/api/frontpad/webhook";
 
-/** Секрет для точки. Админка → .env → общий FRONTPAD_SECRET. */
+/** Секрет для точки. data/frontpad-accounts.json → FRONTPAD_SECRET_* в .env. */
 export function secretFor(franchiseId?: FranchiseId): string | undefined {
   if (franchiseId === "hippodrome") {
     return resolveFrontPadSecret("hippodrome").secret;
@@ -26,12 +25,26 @@ export function secretFor(franchiseId?: FranchiseId): string | undefined {
     return resolveFrontPadSecret("center").secret;
   }
   return (
-    readFrontPadSecretSync("center") ||
-    readFrontPadSecretSync("hippodrome") ||
-    process.env.FRONTPAD_SECRET_CENTER?.trim() ||
-    process.env.FRONTPAD_SECRET_HIPPODROME?.trim() ||
-    process.env.FRONTPAD_SECRET?.trim() ||
+    resolveFrontPadSecret("center").secret ||
+    resolveFrontPadSecret("hippodrome").secret ||
     undefined
+  );
+}
+
+const FRANCHISE_LABELS: Record<FranchiseId, string> = {
+  center: "центра",
+  hippodrome: "ипподрома",
+};
+
+const FRANCHISE_ENV_KEYS: Record<FranchiseId, string> = {
+  center: "FRONTPAD_SECRET_CENTER",
+  hippodrome: "FRONTPAD_SECRET_HIPPODROME",
+};
+
+export function missingFrontPadSecretMessage(franchiseId: FranchiseId): string {
+  return (
+    `Секрет FrontPad для ${FRANCHISE_LABELS[franchiseId]} не настроен. ` +
+    `Задайте ${FRANCHISE_ENV_KEYS[franchiseId]} на сервере.`
   );
 }
 
@@ -274,18 +287,27 @@ export async function sendOrderToFrontPad(
   const secret = secretFor(order.franchiseId);
 
   if (!secret) {
-    console.info("[FrontPad stub] order accepted", {
-      orderId: stubId,
-      franchise: order.franchiseId,
-      total: order.total,
-      items: order.items,
-    });
+    if (!isFrontPadConfigured()) {
+      console.info("[FrontPad stub] order accepted", {
+        orderId: stubId,
+        franchise: order.franchiseId,
+        total: order.total,
+        items: order.items,
+      });
+      return {
+        ok: true,
+        orderId: stubId,
+        mode: "stub",
+        message:
+          "Заказ принят (заглушка). Добавьте FRONTPAD_SECRET_CENTER и FRONTPAD_SECRET_HIPPODROME в .env.",
+      };
+    }
+
     return {
-      ok: true,
+      ok: false,
       orderId: stubId,
-      mode: "stub",
-      message:
-        "Заказ принят (заглушка). Добавьте FRONTPAD_SECRET_CENTER и FRONTPAD_SECRET_HIPPODROME в .env.",
+      mode: "live",
+      message: missingFrontPadSecretMessage(order.franchiseId),
     };
   }
 
@@ -493,11 +515,11 @@ export async function fetchFrontPadStatus(params: {
   else if (phone) fields.client_phone = normalizePhone(phone);
   else return { ok: false, message: "Нужен orderId или clientPhone" };
 
-  const secretsToTry = [
-    secretFor(params.franchiseId),
-    secretFor("center"),
-    secretFor("hippodrome"),
-  ].filter((s, i, arr): s is string => Boolean(s) && arr.indexOf(s) === i);
+  const secretsToTry = (
+    params.franchiseId
+      ? [secretFor(params.franchiseId)]
+      : [secretFor("center"), secretFor("hippodrome")]
+  ).filter((s, i, arr): s is string => Boolean(s) && arr.indexOf(s) === i);
 
   if (!secretsToTry.length) {
     return { ok: false, message: "Нет секрета FrontPad" };
