@@ -53,12 +53,6 @@ export async function appendOrder(
     status: meta.mode === "live" ? "frontpad" : "paid_stub",
     frontpadMode: meta.mode,
     frontpadOrderNumber: meta.orderNumber,
-    ...(meta.mode === "live"
-      ? {
-          frontpadStatus: "1",
-          frontpadStatusAt: new Date().toISOString(),
-        }
-      : {}),
   };
   list.unshift(entry);
   await fs.writeFile(FILE, JSON.stringify(list, null, 2), "utf8");
@@ -70,7 +64,10 @@ export async function updateOrderByFrontPadId(
   patch: Partial<Pick<StoredOrder, "frontpadStatus" | "frontpadStatusAt">>,
 ): Promise<StoredOrder | null> {
   const list = await readOrders();
-  const idx = list.findIndex((o) => o.orderId === String(frontpadOrderId));
+  const id = String(frontpadOrderId);
+  const idx = list.findIndex(
+    (o) => o.orderId === id || o.frontpadOrderNumber === id,
+  );
   if (idx < 0) return null;
   list[idx] = { ...list[idx], ...patch };
   await fs.writeFile(FILE, JSON.stringify(list, null, 2), "utf8");
@@ -81,7 +78,10 @@ export async function findOrderByFrontPadId(
   frontpadOrderId: string,
 ): Promise<StoredOrder | null> {
   const list = await readOrders();
-  return list.find((o) => o.orderId === String(frontpadOrderId)) ?? null;
+  const id = String(frontpadOrderId);
+  return (
+    list.find((o) => o.orderId === id || o.frontpadOrderNumber === id) ?? null
+  );
 }
 
 export async function deleteOrder(id: string): Promise<boolean> {

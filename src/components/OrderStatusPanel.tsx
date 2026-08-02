@@ -58,6 +58,7 @@ export function OrderStatusPanel({
     try {
       const qs = new URLSearchParams();
       if (order.orderId) qs.set("orderId", order.orderId);
+      if (order.orderNumber) qs.set("orderNumber", order.orderNumber);
       if (order.phone) qs.set("phone", order.phone);
       const res = await fetch(`/api/frontpad/status?${qs}`);
       const data = (await res.json()) as {
@@ -71,7 +72,7 @@ export function OrderStatusPanel({
         setHint(data.message || "Не удалось обновить статус из FrontPad");
         return;
       }
-      setStatus(formatFrontPadStatus(data.status || "1"));
+      setStatus(formatFrontPadStatus(data.status || "Принят"));
       if (data.message && data.source !== "webhook") {
         setHint(data.message);
       } else if (data.source === "webhook") {

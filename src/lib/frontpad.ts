@@ -1,3 +1,6 @@
+import {
+  FRONTPAD_DEFAULT_HOOK_STATUSES,
+} from "@/lib/frontpad-status";
 import type { FranchiseId, OrderPayload } from "./types";
 
 /**
@@ -372,9 +375,12 @@ export async function sendOrderToFrontPad(
     .map((t) => t.trim())
     .filter(Boolean);
 
-  const hookStatuses = process.env.FRONTPAD_HOOK_STATUSES?.split(",")
+  const hookStatusesFromEnv = process.env.FRONTPAD_HOOK_STATUSES?.split(",")
     .map((t) => t.trim())
     .filter(Boolean);
+  const hookStatuses = hookStatusesFromEnv?.length
+    ? hookStatusesFromEnv
+    : FRONTPAD_DEFAULT_HOOK_STATUSES;
 
   const hookUrl = process.env.FRONTPAD_HOOK_URL?.trim();
   if (hookUrl) scalars.hook_url = hookUrl;
@@ -384,7 +390,7 @@ export async function sendOrderToFrontPad(
     product_kol: productQty,
     ...(SEND_PRICES ? { product_price: productPrice } : {}),
     ...(tags?.length ? { tags: tags.slice(0, 10) } : {}),
-    ...(hookStatuses?.length ? { hook_status: hookStatuses.slice(0, 5) } : {}),
+    ...(hookStatuses.length ? { hook_status: hookStatuses.slice(0, 10) } : {}),
   });
 
   if (mods.length && lines.length === order.items.length) {
@@ -527,9 +533,9 @@ export async function fetchFrontPadStatus(params: {
       return {
         ok: true,
         code: "invalid_method",
-        status: "1",
+        status: "Принят",
         message:
-          "Заказ принят. Статус обновится автоматически при смене в FrontPad.",
+          "Заказ в FrontPad. Статус обновится при смене в программе.",
       };
     }
   }

@@ -10,17 +10,20 @@ import { findOrderByFrontPadId } from "@/lib/orders-store";
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const orderId = url.searchParams.get("orderId")?.trim() || undefined;
+  const orderNumber = url.searchParams.get("orderNumber")?.trim() || undefined;
   const clientPhone = url.searchParams.get("phone")?.trim() || undefined;
 
-  if (!orderId && !clientPhone) {
+  if (!orderId && !orderNumber && !clientPhone) {
     return NextResponse.json(
-      { ok: false, message: "Укажите orderId или phone" },
+      { ok: false, message: "Укажите orderId, orderNumber или phone" },
       { status: 400 },
     );
   }
 
-  if (orderId) {
-    const local = await findOrderByFrontPadId(orderId);
+  const lookupId = orderId || orderNumber;
+
+  if (lookupId) {
+    const local = await findOrderByFrontPadId(lookupId);
     if (local?.frontpadStatus) {
       return NextResponse.json({
         ok: true,
@@ -38,7 +41,7 @@ export async function GET(request: Request) {
     }
     if (local?.frontpadMode === "live") {
       const fp = await fetchFrontPadStatus({
-        orderId,
+        orderId: local.orderId,
         clientPhone: clientPhone || local.customerPhone,
         franchiseId: local.franchiseId,
       });
@@ -52,10 +55,10 @@ export async function GET(request: Request) {
       }
       return NextResponse.json({
         ok: true,
-        status: "Новый",
+        status: "Принят",
         source: "local",
         message:
-          "Заказ принят. Статус обновится автоматически при смене в FrontPad.",
+          "Заказ в FrontPad. Статус обновится при смене в программе.",
       });
     }
   }
