@@ -52,12 +52,10 @@ export async function POST(request: Request) {
   try {
     const body = await parseWebhookPayload(request);
 
+    // FrontPad проверяет URL пустым POST при настройке — нужен 200, не 400.
     if (!body.order_id) {
-      console.warn("[FrontPad webhook] missing order_id", body);
-      return NextResponse.json(
-        { ok: false, message: "Missing order_id" },
-        { status: 400 },
-      );
+      console.info("[FrontPad webhook] ping / validation", body);
+      return NextResponse.json({ ok: true, ping: true });
     }
 
     const updated = await updateOrderByFrontPadId(String(body.order_id), {
