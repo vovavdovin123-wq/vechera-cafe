@@ -139,12 +139,15 @@ export function CartDrawer() {
     };
     if (mode === "pickup") return [cafe];
     if (deliveryCoords) {
-      return [cafe, { coords: deliveryCoords, style: "pm2rdm" }];
+      return [
+        cafe,
+        { coords: deliveryCoords, style: "pm2rdm" },
+      ];
     }
     return [cafe];
   }, [franchise.coords, mode, deliveryCoords]);
 
-  const mapCenter = deliveryCoords ?? franchise.coords;
+  const deliveryMapZoom = deliveryCoords ? 15 : 16;
 
   async function applyPromo() {
     const code = promoInput.trim();
@@ -402,11 +405,10 @@ export function CartDrawer() {
             {/* Карта на телефоне — сразу под адресом */}
             <div className="h-48 overflow-hidden rounded-2xl border border-line lg:hidden">
               <CleanMap
-                coords={mapCenter}
                 markers={mapMarkers}
                 title={mapTitle}
                 className="h-full w-full"
-                zoom={deliveryCoords ? 15 : 16}
+                zoom={deliveryMapZoom}
               />
             </div>
 
@@ -581,11 +583,10 @@ export function CartDrawer() {
         {/* Карта справа на десктопе */}
         <div className="relative hidden min-h-[420px] flex-1 bg-bg-deep lg:block">
           <CleanMap
-            coords={mapCenter}
             markers={mapMarkers}
             title={mapTitle}
             className="absolute inset-0 h-full w-full rounded-none"
-            zoom={deliveryCoords ? 15 : 16}
+            zoom={deliveryMapZoom}
           />
         </div>
       </div>

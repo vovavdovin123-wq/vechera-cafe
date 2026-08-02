@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { CircleAlert, ShoppingBag, UtensilsCrossed, X } from "lucide-react";
+import { MenuCategorySelect } from "@/components/MenuCategorySelect";
 import { CATEGORY_LABELS, CATEGORY_ORDER } from "@/lib/menu-data";
 import { PAGE } from "@/lib/layout";
 import type { MenuCategory, MenuItem } from "@/lib/types";
@@ -24,6 +25,31 @@ export function MenuSection() {
     const present = new Set(items.map((i) => i.category));
     return CATEGORY_ORDER.filter((c) => present.has(c));
   }, [items]);
+
+  const categoryCounts = useMemo(() => {
+    const counts = new Map<MenuCategory, number>();
+    for (const item of items) {
+      if (!item.available) continue;
+      counts.set(item.category, (counts.get(item.category) ?? 0) + 1);
+    }
+    return counts;
+  }, [items]);
+
+  const categoryOptions = useMemo(
+    () => [
+      {
+        value: "all",
+        label: "Все блюда",
+        count: items.filter((i) => i.available).length,
+      },
+      ...availableCategories.map((c) => ({
+        value: c,
+        label: CATEGORY_LABELS[c],
+        count: categoryCounts.get(c) ?? 0,
+      })),
+    ],
+    [availableCategories, categoryCounts, items],
+  );
 
   const filtered = useMemo(() => {
     const list = items.filter((i) => i.available);
@@ -53,20 +79,12 @@ export function MenuSection() {
         </div>
       </div>
 
-      <div className="mt-5 flex gap-2 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:mt-6 [&::-webkit-scrollbar]:hidden">
-        <CategoryChip
-          active={category === "all"}
-          onClick={() => setCategory("all")}
-          label="Все"
+      <div className="mt-5 sm:mt-6">
+        <MenuCategorySelect
+          value={category}
+          onChange={(value) => setCategory(value as MenuCategory | "all")}
+          options={categoryOptions}
         />
-        {availableCategories.map((c) => (
-          <CategoryChip
-            key={c}
-            active={category === c}
-            onClick={() => setCategory(c)}
-            label={CATEGORY_LABELS[c]}
-          />
-        ))}
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-2.5 sm:mt-6 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
@@ -168,29 +186,5 @@ export function MenuSection() {
         </div>
       )}
     </section>
-  );
-}
-
-function CategoryChip({
-  active,
-  label,
-  onClick,
-}: {
-  active: boolean;
-  label: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`shrink-0 rounded-full border px-3.5 py-2 text-sm font-medium transition-[background,border-color,color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-4 sm:py-2.5 sm:text-base ${
-        active
-          ? "border-transparent bg-[var(--espresso)] text-[var(--gold)]"
-          : "border-[var(--line)] bg-[var(--white)] text-ink hover:border-[var(--gold)] hover:text-[var(--espresso)]"
-      }`}
-    >
-      {label}
-    </button>
   );
 }

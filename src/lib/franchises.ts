@@ -37,6 +37,39 @@ export const FRANCHISE_TAB_LABELS: Record<FranchiseId, string> = {
 };
 
 /** Интерактивный виджет Яндекс.Карт с метками */
+export function mapViewForMarkers(
+  markers: Array<{ coords: [number, number]; style?: string }>,
+  fallbackZoom = 16,
+): { center: [number, number]; zoom: number } {
+  if (markers.length === 0) {
+    return { center: [44.540511, 43.187266], zoom: fallbackZoom };
+  }
+  if (markers.length === 1) {
+    return { center: markers[0].coords, zoom: fallbackZoom };
+  }
+
+  const lons = markers.map((m) => m.coords[0]);
+  const lats = markers.map((m) => m.coords[1]);
+  const center: [number, number] = [
+    (Math.min(...lons) + Math.max(...lons)) / 2,
+    (Math.min(...lats) + Math.max(...lats)) / 2,
+  ];
+  const span = Math.max(
+    Math.max(...lons) - Math.min(...lons),
+    Math.max(...lats) - Math.min(...lats),
+  );
+
+  let zoom = fallbackZoom;
+  if (span > 0.12) zoom = 11;
+  else if (span > 0.08) zoom = 12;
+  else if (span > 0.05) zoom = 13;
+  else if (span > 0.03) zoom = 14;
+  else if (span > 0.015) zoom = 15;
+
+  return { center, zoom: Math.min(fallbackZoom, zoom) };
+}
+
+/** Интерактивный виджет Яндекс.Карт с метками */
 export function yandexEmbedUrl(options: {
   coords?: [number, number];
   markers?: Array<{ coords: [number, number]; style?: string }>;
@@ -52,24 +85,22 @@ export function yandexEmbedUrl(options: {
     return "https://yandex.ru/map-widget/v1/?l=map&lang=ru_RU";
   }
 
-  const center =
-    options.coords ??
-    (() => {
-      const lon =
-        markers.reduce((s, m) => s + m.coords[0], 0) / markers.length;
-      const lat =
-        markers.reduce((s, m) => s + m.coords[1], 0) / markers.length;
-      return [lon, lat] as [number, number];
-    })();
+  const view =
+    markers.length > 1
+      ? mapViewForMarkers(markers, options.zoom ?? 16)
+      : {
+          center: options.coords ?? markers[0].coords,
+          zoom: options.zoom ?? 16,
+        };
 
-  const [lon, lat] = center;
+  const [lon, lat] = view.center;
   const pt = markers
     .map((m) => `${m.coords[0]},${m.coords[1]},${m.style ?? "pm2"}`)
     .join("~");
 
   const params = new URLSearchParams({
     ll: `${lon},${lat}`,
-    z: String(options.zoom ?? 16),
+    z: String(view.zoom),
     pt,
     l: "map",
     lang: "ru_RU",
