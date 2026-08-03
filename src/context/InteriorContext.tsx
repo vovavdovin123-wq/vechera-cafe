@@ -47,19 +47,9 @@ function normalizeInterior(
 
 export function InteriorProvider({ children }: { children: ReactNode }) {
   const { franchiseId } = useFranchise();
-  const [allPhotos, setAllPhotos] = useState<
-    Record<FranchiseId, InteriorPhoto[]>
-  >(() => {
-    const cached =
-      readContentCache<Record<FranchiseId, InteriorPhoto[]>>(CACHE_INTERIOR);
-    if (cached?.center || cached?.hippodrome) return normalizeInterior(cached);
-    return EMPTY_INTERIOR;
-  });
-  const [contentReady, setContentReady] = useState(() => {
-    const cached =
-      readContentCache<Record<FranchiseId, InteriorPhoto[]>>(CACHE_INTERIOR);
-    return Boolean(cached?.center?.length || cached?.hippodrome?.length);
-  });
+  const [allPhotos, setAllPhotos] =
+    useState<Record<FranchiseId, InteriorPhoto[]>>(EMPTY_INTERIOR);
+  const [contentReady, setContentReady] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const [syncStatus, setSyncStatus] = useState<
     "idle" | "loading" | "saving" | "error"
@@ -83,6 +73,14 @@ export function InteriorProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let cancelled = false;
+
+    const cached =
+      readContentCache<Record<FranchiseId, InteriorPhoto[]>>(CACHE_INTERIOR);
+    if (cached?.center || cached?.hippodrome) {
+      setAllPhotos(normalizeInterior(cached));
+      setContentReady(true);
+    }
+
     (async () => {
       setSyncStatus("loading");
       const data = await fetchContent<Record<FranchiseId, InteriorPhoto[]>>(
@@ -93,7 +91,7 @@ export function InteriorProvider({ children }: { children: ReactNode }) {
         const next = normalizeInterior(data);
         setAllPhotos(next);
         writeContentCache(CACHE_INTERIOR, next);
-      } else if (!contentReady) {
+      } else if (!cached?.center && !cached?.hippodrome) {
         setAllPhotos(DEFAULT_INTERIOR);
       }
       setContentReady(true);
@@ -103,7 +101,6 @@ export function InteriorProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only on mount
   }, []);
 
   useEffect(() => {

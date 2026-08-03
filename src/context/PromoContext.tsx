@@ -59,14 +59,8 @@ function normalizeSlide(raw: Partial<PromoSlide> & { id: string }): PromoSlide {
 }
 
 export function PromoProvider({ children }: { children: ReactNode }) {
-  const [slides, setSlides] = useState<PromoSlide[]>(() => {
-    const cached = readContentCache<PromoSlide[]>(CACHE_PROMOS);
-    return cached?.length ? cached.map((s) => normalizeSlide(s)) : [];
-  });
-  const [contentReady, setContentReady] = useState(() => {
-    const cached = readContentCache<PromoSlide[]>(CACHE_PROMOS);
-    return Boolean(cached?.length);
-  });
+  const [slides, setSlides] = useState<PromoSlide[]>([]);
+  const [contentReady, setContentReady] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const [syncStatus, setSyncStatus] = useState<
     "idle" | "loading" | "saving" | "error"
@@ -90,6 +84,13 @@ export function PromoProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let cancelled = false;
+
+    const cached = readContentCache<PromoSlide[]>(CACHE_PROMOS);
+    if (cached?.length) {
+      setSlides(cached.map((s) => normalizeSlide(s)));
+      setContentReady(true);
+    }
+
     (async () => {
       setSyncStatus("loading");
       const data = await fetchContent<PromoSlide[]>("/api/content/promos");
@@ -98,7 +99,7 @@ export function PromoProvider({ children }: { children: ReactNode }) {
         const next = data.map((s) => normalizeSlide(s));
         setSlides(next);
         writeContentCache(CACHE_PROMOS, next);
-      } else if (!contentReady) {
+      } else if (!cached?.length) {
         setSlides(PROMO_SLIDES);
       }
       setContentReady(true);
@@ -108,7 +109,6 @@ export function PromoProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only on mount
   }, []);
 
   useEffect(() => {

@@ -124,19 +124,9 @@ function normalizeMenus(
 
 export function MenuProvider({ children }: { children: ReactNode }) {
   const { franchiseId } = useFranchise();
-  const [allMenus, setAllMenus] = useState<Record<FranchiseId, MenuItem[]>>(
-    () => {
-      const cached =
-        readContentCache<Record<FranchiseId, MenuItem[]>>(CACHE_MENUS);
-      if (cached?.center || cached?.hippodrome) return normalizeMenus(cached);
-      return EMPTY_MENUS;
-    },
-  );
-  const [contentReady, setContentReady] = useState(() => {
-    const cached =
-      readContentCache<Record<FranchiseId, MenuItem[]>>(CACHE_MENUS);
-    return Boolean(cached?.center?.length || cached?.hippodrome?.length);
-  });
+  const [allMenus, setAllMenus] =
+    useState<Record<FranchiseId, MenuItem[]>>(EMPTY_MENUS);
+  const [contentReady, setContentReady] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const [syncStatus, setSyncStatus] = useState<
     "idle" | "loading" | "saving" | "error"
@@ -169,6 +159,16 @@ export function MenuProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let cancelled = false;
+
+    const cached =
+      readContentCache<Record<FranchiseId, MenuItem[]>>(CACHE_MENUS);
+    if (cached?.center || cached?.hippodrome) {
+      const fromCache = normalizeMenus(cached);
+      setAllMenus(fromCache);
+      setSavedMenus(fromCache);
+      setContentReady(true);
+    }
+
     (async () => {
       setSyncStatus("loading");
       const data = await fetchContent<Record<FranchiseId, MenuItem[]>>(
@@ -180,7 +180,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
         setAllMenus(next);
         writeContentCache(CACHE_MENUS, next);
         setSavedMenus(next);
-      } else if (!contentReady) {
+      } else if (!cached?.center && !cached?.hippodrome) {
         setAllMenus(INITIAL_MENUS);
         setSavedMenus(INITIAL_MENUS);
       }
@@ -191,7 +191,6 @@ export function MenuProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only on mount
   }, []);
 
   const addMenuItem = useCallback(

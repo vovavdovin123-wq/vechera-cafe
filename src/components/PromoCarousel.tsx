@@ -202,13 +202,18 @@ export function PromoCarousel() {
 
   if (!contentReady) {
     return (
-      <div
-        className="relative w-full overflow-hidden bg-[var(--bg-deep)] pt-3 sm:pt-4"
-        style={{ aspectRatio: "21 / 9", minHeight: "12rem" }}
-        aria-busy
+      <section
+        className="relative w-full pt-3 sm:pt-4"
+        aria-busy="true"
+        aria-label="Загрузка акций"
       >
-        <div className="absolute inset-0 animate-pulse bg-[var(--espresso)]/10" />
-      </div>
+        <div
+          className="relative w-full overflow-hidden rounded-[20px] bg-[var(--bg-deep)] sm:rounded-[24px] md:rounded-[28px]"
+          style={{ aspectRatio: "21 / 9", minHeight: "12rem" }}
+        >
+          <div className="absolute inset-0 animate-pulse bg-[var(--espresso)]/10" />
+        </div>
+      </section>
     );
   }
 
