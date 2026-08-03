@@ -113,7 +113,7 @@ export function MenuSection() {
             </div>
             <div className="flex flex-1 flex-col p-2.5 sm:p-5">
               <div className="flex items-start justify-between gap-1.5">
-                <h3 className="text-sm font-semibold leading-snug text-ink sm:text-xl">
+                <h3 className="text-[0.9375rem] font-semibold leading-snug text-ink sm:text-xl md:text-2xl">
                   {item.name}
                 </h3>
                 <button
@@ -127,7 +127,7 @@ export function MenuSection() {
                 </button>
               </div>
               <div className="mt-2.5 flex flex-col gap-2 sm:mt-5 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-                <p className="text-base font-semibold text-ink sm:text-xl">
+                <p className="text-lg font-semibold text-ink sm:text-2xl">
                   {item.price} ₽
                 </p>
                 <button
