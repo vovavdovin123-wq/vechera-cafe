@@ -18,17 +18,27 @@ interface FranchiseContextValue {
   setFranchiseId: (id: FranchiseId) => void;
   /** true — точка не выбрана, нужна страница /pick */
   needsPick: boolean;
-  /** localStorage прочитан */
+  /** sessionStorage прочитан */
   ready: boolean;
 }
 
 const FranchiseContext = createContext<FranchiseContextValue | null>(null);
 const STORAGE_KEY = "vechera-franchise";
 
+function franchiseStorage(): Storage | null {
+  try {
+    return sessionStorage;
+  } catch {
+    return null;
+  }
+}
+
 /** Синхронная проверка — не ждём React state после выбора на /pick */
 export function hasStoredFranchise(): boolean {
+  const storage = franchiseStorage();
+  if (!storage) return false;
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = storage.getItem(STORAGE_KEY);
     if (raw === "center" || raw === "hippodrome") return true;
     if (raw === "centerCoffee" || raw === "hippodromeCoffee") return true;
     return false;
@@ -44,8 +54,18 @@ const LEGACY_FRANCHISE: Record<string, FranchiseId> = {
 };
 
 function readStoredFranchise(): { id: FranchiseId | null } {
+  const storage = franchiseStorage();
+  if (!storage) return { id: null };
+
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    // Старое localStorage больше не используем — выбор только на сессию
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
+
+    const raw = storage.getItem(STORAGE_KEY);
     if (!raw) return { id: null };
 
     if (FRANCHISES[raw as FranchiseId]) {
@@ -54,11 +74,11 @@ function readStoredFranchise(): { id: FranchiseId | null } {
 
     const mapped = LEGACY_FRANCHISE[raw];
     if (mapped && FRANCHISES[mapped]) {
-      localStorage.setItem(STORAGE_KEY, mapped);
+      storage.setItem(STORAGE_KEY, mapped);
       return { id: mapped };
     }
 
-    localStorage.removeItem(STORAGE_KEY);
+    storage.removeItem(STORAGE_KEY);
     return { id: null };
   } catch {
     return { id: null };
@@ -86,7 +106,7 @@ export function FranchiseProvider({ children }: { children: ReactNode }) {
     setFranchiseIdState(id);
     setNeedsPick(false);
     try {
-      localStorage.setItem(STORAGE_KEY, id);
+      franchiseStorage()?.setItem(STORAGE_KEY, id);
     } catch {
       /* private mode / blocked storage */
     }
