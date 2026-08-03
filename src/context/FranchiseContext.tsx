@@ -16,12 +16,26 @@ interface FranchiseContextValue {
   franchiseId: FranchiseId;
   franchise: Franchise;
   setFranchiseId: (id: FranchiseId) => void;
-  /** Нужно выбрать точку (показывается при каждом заходе) */
+  /** true — точка не выбрана, нужна страница /pick */
   needsPick: boolean;
+  /** localStorage прочитан */
+  ready: boolean;
 }
 
 const FranchiseContext = createContext<FranchiseContextValue | null>(null);
 const STORAGE_KEY = "vechera-franchise";
+
+/** Синхронная проверка — не ждём React state после выбора на /pick */
+export function hasStoredFranchise(): boolean {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw === "center" || raw === "hippodrome") return true;
+    if (raw === "centerCoffee" || raw === "hippodromeCoffee") return true;
+    return false;
+  } catch {
+    return false;
+  }
+}
 
 /** Старые id кофеен → родительская точка */
 const LEGACY_FRANCHISE: Record<string, FranchiseId> = {
@@ -53,12 +67,18 @@ function readStoredFranchise(): { id: FranchiseId | null } {
 
 export function FranchiseProvider({ children }: { children: ReactNode }) {
   const [franchiseId, setFranchiseIdState] = useState<FranchiseId>("center");
-  /** Окно выбора точки — при каждом заходе на сайт */
   const [needsPick, setNeedsPick] = useState(true);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const stored = readStoredFranchise();
-    if (stored.id) setFranchiseIdState(stored.id);
+    if (stored.id) {
+      setFranchiseIdState(stored.id);
+      setNeedsPick(false);
+    } else {
+      setNeedsPick(true);
+    }
+    setReady(true);
   }, []);
 
   const setFranchiseId = useCallback((id: FranchiseId) => {
@@ -80,8 +100,9 @@ export function FranchiseProvider({ children }: { children: ReactNode }) {
       franchise,
       setFranchiseId,
       needsPick,
+      ready,
     }),
-    [franchise, setFranchiseId, needsPick],
+    [franchise, setFranchiseId, needsPick, ready],
   );
 
   return (

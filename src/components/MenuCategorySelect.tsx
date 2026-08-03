@@ -87,7 +87,7 @@ export function MenuCategorySelect({
             className={`block truncate ${
               isAdmin
                 ? "text-sm font-semibold text-ink"
-                : "font-display text-xl font-semibold text-ink"
+                : "font-display text-lg font-semibold text-ink"
             }`}
           >
             {selected?.label}
@@ -131,7 +131,7 @@ export function MenuCategorySelect({
                         : "rounded-xl text-ink hover:bg-[var(--bg-deep)]/40"
                   }`}
                 >
-                  <span className="text-base font-medium sm:text-lg">{opt.label}</span>
+                  <span className="text-sm font-medium sm:text-base">{opt.label}</span>
                   <span className="flex shrink-0 items-center gap-2">
                     {opt.count != null && (
                       <span

@@ -1,43 +1,23 @@
 "use client";
 
-import { useEffect } from "react";
 import { Clock, MapPin } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { useFranchise } from "@/context/FranchiseContext";
 import { FRANCHISE_LIST, FRANCHISE_TAB_LABELS } from "@/lib/franchises";
 import type { FranchiseId } from "@/lib/types";
 
-export function FranchiseWelcomeGate() {
-  const { needsPick, setFranchiseId } = useFranchise();
-
-  useEffect(() => {
-    if (!needsPick) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, [needsPick]);
-
-  if (!needsPick) return null;
-
-  function pick(id: FranchiseId) {
-    setFranchiseId(id);
-  }
-
+export function FranchisePickScreen({
+  onPick,
+}: {
+  onPick: (id: FranchiseId) => void;
+}) {
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-end justify-center overflow-y-auto sm:items-center sm:p-6"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="franchise-pick-title"
-    >
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-y-auto px-4 py-[max(2rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:p-6">
       <div
-        className="absolute inset-0 bg-[color-mix(in_srgb,var(--espresso-deep)_92%,black)]"
+        className="fixed inset-0 bg-[color-mix(in_srgb,var(--espresso-deep)_92%,black)]"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 opacity-40"
+        className="pointer-events-none fixed inset-0 opacity-40"
         style={{
           background:
             "radial-gradient(ellipse 80% 50% at 50% 0%, color-mix(in srgb, var(--gold) 28%, transparent), transparent 55%)",
@@ -45,15 +25,12 @@ export function FranchiseWelcomeGate() {
         aria-hidden
       />
 
-      <div className="relative z-10 flex w-full max-w-lg flex-col px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(2rem,env(safe-area-inset-top))] animate-rise sm:px-0 sm:pb-0 sm:pt-0">
+      <div className="relative z-10 flex w-full max-w-lg flex-col animate-rise">
         <div className="mb-8 text-center sm:mb-10">
           <div className="flex justify-center">
             <BrandLogo variant="light" size="md" href={null} />
           </div>
-          <h1
-            id="franchise-pick-title"
-            className="mt-6 font-display text-3xl font-semibold tracking-tight text-white sm:text-4xl"
-          >
+          <h1 className="mt-6 font-display text-3xl font-semibold tracking-tight text-white sm:text-4xl">
             Откуда заказать?
           </h1>
           <p className="mx-auto mt-3 max-w-sm text-base leading-relaxed text-white/70">
@@ -66,7 +43,7 @@ export function FranchiseWelcomeGate() {
             <button
               key={f.id}
               type="button"
-              onClick={() => pick(f.id)}
+              onClick={() => onPick(f.id)}
               className="group flex w-full flex-col gap-3 rounded-2xl border border-white/15 bg-white/10 px-5 py-5 text-left transition-[background,border-color,transform] duration-300 hover:border-[var(--gold)] hover:bg-white/15 active:scale-[0.98] sm:px-6 sm:py-6"
             >
               <div className="flex items-center justify-between gap-3">

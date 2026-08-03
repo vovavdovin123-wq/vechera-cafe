@@ -1,7 +1,9 @@
 import Script from "next/script";
 
-/** Срабатывает до React — ловит ошибки чанков после деплоя. */
+/** Срабатывает до React — ловит ошибки чанков после деплоя (только production). */
 export function ChunkLoadRecoveryScript() {
+  if (process.env.NODE_ENV !== "production") return null;
+
   return (
     <Script id="chunk-load-recovery" strategy="beforeInteractive">
       {`(function(){
