@@ -1,4 +1,5 @@
 import { resolveFrontPadHookStatuses } from "@/lib/frontpad-status";
+import { resolveFrontPadArticle } from "@/lib/frontpad-article-map";
 import {
   resolveFrontPadSecret,
 } from "@/lib/frontpad-accounts-store";
@@ -328,8 +329,18 @@ export async function sendOrderToFrontPad(
     };
   }
 
-  const articles = order.items.map((item) => item.frontpadArticle?.trim() || "");
-  const missingItems = order.items.filter((item) => !item.frontpadArticle?.trim());
+  const resolvedItems = order.items.map((item) => ({
+    ...item,
+    frontpadArticle: resolveFrontPadArticle(
+      order.franchiseId,
+      item.id,
+      item.frontpadArticle,
+    ),
+  }));
+
+  const missingItems = resolvedItems.filter(
+    (item) => !item.frontpadArticle?.trim(),
+  );
   if (missingItems.length) {
     const names = missingItems.map((i) => i.name).slice(0, 5).join(", ");
     const tail =
@@ -338,7 +349,7 @@ export async function sendOrderToFrontPad(
       ok: false,
       orderId: stubId,
       mode: "live",
-      message: `Нет артикула FrontPad у: ${names}${tail}. В админке → Меню → «Синхронизация FrontPad» или укажите артикул вручную.`,
+      message: `Нет артикула FrontPad у: ${names}${tail}. Укажите артикул в админке (Меню) или в data/frontpad-article-map.json.`,
     };
   }
 
@@ -347,7 +358,7 @@ export async function sendOrderToFrontPad(
     string,
     { article: string; quantity: number; price: number }
   >();
-  for (const item of order.items) {
+  for (const item of resolvedItems) {
     const article = item.frontpadArticle!.trim();
     const prev = merged.get(article);
     if (prev) {

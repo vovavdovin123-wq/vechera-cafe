@@ -170,9 +170,29 @@ export default function AdminPage() {
         setSyncMsg(data.message || "Не удалось загрузить товары FrontPad");
         return;
       }
-      const { updated, assigned, skipped } = applyFrontPadProducts(data.products);
+      const { updated, assigned, skipped, mismatches } =
+        applyFrontPadProducts(data.products);
+      const parts = [
+        `артикулы подставлены — ${assigned}`,
+        `цены обновлены — ${updated}`,
+        `пропущено — ${skipped}`,
+      ];
+      if (mismatches.length) {
+        parts.push(
+          `ошибки артикулов — ${mismatches.length} (исправьте вручную)`,
+        );
+      }
       setSyncMsg(
-        `FrontPad: артикулы подставлены — ${assigned}, цены обновлены — ${updated}, без совпадения — ${skipped}. Нажмите «Сохранить меню».`,
+        `FrontPad: ${parts.join(", ")}. Нажмите «Сохранить меню».` +
+          (mismatches.length
+            ? ` Неверный артикул: ${mismatches
+                .slice(0, 3)
+                .map(
+                  (m) =>
+                    `«${m.itemName}» (${m.article} → «${m.frontpadName}»)`,
+                )
+                .join("; ")}${mismatches.length > 3 ? "…" : ""}`
+            : ""),
       );
     } catch {
       setSyncMsg("Сеть недоступна");

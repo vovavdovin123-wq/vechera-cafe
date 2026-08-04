@@ -27,6 +27,7 @@ import { CATEGORY_IMAGES, INITIAL_MENUS } from "@/lib/menu-data";
 import {
   syncMenuWithFrontPadProducts,
   type FrontPadProductSync,
+  type FrontPadSyncMismatch,
 } from "@/lib/frontpad-menu-sync";
 import type { FranchiseId, MenuCategoryDef, MenuItem } from "@/lib/types";
 import { useFranchise } from "./FranchiseContext";
@@ -55,6 +56,7 @@ interface MenuContextValue {
     updated: number;
     assigned: number;
     skipped: number;
+    mismatches: import("@/lib/frontpad-menu-sync").FrontPadSyncMismatch[];
   };
   saveMenus: () => Promise<boolean>;
   isDirty: boolean;
@@ -382,6 +384,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
       let updated = 0;
       let assigned = 0;
       let skipped = 0;
+      let mismatches: FrontPadSyncMismatch[] = [];
 
       setAllMenus((prev) => {
         const result = syncMenuWithFrontPadProducts(
@@ -391,10 +394,11 @@ export function MenuProvider({ children }: { children: ReactNode }) {
         updated = result.updated;
         assigned = result.assigned;
         skipped = result.skipped;
+        mismatches = result.mismatches;
         return { ...prev, [franchiseId]: result.items };
       });
 
-      return { updated, assigned, skipped };
+      return { updated, assigned, skipped, mismatches };
     },
     [franchiseId],
   );
