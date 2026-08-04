@@ -1,25 +1,86 @@
 {
   "center": [
-    { "id": "sandwiches", "label": "Сэндвичи" },
-    { "id": "burgers", "label": "Бургеры" },
-    { "id": "panini", "label": "Панини" },
-    { "id": "fryBoxes", "label": "Фри-боксы" },
-    { "id": "waffles", "label": "Венские вафли" },
-    { "id": "salads", "label": "Салаты" },
-    { "id": "fried", "label": "Фритюр" },
-    { "id": "sauces", "label": "Соусы" },
-    { "id": "rolls", "label": "Роллы" },
-    { "id": "pizzas", "label": "Пицца" },
-    { "id": "coffeeShop", "label": "Кофейня" }
+    {
+      "id": "rolls",
+      "label": "Роллы"
+    },
+    {
+      "id": "burgers",
+      "label": "Бургеры"
+    },
+    {
+      "id": "sandwiches",
+      "label": "Сэндвичи"
+    },
+    {
+      "id": "panini",
+      "label": "Панини"
+    },
+    {
+      "id": "pizzas",
+      "label": "Пицца"
+    },
+    {
+      "id": "salads",
+      "label": "Салаты"
+    },
+    {
+      "id": "hotDogs",
+      "label": "Хот-доги"
+    },
+    {
+      "id": "fryBoxes",
+      "label": "Фри-боксы"
+    },
+    {
+      "id": "fried",
+      "label": "Фритюр"
+    },
+    {
+      "id": "waffles",
+      "label": "Венские вафли"
+    },
+    {
+      "id": "coffeeShop",
+      "label": "Кофейня"
+    },
+    {
+      "id": "sauces",
+      "label": "Соусы"
+    }
   ],
   "hippodrome": [
-    { "id": "fried", "label": "Фритюр" },
-    { "id": "sandwiches", "label": "Сэндвичи" },
-    { "id": "hotDogs", "label": "Хот-доги" },
-    { "id": "burgers", "label": "Бургеры" },
-    { "id": "salads", "label": "Салаты" },
-    { "id": "sauces", "label": "Соусы" },
-    { "id": "waffles", "label": "Десерты" },
-    { "id": "coffeeShop", "label": "Напитки" }
+    {
+      "id": "coffeeShop",
+      "label": "Напитки"
+    },
+    {
+      "id": "burgers",
+      "label": "Бургеры"
+    },
+    {
+      "id": "sandwiches",
+      "label": "Сэндвичи"
+    },
+    {
+      "id": "hotDogs",
+      "label": "Хот-доги"
+    },
+    {
+      "id": "fried",
+      "label": "Фритюр"
+    },
+    {
+      "id": "waffles",
+      "label": "Десерты"
+    },
+    {
+      "id": "salads",
+      "label": "Салаты"
+    },
+    {
+      "id": "sauces",
+      "label": "Соусы"
+    }
   ]
 }
