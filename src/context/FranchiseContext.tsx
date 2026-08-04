@@ -24,6 +24,10 @@ interface FranchiseContextValue {
 
 const FranchiseContext = createContext<FranchiseContextValue | null>(null);
 const STORAGE_KEY = "vechera-franchise";
+const FRANCHISE_CHANGE = "vechera-franchise-change";
+
+/** Если sessionStorage недоступен — держим выбор в памяти на время вкладки */
+let memoryFranchiseId: FranchiseId | null = null;
 
 function franchiseStorage(): Storage | null {
   try {
@@ -33,8 +37,15 @@ function franchiseStorage(): Storage | null {
   }
 }
 
+function notifyFranchiseChange() {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event(FRANCHISE_CHANGE));
+  }
+}
+
 /** Синхронная проверка — не ждём React state после выбора на /pick */
 export function hasStoredFranchise(): boolean {
+  if (memoryFranchiseId) return true;
   const storage = franchiseStorage();
   if (!storage) return false;
   try {
@@ -54,6 +65,10 @@ const LEGACY_FRANCHISE: Record<string, FranchiseId> = {
 };
 
 function readStoredFranchise(): { id: FranchiseId | null } {
+  if (memoryFranchiseId && FRANCHISES[memoryFranchiseId]) {
+    return { id: memoryFranchiseId };
+  }
+
   const storage = franchiseStorage();
   if (!storage) return { id: null };
 
@@ -93,6 +108,7 @@ export function FranchiseProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const stored = readStoredFranchise();
     if (stored.id) {
+      memoryFranchiseId = stored.id;
       setFranchiseIdState(stored.id);
       setNeedsPick(false);
     } else {
@@ -103,6 +119,7 @@ export function FranchiseProvider({ children }: { children: ReactNode }) {
 
   const setFranchiseId = useCallback((id: FranchiseId) => {
     if (!FRANCHISES[id]) return;
+    memoryFranchiseId = id;
     setFranchiseIdState(id);
     setNeedsPick(false);
     try {
@@ -110,6 +127,7 @@ export function FranchiseProvider({ children }: { children: ReactNode }) {
     } catch {
       /* private mode / blocked storage */
     }
+    notifyFranchiseChange();
   }, []);
 
   const franchise = FRANCHISES[franchiseId] ?? FRANCHISES.center;

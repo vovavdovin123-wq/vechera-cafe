@@ -7,13 +7,15 @@ import type { FranchiseId } from "@/lib/types";
 
 export function FranchisePickScreen({
   onPick,
+  busyId = null,
 }: {
   onPick: (id: FranchiseId) => void;
+  busyId?: FranchiseId | null;
 }) {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-y-auto px-4 py-[max(2rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:p-6">
       <div
-        className="fixed inset-0 bg-[color-mix(in_srgb,var(--espresso-deep)_92%,black)]"
+        className="pointer-events-none fixed inset-0 bg-[color-mix(in_srgb,var(--espresso-deep)_92%,black)]"
         aria-hidden
       />
       <div
@@ -25,7 +27,7 @@ export function FranchisePickScreen({
         aria-hidden
       />
 
-      <div className="relative z-10 flex w-full max-w-lg flex-col animate-rise">
+      <div className="relative z-20 flex w-full max-w-lg flex-col animate-rise">
         <div className="mb-8 text-center sm:mb-10">
           <div className="flex justify-center">
             <BrandLogo variant="light" size="md" href={null} />
@@ -43,15 +45,16 @@ export function FranchisePickScreen({
             <button
               key={f.id}
               type="button"
+              disabled={busyId !== null}
               onClick={() => onPick(f.id)}
-              className="group flex w-full flex-col gap-3 rounded-2xl border border-white/15 bg-white/10 px-5 py-5 text-left transition-[background,border-color,transform] duration-300 hover:border-[var(--gold)] hover:bg-white/15 active:scale-[0.98] sm:px-6 sm:py-6"
+              className="group flex w-full touch-manipulation flex-col gap-3 rounded-2xl border border-white/15 bg-white/10 px-5 py-5 text-left transition-[background,border-color,transform] duration-300 hover:border-[var(--gold)] hover:bg-white/15 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60 sm:px-6 sm:py-6"
             >
               <div className="flex items-center justify-between gap-3">
                 <span className="font-display text-2xl font-semibold tracking-tight text-white sm:text-[1.75rem]">
                   {FRANCHISE_TAB_LABELS[f.id]}
                 </span>
                 <span className="shrink-0 rounded-full bg-[var(--gold)] px-3.5 py-1.5 text-sm font-semibold text-[var(--espresso)] transition group-hover:bg-[var(--gold-dark)]">
-                  Выбрать
+                  {busyId === f.id ? "…" : "Выбрать"}
                 </span>
               </div>
               <span className="flex items-start gap-2 text-sm leading-snug text-white/75">
