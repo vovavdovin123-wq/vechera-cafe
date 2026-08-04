@@ -639,7 +639,8 @@
       "category": "fried",
       "description": "Состав уточняется",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "7000"
     },
     {
       "id": "h-fr-2",
@@ -657,7 +658,8 @@
       "category": "fried",
       "description": "Состав уточняется",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "7001"
     },
     {
       "id": "h-fr-4",
@@ -666,7 +668,8 @@
       "category": "fried",
       "description": "Состав уточняется",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "7002"
     },
     {
       "id": "h-fr-5",
@@ -675,7 +678,8 @@
       "category": "fried",
       "description": "Состав уточняется",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "7003"
     },
     {
       "id": "h-fr-6",
@@ -684,7 +688,8 @@
       "category": "fried",
       "description": "Состав уточняется",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "7004"
     },
     {
       "id": "h-sw-1",
@@ -693,7 +698,8 @@
       "category": "sandwiches",
       "description": "Хлеб Харрис, соус, помидор, лук, курица, салат, сыр, фри",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "1000"
     },
     {
       "id": "h-sw-2",
@@ -702,7 +708,8 @@
       "category": "sandwiches",
       "description": "Состав уточняется",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "1001"
     },
     {
       "id": "h-sw-3",
@@ -711,7 +718,8 @@
       "category": "sandwiches",
       "description": "Хлеб Харрис, соус, помидор, лук, котлета, салат, сыр, фри",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "1002"
     },
     {
       "id": "h-sw-4",
@@ -720,7 +728,8 @@
       "category": "sandwiches",
       "description": "Состав уточняется",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "1003"
     },
     {
       "id": "h-sw-5",
@@ -729,7 +738,8 @@
       "category": "sandwiches",
       "description": "Хлеб Харрис, соус, помидор, салат, курица, котлета, сыр",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "1004"
     },
     {
       "id": "h-bg-1",
@@ -738,7 +748,8 @@
       "category": "hotDogs",
       "description": "Помидор, лист салата, лук, сол. огурец, сосиска, кетчуп, горчица",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "101"
     },
     {
       "id": "h-bg-2",
@@ -747,7 +758,8 @@
       "category": "hotDogs",
       "description": "Лист салата, помидор, лук, корейская морковь, халапеньо, люля, кетчуп, горчица",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "100"
     },
     {
       "id": "h-bg-3",
@@ -756,7 +768,8 @@
       "category": "burgers",
       "description": "Булочка, фирменный соус, салат айсберг, помидор, лук, котлета, сыр, сол. огурец",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "2000"
     },
     {
       "id": "h-sl-1",
@@ -765,7 +778,8 @@
       "category": "salads",
       "description": "Состав уточняется",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "6000"
     },
     {
       "id": "h-sl-2",
@@ -774,7 +788,8 @@
       "category": "salads",
       "description": "Состав уточняется",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "6002"
     },
     {
       "id": "h-sc-1",
@@ -783,7 +798,8 @@
       "category": "sauces",
       "description": "Состав уточняется",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "8000"
     },
     {
       "id": "h-sc-2",
@@ -792,7 +808,8 @@
       "category": "sauces",
       "description": "Состав уточняется",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "8001"
     },
     {
       "id": "h-sc-3",
@@ -810,7 +827,8 @@
       "category": "waffles",
       "description": "Состав уточняется",
       "image": "/menu/dish.png",
-      "available": true
+      "available": true,
+      "frontpadArticle": "5000"
     },
     {
       "id": "h-cs-1",

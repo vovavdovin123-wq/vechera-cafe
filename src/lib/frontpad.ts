@@ -329,13 +329,16 @@ export async function sendOrderToFrontPad(
   }
 
   const articles = order.items.map((item) => item.frontpadArticle?.trim() || "");
-  if (articles.some((a) => !a)) {
+  const missingItems = order.items.filter((item) => !item.frontpadArticle?.trim());
+  if (missingItems.length) {
+    const names = missingItems.map((i) => i.name).slice(0, 5).join(", ");
+    const tail =
+      missingItems.length > 5 ? ` и ещё ${missingItems.length - 5}` : "";
     return {
       ok: false,
       orderId: stubId,
       mode: "live",
-      message:
-        "У части блюд нет артикула FrontPad. Укажите цифровой артикул в админке (Меню).",
+      message: `Нет артикула FrontPad у: ${names}${tail}. В админке → Меню → «Синхронизация FrontPad» или укажите артикул вручную.`,
     };
   }
 

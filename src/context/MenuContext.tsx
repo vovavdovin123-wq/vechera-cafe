@@ -24,6 +24,10 @@ import {
   suggestCategoryId,
 } from "@/lib/menu-categories";
 import { CATEGORY_IMAGES, INITIAL_MENUS } from "@/lib/menu-data";
+import {
+  syncMenuWithFrontPadProducts,
+  type FrontPadProductSync,
+} from "@/lib/frontpad-menu-sync";
 import type { FranchiseId, MenuCategoryDef, MenuItem } from "@/lib/types";
 import { useFranchise } from "./FranchiseContext";
 
@@ -32,11 +36,7 @@ type NewItem = Omit<MenuItem, "id" | "available" | "image"> & {
   image?: string;
 };
 
-export type FrontPadProductSync = {
-  article: string;
-  name: string;
-  price: number;
-};
+export type { FrontPadProductSync } from "@/lib/frontpad-menu-sync";
 
 interface MenuContextValue {
   items: MenuItem[];
@@ -53,6 +53,7 @@ interface MenuContextValue {
   moveCategory: (id: string, direction: "up" | "down") => void;
   applyFrontPadProducts: (products: FrontPadProductSync[]) => {
     updated: number;
+    assigned: number;
     skipped: number;
   };
   saveMenus: () => Promise<boolean>;
@@ -378,45 +379,24 @@ export function MenuProvider({ children }: { children: ReactNode }) {
 
   const applyFrontPadProducts = useCallback(
     (products: FrontPadProductSync[]) => {
-      const byArticle = new Map(
-        products
-          .filter((p) => p.article)
-          .map((p) => [String(p.article).trim(), p] as const),
-      );
-
       let updated = 0;
+      let assigned = 0;
       let skipped = 0;
 
       setAllMenus((prev) => {
-        updated = 0;
-        skipped = 0;
-        const next = { ...prev };
-        for (const fid of Object.keys(prev) as FranchiseId[]) {
-          next[fid] = (prev[fid] ?? []).map((item) => {
-            const art = item.frontpadArticle?.trim();
-            if (!art) {
-              skipped += 1;
-              return item;
-            }
-            const fp = byArticle.get(art);
-            if (!fp) {
-              skipped += 1;
-              return item;
-            }
-            updated += 1;
-            return {
-              ...item,
-              name: fp.name?.trim() ? fp.name.trim() : item.name,
-              price: fp.price > 0 ? Math.round(fp.price) : item.price,
-            };
-          });
-        }
-        return next;
+        const result = syncMenuWithFrontPadProducts(
+          prev[franchiseId] ?? [],
+          products,
+        );
+        updated = result.updated;
+        assigned = result.assigned;
+        skipped = result.skipped;
+        return { ...prev, [franchiseId]: result.items };
       });
 
-      return { updated, skipped };
+      return { updated, assigned, skipped };
     },
-    [],
+    [franchiseId],
   );
 
   const categories = useMemo(() => {

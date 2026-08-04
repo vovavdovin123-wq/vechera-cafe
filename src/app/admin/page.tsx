@@ -170,9 +170,9 @@ export default function AdminPage() {
         setSyncMsg(data.message || "Не удалось загрузить товары FrontPad");
         return;
       }
-      const { updated, skipped } = applyFrontPadProducts(data.products);
+      const { updated, assigned, skipped } = applyFrontPadProducts(data.products);
       setSyncMsg(
-        `Синхронизация: обновлено ${updated}, без совпадения артикула ${skipped}. Нажмите «Сохранить меню».`,
+        `FrontPad: артикулы подставлены — ${assigned}, цены обновлены — ${updated}, без совпадения — ${skipped}. Нажмите «Сохранить меню».`,
       );
     } catch {
       setSyncMsg("Сеть недоступна");
