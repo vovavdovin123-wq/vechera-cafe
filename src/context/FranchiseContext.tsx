@@ -64,6 +64,11 @@ const LEGACY_FRANCHISE: Record<string, FranchiseId> = {
   hippodromeCoffee: "hippodrome",
 };
 
+/** Актуальная точка из sessionStorage (для заказа — не полагаться только на React state). */
+export function getStoredFranchiseId(): FranchiseId | null {
+  return readStoredFranchise().id;
+}
+
 function readStoredFranchise(): { id: FranchiseId | null } {
   if (memoryFranchiseId && FRANCHISES[memoryFranchiseId]) {
     return { id: memoryFranchiseId };

@@ -58,11 +58,16 @@ export function isFrontPadConfigured(): boolean {
 export function frontPadConfigStatus() {
   const centerResolved = resolveFrontPadSecret("center");
   const hippodromeResolved = resolveFrontPadSecret("hippodrome");
+  const centerSecret = centerResolved.secret;
+  const hippodromeSecret = hippodromeResolved.secret;
   return {
-    configured: Boolean(centerResolved.secret || hippodromeResolved.secret),
-    center: Boolean(centerResolved.secret),
-    hippodrome: Boolean(hippodromeResolved.secret),
-    dualAccounts: Boolean(centerResolved.secret && hippodromeResolved.secret),
+    configured: Boolean(centerSecret || hippodromeSecret),
+    center: Boolean(centerSecret),
+    hippodrome: Boolean(hippodromeSecret),
+    dualAccounts: Boolean(centerSecret && hippodromeSecret),
+    secretsMatch: Boolean(
+      centerSecret && hippodromeSecret && centerSecret === hippodromeSecret,
+    ),
     sources: {
       center: centerResolved.source,
       hippodrome: hippodromeResolved.source,
@@ -215,6 +220,9 @@ export function splitAddress(input: string): { street: string; home: string } {
 
 function buildDescr(order: OrderPayload): string {
   const parts: string[] = [];
+  parts.push(
+    order.franchiseId === "hippodrome" ? "Точка: Ипподром" : "Точка: Центр",
+  );
   if (order.fulfillment === "pickup") parts.push("Самовывоз");
   if (order.fulfillment === "delivery") parts.push("Доставка");
   if (order.comment) parts.push(order.comment);
@@ -285,6 +293,15 @@ export async function sendOrderToFrontPad(
 ): Promise<FrontPadResult> {
   const stubId = `VC-${Date.now().toString(36).toUpperCase()}`;
   const secret = secretFor(order.franchiseId);
+
+  if (secret) {
+    const otherId: FranchiseId =
+      order.franchiseId === "hippodrome" ? "center" : "hippodrome";
+    const otherSecret = resolveFrontPadSecret(otherId).secret;
+    if (otherSecret && otherSecret === secret) {
+      console.error("[FrontPad] center and hippodrome share the same secret");
+    }
+  }
 
   if (!secret) {
     if (!isFrontPadConfigured()) {

@@ -20,7 +20,8 @@ import {
   type TrackedOrder,
 } from "@/components/OrderStatusPanel";
 import { useCart } from "@/context/CartContext";
-import { useFranchise } from "@/context/FranchiseContext";
+import { getStoredFranchiseId, useFranchise } from "@/context/FranchiseContext";
+import { franchiseFromOrderItems } from "@/lib/order-franchise";
 
 type PromoState =
   | { kind: "none" }
@@ -216,13 +217,19 @@ export function CartDrawer() {
     setLoading(true);
     setResult(null);
 
+    const cartItems = items.map((i) => ({ id: i.menuItem.id }));
+    const orderFranchiseId =
+      franchiseFromOrderItems(cartItems) ??
+      getStoredFranchiseId() ??
+      franchiseId;
+
     try {
       const promoNote =
         promo.kind !== "none" ? `Промокод ${promo.code}` : undefined;
       const commentParts = [addressNote, promoNote].filter(Boolean);
 
       const payload: Record<string, unknown> = {
-        franchiseId,
+        franchiseId: orderFranchiseId,
         customerName: name || undefined,
         customerPhone: phone || undefined,
         fulfillment: mode,
@@ -271,7 +278,7 @@ export function CartDrawer() {
         orderId: String(data.orderId),
         orderNumber: data.orderNumber ? String(data.orderNumber) : undefined,
         phone: phone || undefined,
-        franchiseId,
+        franchiseId: orderFranchiseId,
         fulfillment: mode,
         mode: data.mode === "live" ? "live" : "stub",
         at: new Date().toISOString(),

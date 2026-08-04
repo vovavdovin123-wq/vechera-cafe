@@ -21,6 +21,7 @@ export async function GET() {
       center: status.center,
       hippodrome: status.hippodrome,
       dualAccounts: status.dualAccounts,
+      secretsMatch: status.secretsMatch,
     },
     webhook: {
       url: hookUrl,
@@ -46,10 +47,12 @@ export async function GET() {
       certificate: "/api/frontpad/certificate",
       stops: "/api/frontpad/stops",
     },
-    message: status.dualAccounts
-      ? "Два аккаунта FrontPad: центр и ипподром — заказы уходят строго в свой аккаунт"
-      : status.configured
-        ? "Настроен только один аккаунт FrontPad — заказы второй точки будут отклонены"
-        : "Нет секретов FrontPad — заказы в stub-режиме",
+    message: status.secretsMatch
+      ? "ОШИБКА: один и тот же секрет FrontPad у центра и ипподрома — заказы попадут в один аккаунт"
+      : status.dualAccounts
+        ? "Два аккаунта FrontPad: центр и ипподром — заказы уходят строго в свой аккаунт"
+        : status.configured
+          ? "Настроен только один аккаунт FrontPad — заказы второй точки будут отклонены"
+          : "Нет секретов FrontPad — заказы в stub-режиме",
   });
 }

@@ -4,18 +4,12 @@ import { COOKIE_NAME, verifySessionToken } from "@/lib/admin-auth";
 import { sendOrderToFrontPad } from "@/lib/frontpad";
 import { notifyNewOrder } from "@/lib/notify";
 import { appendOrder, deleteOrder, readOrders } from "@/lib/orders-store";
+import { resolveOrderFranchise } from "@/lib/order-franchise";
 import { applyPendingWebhooks } from "@/lib/webhook-log";
 import type { FranchiseId, OrderPayload } from "@/lib/types";
 
 function isFranchiseId(value: unknown): value is FranchiseId {
   return value === "center" || value === "hippodrome";
-}
-
-function itemMatchesFranchise(itemId: string, franchiseId: FranchiseId): boolean {
-  if (franchiseId === "hippodrome") {
-    return itemId.startsWith("h-") || itemId.startsWith("hippodrome-");
-  }
-  return itemId.startsWith("c-") || itemId.startsWith("center-");
 }
 
 export async function GET() {
@@ -64,30 +58,31 @@ export async function POST(request: Request) {
       );
     }
 
-    if (
-      body.items.some((item) => !itemMatchesFranchise(item.id, body.franchiseId))
-    ) {
+    const resolved = resolveOrderFranchise(body.franchiseId, body.items);
+    if (!resolved.ok) {
       return NextResponse.json(
-        {
-          ok: false,
-          message: "Состав заказа не соответствует выбранной точке",
-        },
+        { ok: false, message: resolved.message },
         { status: 400 },
       );
     }
 
-    const frontpad = await sendOrderToFrontPad(body);
+    const order: OrderPayload = {
+      ...body,
+      franchiseId: resolved.franchiseId,
+    };
+
+    const frontpad = await sendOrderToFrontPad(order);
     if (!frontpad.ok) {
       return NextResponse.json(frontpad, { status: 502 });
     }
 
-    await appendOrder(body, {
+    await appendOrder(order, {
       orderId: frontpad.orderId,
       mode: frontpad.mode,
       orderNumber: frontpad.orderNumber,
     });
     await applyPendingWebhooks(frontpad.orderId, frontpad.orderNumber);
-    await notifyNewOrder(body, frontpad.orderId);
+    await notifyNewOrder(order, frontpad.orderId);
 
     return NextResponse.json({
       ok: true,
