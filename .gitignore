@@ -36,6 +36,7 @@ yarn-error.log*
 /data/*
 !/data/menus.json
 !/data/menu-categories.json
+!/data/frontpad-article-map.json
 /public/uploads/
 
 # typescript
