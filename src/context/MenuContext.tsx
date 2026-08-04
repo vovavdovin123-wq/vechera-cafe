@@ -10,13 +10,21 @@ import {
   type ReactNode,
 } from "react";
 import {
+  CACHE_MENU_CATEGORIES,
   CACHE_MENUS,
   readContentCache,
   writeContentCache,
 } from "@/lib/content-cache";
 import { fetchContent, saveContent } from "@/lib/content-sync";
+import {
+  DEFAULT_DISH_IMAGE,
+  INITIAL_MENU_CATEGORIES,
+  mergeCategoriesWithItems,
+  normalizeMenuCategories,
+  suggestCategoryId,
+} from "@/lib/menu-categories";
 import { CATEGORY_IMAGES, INITIAL_MENUS } from "@/lib/menu-data";
-import type { FranchiseId, MenuItem } from "@/lib/types";
+import type { FranchiseId, MenuCategoryDef, MenuItem } from "@/lib/types";
 import { useFranchise } from "./FranchiseContext";
 
 type NewItem = Omit<MenuItem, "id" | "available" | "image"> & {
@@ -33,20 +41,23 @@ export type FrontPadProductSync = {
 interface MenuContextValue {
   items: MenuItem[];
   allMenus: Record<FranchiseId, MenuItem[]>;
+  categories: MenuCategoryDef[];
+  allCategories: Record<FranchiseId, MenuCategoryDef[]>;
   addMenuItem: (item: NewItem) => void;
   updateMenuItem: (id: string, patch: Partial<MenuItem>) => void;
   removeMenuItem: (id: string) => void;
   toggleAvailable: (id: string) => void;
-  /** Обновить name/price у блюд с совпадающим артикулом FrontPad */
+  addCategory: (label: string) => { ok: true; id: string } | { ok: false; message: string };
+  updateCategory: (id: string, patch: Partial<MenuCategoryDef>) => void;
+  removeCategory: (id: string) => { ok: true } | { ok: false; message: string };
+  moveCategory: (id: string, direction: "up" | "down") => void;
   applyFrontPadProducts: (products: FrontPadProductSync[]) => {
     updated: number;
     skipped: number;
   };
-  /** Явное сохранение на сервер (админка) */
   saveMenus: () => Promise<boolean>;
   isDirty: boolean;
   syncStatus: "idle" | "loading" | "saving" | "error";
-  /** true после первой загрузки с сервера или из кэша */
   contentReady: boolean;
 }
 
@@ -57,6 +68,13 @@ const EMPTY_MENUS: Record<FranchiseId, MenuItem[]> = {
   hippodrome: [],
 };
 
+function dishImageFor(category: string): string {
+  return (
+    CATEGORY_IMAGES[category as keyof typeof CATEGORY_IMAGES] ??
+    DEFAULT_DISH_IMAGE
+  );
+}
+
 function normalizeMenus(
   data: Partial<Record<string, MenuItem[]>>,
 ): Record<FranchiseId, MenuItem[]> {
@@ -65,9 +83,7 @@ function normalizeMenus(
   const fix = (list: MenuItem[], fallback: MenuItem[]) => {
     const mapped = (Array.isArray(list) ? list : []).map((item) => {
       const raw = String(item?.category ?? "");
-      const category = (
-        legacyCoffee.has(raw) ? "coffeeShop" : item.category
-      ) as MenuItem["category"];
+      const category = legacyCoffee.has(raw) ? "coffeeShop" : raw;
       return {
         ...item,
         name: item?.name ?? "",
@@ -76,7 +92,7 @@ function normalizeMenus(
         image:
           item?.image && String(item.image).trim()
             ? String(item.image).trim()
-            : CATEGORY_IMAGES[category] || CATEGORY_IMAGES.sandwiches,
+            : dishImageFor(category),
         available: item?.available ?? true,
       };
     });
@@ -97,7 +113,7 @@ function normalizeMenus(
     const fromOldCoffee = Array.isArray(coffeeVenue)
       ? coffeeVenue.map((item) => ({
           ...item,
-          category: "coffeeShop" as const,
+          category: "coffeeShop",
         }))
       : [];
     const merged =
@@ -126,6 +142,9 @@ export function MenuProvider({ children }: { children: ReactNode }) {
   const { franchiseId } = useFranchise();
   const [allMenus, setAllMenus] =
     useState<Record<FranchiseId, MenuItem[]>>(EMPTY_MENUS);
+  const [allCategories, setAllCategories] = useState<
+    Record<FranchiseId, MenuCategoryDef[]>
+  >({ center: [], hippodrome: [] });
   const [contentReady, setContentReady] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const [syncStatus, setSyncStatus] = useState<
@@ -135,59 +154,100 @@ export function MenuProvider({ children }: { children: ReactNode }) {
     FranchiseId,
     MenuItem[]
   > | null>(null);
+  const [savedCategories, setSavedCategories] = useState<Record<
+    FranchiseId,
+    MenuCategoryDef[]
+  > | null>(null);
 
-  const snapshot = (data: Record<FranchiseId, MenuItem[]>) =>
-    JSON.stringify(data);
+  const snapshot = (data: unknown) => JSON.stringify(data);
 
   const saveMenus = useCallback(async (): Promise<boolean> => {
     setSyncStatus("saving");
-    const result = await saveContent("/api/content/menus", allMenus);
-    if (result.ok) {
+    const [menusResult, categoriesResult] = await Promise.all([
+      saveContent("/api/content/menus", allMenus),
+      saveContent("/api/content/menu-categories", allCategories),
+    ]);
+    if (menusResult.ok && categoriesResult.ok) {
       writeContentCache(CACHE_MENUS, allMenus);
+      writeContentCache(CACHE_MENU_CATEGORIES, allCategories);
       setSavedMenus(allMenus);
+      setSavedCategories(allCategories);
       setSyncStatus("idle");
       return true;
     }
     setSyncStatus("error");
     return false;
-  }, [allMenus]);
+  }, [allMenus, allCategories]);
 
   const isDirty = useMemo(() => {
-    if (!hydrated || !savedMenus) return false;
-    return snapshot(allMenus) !== snapshot(savedMenus);
-  }, [allMenus, savedMenus, hydrated]);
+    if (!hydrated || !savedMenus || !savedCategories) return false;
+    return (
+      snapshot(allMenus) !== snapshot(savedMenus) ||
+      snapshot(allCategories) !== snapshot(savedCategories)
+    );
+  }, [allMenus, allCategories, savedMenus, savedCategories, hydrated]);
 
   useEffect(() => {
     let cancelled = false;
 
-    const cached =
+    const cachedMenus =
       readContentCache<Record<FranchiseId, MenuItem[]>>(CACHE_MENUS);
-    if (cached?.center || cached?.hippodrome) {
-      const fromCache = normalizeMenus(cached);
+    const cachedCategories = readContentCache<
+      Record<FranchiseId, MenuCategoryDef[]>
+    >(CACHE_MENU_CATEGORIES);
+
+    if (cachedMenus?.center || cachedMenus?.hippodrome) {
+      const fromCache = normalizeMenus(cachedMenus);
       setAllMenus(fromCache);
       setSavedMenus(fromCache);
+      const cats = normalizeMenuCategories(
+        cachedCategories ?? undefined,
+        fromCache,
+      );
+      setAllCategories(cats);
+      setSavedCategories(cats);
       setContentReady(true);
     }
 
     (async () => {
       setSyncStatus("loading");
-      const data = await fetchContent<Record<FranchiseId, MenuItem[]>>(
-        "/api/content/menus",
-      );
+      const [menusData, categoriesData] = await Promise.all([
+        fetchContent<Record<FranchiseId, MenuItem[]>>("/api/content/menus"),
+        fetchContent<Record<FranchiseId, MenuCategoryDef[]>>(
+          "/api/content/menu-categories",
+        ),
+      ]);
       if (cancelled) return;
-      if (data) {
-        const next = normalizeMenus(data);
-        setAllMenus(next);
-        writeContentCache(CACHE_MENUS, next);
-        setSavedMenus(next);
-      } else if (!cached?.center && !cached?.hippodrome) {
+
+      let nextMenus = INITIAL_MENUS;
+      if (cachedMenus?.center || cachedMenus?.hippodrome) {
+        nextMenus = normalizeMenus(cachedMenus);
+      }
+
+      if (menusData) {
+        nextMenus = normalizeMenus(menusData);
+        setAllMenus(nextMenus);
+        writeContentCache(CACHE_MENUS, nextMenus);
+        setSavedMenus(nextMenus);
+      } else if (!cachedMenus?.center && !cachedMenus?.hippodrome) {
         setAllMenus(INITIAL_MENUS);
         setSavedMenus(INITIAL_MENUS);
+        nextMenus = INITIAL_MENUS;
       }
+
+      const nextCategories = normalizeMenuCategories(
+        categoriesData ?? cachedCategories ?? INITIAL_MENU_CATEGORIES,
+        nextMenus,
+      );
+      setAllCategories(nextCategories);
+      writeContentCache(CACHE_MENU_CATEGORIES, nextCategories);
+      setSavedCategories(nextCategories);
+
       setContentReady(true);
       setHydrated(true);
       setSyncStatus("idle");
     })();
+
     return () => {
       cancelled = true;
     };
@@ -204,7 +264,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
             ...item,
             id,
             available: item.available ?? true,
-            image: item.image ?? CATEGORY_IMAGES[item.category],
+            image: item.image ?? dishImageFor(item.category),
           },
         ],
       }));
@@ -249,6 +309,73 @@ export function MenuProvider({ children }: { children: ReactNode }) {
     [franchiseId],
   );
 
+  const addCategory = useCallback(
+    (label: string) => {
+      const trimmed = label.trim();
+      if (!trimmed) {
+        return { ok: false as const, message: "Введите название категории" };
+      }
+
+      const list = allCategories[franchiseId] ?? [];
+      const existingIds = new Set(list.map((c) => c.id));
+      const id = suggestCategoryId(trimmed, existingIds);
+
+      setAllCategories((prev) => ({
+        ...prev,
+        [franchiseId]: [...(prev[franchiseId] ?? []), { id, label: trimmed }],
+      }));
+
+      return { ok: true as const, id };
+    },
+    [allCategories, franchiseId],
+  );
+
+  const updateCategory = useCallback(
+    (id: string, patch: Partial<MenuCategoryDef>) => {
+      setAllCategories((prev) => ({
+        ...prev,
+        [franchiseId]: (prev[franchiseId] ?? []).map((c) =>
+          c.id === id ? { ...c, ...patch, id: c.id } : c,
+        ),
+      }));
+    },
+    [franchiseId],
+  );
+
+  const removeCategory = useCallback(
+    (id: string) => {
+      const used = (allMenus[franchiseId] ?? []).some((i) => i.category === id);
+      if (used) {
+        return {
+          ok: false as const,
+          message: "Сначала перенесите или удалите блюда в этой категории",
+        };
+      }
+
+      setAllCategories((prev) => ({
+        ...prev,
+        [franchiseId]: (prev[franchiseId] ?? []).filter((c) => c.id !== id),
+      }));
+      return { ok: true as const };
+    },
+    [allMenus, franchiseId],
+  );
+
+  const moveCategory = useCallback(
+    (id: string, direction: "up" | "down") => {
+      setAllCategories((prev) => {
+        const list = [...(prev[franchiseId] ?? [])];
+        const index = list.findIndex((c) => c.id === id);
+        if (index < 0) return prev;
+        const target = direction === "up" ? index - 1 : index + 1;
+        if (target < 0 || target >= list.length) return prev;
+        [list[index], list[target]] = [list[target], list[index]];
+        return { ...prev, [franchiseId]: list };
+      });
+    },
+    [franchiseId],
+  );
+
   const applyFrontPadProducts = useCallback(
     (products: FrontPadProductSync[]) => {
       const byArticle = new Map(
@@ -259,7 +386,6 @@ export function MenuProvider({ children }: { children: ReactNode }) {
 
       let updated = 0;
       let skipped = 0;
-      let nextMenus: Record<FranchiseId, MenuItem[]> | null = null;
 
       setAllMenus((prev) => {
         updated = 0;
@@ -285,25 +411,33 @@ export function MenuProvider({ children }: { children: ReactNode }) {
             };
           });
         }
-        nextMenus = next;
         return next;
       });
 
-      // React вызывает updater синхронно — updated/skipped уже заполнены
-      void nextMenus;
       return { updated, skipped };
     },
     [],
   );
 
+  const categories = useMemo(() => {
+    const list = allCategories[franchiseId] ?? [];
+    return mergeCategoriesWithItems(list, allMenus[franchiseId] ?? []);
+  }, [allCategories, allMenus, franchiseId]);
+
   const value = useMemo(
     () => ({
       items: allMenus[franchiseId] ?? allMenus.center ?? [],
       allMenus,
+      categories,
+      allCategories,
       addMenuItem,
       updateMenuItem,
       removeMenuItem,
       toggleAvailable,
+      addCategory,
+      updateCategory,
+      removeCategory,
+      moveCategory,
       applyFrontPadProducts,
       saveMenus,
       isDirty,
@@ -312,11 +446,17 @@ export function MenuProvider({ children }: { children: ReactNode }) {
     }),
     [
       allMenus,
+      allCategories,
+      categories,
       franchiseId,
       addMenuItem,
       updateMenuItem,
       removeMenuItem,
       toggleAvailable,
+      addCategory,
+      updateCategory,
+      removeCategory,
+      moveCategory,
       applyFrontPadProducts,
       saveMenus,
       isDirty,

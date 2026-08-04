@@ -4,8 +4,9 @@ import path from "path";
 import { EMPTY_COUPONS, type Coupon } from "@/lib/coupons";
 import { DEFAULT_INTERIOR, type InteriorPhoto } from "@/lib/interior-data";
 import { INITIAL_MENUS } from "@/lib/menu-data";
+import { INITIAL_MENU_CATEGORIES } from "@/lib/menu-categories";
 import { PROMO_SLIDES, type PromoSlide } from "@/lib/promos";
-import type { FranchiseId, MenuItem } from "@/lib/types";
+import type { FranchiseId, MenuCategoryDef, MenuItem } from "@/lib/types";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 /** Новые загрузки — сюда (надёжно читаются через /api/uploads) */
@@ -14,6 +15,7 @@ const UPLOADS_DIR = path.join(DATA_DIR, "uploads");
 const LEGACY_UPLOADS_DIR = path.join(process.cwd(), "public", "uploads");
 
 const MENUS_FILE = path.join(DATA_DIR, "menus.json");
+const MENU_CATEGORIES_FILE = path.join(DATA_DIR, "menu-categories.json");
 const INTERIOR_FILE = path.join(DATA_DIR, "interior.json");
 const PROMOS_FILE = path.join(DATA_DIR, "promos.json");
 const COUPONS_FILE = path.join(DATA_DIR, "coupons.json");
@@ -103,6 +105,19 @@ export async function writeMenus(
   const persisted = await deepPersistImages(data, "menu");
   await writeJsonFile(MENUS_FILE, persisted);
   return persisted;
+}
+
+export async function readMenuCategories(): Promise<
+  Record<FranchiseId, MenuCategoryDef[]>
+> {
+  return readJsonFile(MENU_CATEGORIES_FILE, INITIAL_MENU_CATEGORIES);
+}
+
+export async function writeMenuCategories(
+  data: Record<FranchiseId, MenuCategoryDef[]>,
+): Promise<Record<FranchiseId, MenuCategoryDef[]>> {
+  await writeJsonFile(MENU_CATEGORIES_FILE, data);
+  return data;
 }
 
 export async function readInterior(): Promise<

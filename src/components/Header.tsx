@@ -6,7 +6,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { CustomSelect } from "@/components/CustomSelect";
 import { FRANCHISE_LIST } from "@/lib/franchises";
 import { PAGE } from "@/lib/layout";
-import { CATEGORY_LABELS } from "@/lib/menu-data";
+import { categoryLabel } from "@/lib/menu-categories";
 import { useCart } from "@/context/CartContext";
 import { useFranchise } from "@/context/FranchiseContext";
 import { useMenu } from "@/context/MenuContext";
@@ -22,7 +22,7 @@ export function Header() {
   const { franchiseId, setFranchiseId } = useFranchise();
   const { count, setOpen, addItem } = useCart();
   const { query, setQuery } = useSearch();
-  const { items } = useMenu();
+  const { items, categories } = useMenu();
   const [openList, setOpenList] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
 
@@ -35,12 +35,12 @@ export function Header() {
         (i) =>
           i.name?.toLowerCase().includes(q) ||
           i.description?.toLowerCase().includes(q) ||
-          (CATEGORY_LABELS[i.category] ?? "")
+          (categoryLabel(categories, i.category) ?? "")
             .toLowerCase()
             .includes(q),
       )
       .slice(0, 8);
-  }, [items, query]);
+  }, [items, query, categories]);
 
   useEffect(() => {
     function onDoc(e: MouseEvent) {
@@ -128,7 +128,7 @@ export function Header() {
                             {item.name}
                           </span>
                           <span className="text-xs text-ink-muted">
-                            {CATEGORY_LABELS[item.category]}
+                            {categoryLabel(categories, item.category)}
                           </span>
                         </span>
                         <span className="shrink-0 text-sm font-semibold text-ink">

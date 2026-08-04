@@ -35,6 +35,7 @@ yarn-error.log*
 # feedback store (runtime)
 /data/*
 !/data/menus.json
+!/data/menu-categories.json
 /public/uploads/
 
 # typescript

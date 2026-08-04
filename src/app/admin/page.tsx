@@ -1,19 +1,15 @@
 "use client";
 
 import { useMemo, useState, type FormEvent } from "react";
-import { Loader2, Plus, RefreshCw, Save, Search, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Loader2, Plus, RefreshCw, Save, Search, Trash2 } from "lucide-react";
 import { AdminCategorySelect } from "@/components/AdminCategorySelect";
 import { AdminShell } from "@/components/AdminShell";
 import { CustomSelect } from "@/components/CustomSelect";
 import { ImagePicker } from "@/components/ImagePicker";
 import { useFranchise } from "@/context/FranchiseContext";
 import { useMenu } from "@/context/MenuContext";
-import {
-  CATEGORY_IMAGES,
-  CATEGORY_LABELS,
-  CATEGORY_ORDER,
-} from "@/lib/menu-data";
-import type { MenuCategory, MenuItem } from "@/lib/types";
+import { DEFAULT_DISH_IMAGE } from "@/lib/menu-categories";
+import type { MenuCategoryDef, MenuItem } from "@/lib/types";
 
 const ALL_CATEGORIES = "all";
 
@@ -21,10 +17,15 @@ export default function AdminPage() {
   const { franchise, franchiseId } = useFranchise();
   const {
     items,
+    categories,
     addMenuItem,
     updateMenuItem,
     removeMenuItem,
     toggleAvailable,
+    addCategory,
+    updateCategory,
+    removeCategory,
+    moveCategory,
     applyFrontPadProducts,
     saveMenus,
     isDirty,
@@ -32,10 +33,12 @@ export default function AdminPage() {
   } = useMenu();
 
   const [saveMsg, setSaveMsg] = useState<string | null>(null);
+  const [categoryMsg, setCategoryMsg] = useState<string | null>(null);
+  const [newCategoryLabel, setNewCategoryLabel] = useState("");
 
   const [filterCategory, setFilterCategory] = useState(ALL_CATEGORIES);
   const [search, setSearch] = useState("");
-  const [addCategory, setAddCategory] = useState<MenuCategory>("sandwiches");
+  const [addCategoryId, setAddCategoryId] = useState("sandwiches");
   const [showAddForm, setShowAddForm] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -47,23 +50,32 @@ export default function AdminPage() {
 
   const counts = useMemo(() => {
     const map: Record<string, number> = { [ALL_CATEGORIES]: items.length };
-    for (const cat of CATEGORY_ORDER) map[cat] = 0;
+    for (const cat of categories) map[cat.id] = 0;
     for (const item of items) {
       map[item.category] = (map[item.category] ?? 0) + 1;
     }
     return map;
-  }, [items]);
+  }, [items, categories]);
 
   const categoryOptions = useMemo(
     () => [
       { value: ALL_CATEGORIES, label: "Все категории", count: counts[ALL_CATEGORIES] },
-      ...CATEGORY_ORDER.map((c) => ({
-        value: c,
-        label: CATEGORY_LABELS[c],
-        count: counts[c] ?? 0,
+      ...categories.map((c) => ({
+        value: c.id,
+        label: c.label,
+        count: counts[c.id] ?? 0,
       })),
     ],
-    [counts],
+    [counts, categories],
+  );
+
+  const selectCategoryOptions = useMemo(
+    () =>
+      categories.map((c) => ({
+        value: c.id,
+        label: c.label,
+      })),
+    [categories],
   );
 
   const filteredItems = useMemo(() => {
@@ -84,22 +96,36 @@ export default function AdminPage() {
   const sections = useMemo(() => {
     const order =
       filterCategory === ALL_CATEGORIES
-        ? CATEGORY_ORDER
-        : [filterCategory as MenuCategory];
+        ? categories.map((c) => c.id)
+        : [filterCategory];
 
     return order
-      .map((cat) => ({
-        category: cat,
-        label: CATEGORY_LABELS[cat],
-        items: filteredItems.filter((i) => i.category === cat),
+      .map((catId) => ({
+        category: catId,
+        label: categories.find((c) => c.id === catId)?.label ?? catId,
+        items: filteredItems.filter((i) => i.category === catId),
       }))
       .filter((s) => s.items.length > 0 || filterCategory === s.category);
-  }, [filterCategory, filteredItems]);
+  }, [filterCategory, filteredItems, categories]);
 
-  function openAddFor(category: MenuCategory) {
-    setAddCategory(category);
-    setImage(CATEGORY_IMAGES[category]);
+  function openAddFor(categoryId: string) {
+    setAddCategoryId(categoryId);
+    setImage(DEFAULT_DISH_IMAGE);
     setShowAddForm(true);
+  }
+
+  function onAddCategory(e: FormEvent) {
+    e.preventDefault();
+    setCategoryMsg(null);
+    const label = newCategoryLabel.trim();
+    const result = addCategory(label);
+    if (!result.ok) {
+      setCategoryMsg(result.message);
+      return;
+    }
+    setNewCategoryLabel("");
+    setAddCategoryId(result.id);
+    setCategoryMsg(`Категория «${label}» добавлена`);
   }
 
   function onAdd(e: FormEvent) {
@@ -110,16 +136,16 @@ export default function AdminPage() {
       name: name.trim(),
       description: description.trim() || "Состав уточняется",
       price: Math.round(parsed),
-      category: addCategory,
-      image: image || CATEGORY_IMAGES[addCategory],
+      category: addCategoryId,
+      image: image || DEFAULT_DISH_IMAGE,
       frontpadArticle: frontpadArticle.trim() || undefined,
     });
     setName("");
     setDescription("");
     setPrice("300");
     setFrontpadArticle("");
-    setImage(CATEGORY_IMAGES[addCategory]);
-    setFilterCategory(addCategory);
+    setImage(DEFAULT_DISH_IMAGE);
+    setFilterCategory(addCategoryId);
   }
 
   async function onSaveAll() {
@@ -159,8 +185,7 @@ export default function AdminPage() {
     <AdminShell
       active="menu"
       title="Управление меню"
-      subtitle={`${franchise.shortAddress} · категории как на сайте`}
-      showLocation
+      subtitle={`${franchise.shortAddress} · категории и блюда`}
     >
       <div
         className={`mt-4 flex flex-wrap items-center gap-3 rounded-2xl border px-4 py-3 ${
@@ -192,13 +217,83 @@ export default function AdminPage() {
         )}
       </div>
 
+      <section className="mt-6 rounded-[22px] border border-line bg-surface p-4 shadow-[var(--shadow-soft)] sm:p-5">
+        <h2 className="font-display text-lg font-semibold text-[var(--espresso)]">
+          Категории меню
+        </h2>
+
+        <ul className="mt-4 space-y-2">
+          {categories.map((cat, index) => (
+            <li
+              key={cat.id}
+              className="flex flex-wrap items-center gap-2 rounded-xl border border-line bg-bg/40 px-3 py-2"
+            >
+              <input
+                value={cat.label}
+                onChange={(e) => updateCategory(cat.id, { label: e.target.value })}
+                className="admin-input min-w-0 flex-1"
+                aria-label={`Название категории ${cat.id}`}
+              />
+              <span className="text-xs text-ink-muted">{counts[cat.id] ?? 0} блюд</span>
+              <div className="flex gap-1">
+                <button
+                  type="button"
+                  disabled={index === 0}
+                  onClick={() => moveCategory(cat.id, "up")}
+                  className="btn-ghost p-2 disabled:opacity-40"
+                  aria-label="Выше"
+                >
+                  <ArrowUp className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  disabled={index === categories.length - 1}
+                  onClick={() => moveCategory(cat.id, "down")}
+                  className="btn-ghost p-2 disabled:opacity-40"
+                  aria-label="Ниже"
+                >
+                  <ArrowDown className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const result = removeCategory(cat.id);
+                    setCategoryMsg(result.ok ? null : result.message);
+                  }}
+                  className="btn-ghost btn-ghost-danger p-2"
+                  aria-label="Удалить категорию"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <form onSubmit={onAddCategory} className="mt-4 flex flex-wrap gap-2">
+          <input
+            value={newCategoryLabel}
+            onChange={(e) => setNewCategoryLabel(e.target.value)}
+            placeholder="Новая категория, напр. Хот-доги"
+            className="admin-input min-w-[220px] flex-1"
+          />
+          <button type="submit" className="btn-soft inline-flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            Добавить категорию
+          </button>
+        </form>
+        {categoryMsg && (
+          <p className="mt-2 text-xs text-ink-muted">{categoryMsg}</p>
+        )}
+      </section>
+
       <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
         <div className="min-w-0 flex-1 sm:max-w-xs">
           <AdminCategorySelect
             value={filterCategory}
             onChange={(v) => {
               setFilterCategory(v);
-              if (v !== ALL_CATEGORIES) setAddCategory(v as MenuCategory);
+              if (v !== ALL_CATEGORIES) setAddCategoryId(v);
             }}
             options={categoryOptions}
             ariaLabel="Фильтр по категории"
@@ -236,8 +331,8 @@ export default function AdminPage() {
           onClick={() =>
             openAddFor(
               filterCategory === ALL_CATEGORIES
-                ? "sandwiches"
-                : (filterCategory as MenuCategory),
+                ? categories[0]?.id ?? "sandwiches"
+                : filterCategory,
             )
           }
           className="btn-soft inline-flex items-center gap-2"
@@ -246,7 +341,8 @@ export default function AdminPage() {
           Добавить в{" "}
           {filterCategory === ALL_CATEGORIES
             ? "меню"
-            : CATEGORY_LABELS[filterCategory as MenuCategory]}
+            : categories.find((c) => c.id === filterCategory)?.label ??
+              filterCategory}
         </button>
       </div>
 
@@ -256,21 +352,18 @@ export default function AdminPage() {
           className="mt-4 grid gap-3 rounded-[22px] border border-[var(--gold)]/40 bg-[var(--gold-soft)]/20 p-4 shadow-[var(--shadow-soft)] sm:grid-cols-2 sm:p-5"
         >
           <h2 className="sm:col-span-2 text-base font-semibold text-ink">
-            Новая позиция · {CATEGORY_LABELS[addCategory]}
+            Новая позиция ·{" "}
+            {categories.find((c) => c.id === addCategoryId)?.label ?? addCategoryId}
           </h2>
           <div className="sm:col-span-2">
             <CustomSelect
               variant="admin"
               ariaLabel="Категория новой позиции"
-              value={addCategory}
-              options={CATEGORY_ORDER.map((c) => ({
-                value: c,
-                label: CATEGORY_LABELS[c],
-              }))}
+              value={addCategoryId}
+              options={selectCategoryOptions}
               onChange={(v) => {
-                const next = v as MenuCategory;
-                setAddCategory(next);
-                setImage(CATEGORY_IMAGES[next]);
+                setAddCategoryId(v);
+                setImage(DEFAULT_DISH_IMAGE);
               }}
             />
           </div>
@@ -359,6 +452,7 @@ export default function AdminPage() {
                   <AdminItemRow
                     key={item.id}
                     item={item}
+                    categoryOptions={selectCategoryOptions}
                     onUpdate={updateMenuItem}
                     onToggle={() => toggleAvailable(item.id)}
                     onRemove={() => removeMenuItem(item.id)}
@@ -375,11 +469,13 @@ export default function AdminPage() {
 
 function AdminItemRow({
   item,
+  categoryOptions,
   onUpdate,
   onToggle,
   onRemove,
 }: {
   item: MenuItem;
+  categoryOptions: Array<{ value: string; label: string }>;
   onUpdate: (id: string, patch: Partial<MenuItem>) => void;
   onToggle: () => void;
   onRemove: () => void;
@@ -416,13 +512,8 @@ function AdminItemRow({
               variant="admin"
               ariaLabel="Категория блюда"
               value={item.category}
-              options={CATEGORY_ORDER.map((c) => ({
-                value: c,
-                label: CATEGORY_LABELS[c],
-              }))}
-              onChange={(v) =>
-                onUpdate(item.id, { category: v as MenuCategory })
-              }
+              options={categoryOptions}
+              onChange={(v) => onUpdate(item.id, { category: v })}
             />
           </div>
           <input

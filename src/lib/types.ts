@@ -1,6 +1,7 @@
 export type FranchiseId = "center" | "hippodrome";
 
-export type MenuCategory =
+/** Базовые категории для seed-меню (center). Остальные — в menu-categories.json */
+export type DefaultMenuCategory =
   | "sandwiches"
   | "burgers"
   | "panini"
@@ -13,13 +14,21 @@ export type MenuCategory =
   | "pizzas"
   | "coffeeShop";
 
+/** @deprecated Используйте string id + menu-categories.json */
+export type MenuCategory = DefaultMenuCategory | string;
+
+export interface MenuCategoryDef {
+  id: string;
+  label: string;
+}
+
 export interface MenuItem {
   id: string;
   name: string;
   /** Состав — показывается только в FAQ (!) */
   description: string;
   price: number;
-  category: MenuCategory;
+  category: string;
   image: string;
   available: boolean;
   /** Цифровой артикул товара в FrontPad (обязателен для боевых заказов) */

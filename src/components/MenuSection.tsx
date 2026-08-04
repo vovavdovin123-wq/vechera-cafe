@@ -3,18 +3,17 @@
 import { useEffect, useMemo, useState } from "react";
 import { CircleAlert, ShoppingBag, UtensilsCrossed, X } from "lucide-react";
 import { MenuCategorySelect } from "@/components/MenuCategorySelect";
-import { CATEGORY_LABELS, CATEGORY_ORDER } from "@/lib/menu-data";
 import { PAGE } from "@/lib/layout";
-import type { MenuCategory, MenuItem } from "@/lib/types";
+import type { MenuItem } from "@/lib/types";
 import { useCart } from "@/context/CartContext";
 import { useFranchise } from "@/context/FranchiseContext";
 import { useMenu } from "@/context/MenuContext";
 
 export function MenuSection() {
   const { franchise } = useFranchise();
-  const { items, contentReady } = useMenu();
+  const { items, contentReady, categories } = useMenu();
   const { addItem, quantityOf } = useCart();
-  const [category, setCategory] = useState<MenuCategory | "all">("all");
+  const [category, setCategory] = useState<string | "all">("all");
   const [faqItem, setFaqItem] = useState<MenuItem | null>(null);
 
   useEffect(() => {
@@ -23,11 +22,11 @@ export function MenuSection() {
 
   const availableCategories = useMemo(() => {
     const present = new Set(items.map((i) => i.category));
-    return CATEGORY_ORDER.filter((c) => present.has(c));
-  }, [items]);
+    return categories.filter((c) => present.has(c.id));
+  }, [items, categories]);
 
   const categoryCounts = useMemo(() => {
-    const counts = new Map<MenuCategory, number>();
+    const counts = new Map<string, number>();
     for (const item of items) {
       if (!item.available) continue;
       counts.set(item.category, (counts.get(item.category) ?? 0) + 1);
@@ -43,9 +42,9 @@ export function MenuSection() {
         count: items.filter((i) => i.available).length,
       },
       ...availableCategories.map((c) => ({
-        value: c,
-        label: CATEGORY_LABELS[c],
-        count: categoryCounts.get(c) ?? 0,
+        value: c.id,
+        label: c.label,
+        count: categoryCounts.get(c.id) ?? 0,
       })),
     ],
     [availableCategories, categoryCounts, items],
@@ -82,7 +81,7 @@ export function MenuSection() {
       <div className="mt-5 sm:mt-6">
         <MenuCategorySelect
           value={category}
-          onChange={(value) => setCategory(value as MenuCategory | "all")}
+          onChange={(value) => setCategory(value)}
           options={categoryOptions}
         />
       </div>

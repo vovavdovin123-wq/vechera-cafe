@@ -28,5 +28,6 @@ export function writeContentCache(key: string, data: unknown): void {
 }
 
 export const CACHE_MENUS = "vechera-cache-menus-v2";
+export const CACHE_MENU_CATEGORIES = "vechera-cache-menu-categories-v1";
 export const CACHE_INTERIOR = "vechera-cache-interior";
 export const CACHE_PROMOS = "vechera-cache-promos";

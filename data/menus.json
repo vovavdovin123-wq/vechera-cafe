@@ -735,7 +735,7 @@
       "id": "h-bg-1",
       "name": "Хот-дог классический",
       "price": 170,
-      "category": "burgers",
+      "category": "hotDogs",
       "description": "Помидор, лист салата, лук, сол. огурец, сосиска, кетчуп, горчица",
       "image": "/menu/dish.png",
       "available": true
@@ -744,7 +744,7 @@
       "id": "h-bg-2",
       "name": "Хот-дог кавказский",
       "price": 200,
-      "category": "burgers",
+      "category": "hotDogs",
       "description": "Лист салата, помидор, лук, корейская морковь, халапеньо, люля, кетчуп, горчица",
       "image": "/menu/dish.png",
       "available": true

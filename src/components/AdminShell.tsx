@@ -30,14 +30,12 @@ export function AdminShell({
   active,
   title,
   subtitle,
-  showLocation = false,
   showLocationSwitcher = true,
   children,
 }: {
   active: AdminTab;
   title: string;
   subtitle: string;
-  showLocation?: boolean;
   showLocationSwitcher?: boolean;
   children: ReactNode;
 }) {
@@ -245,11 +243,6 @@ export function AdminShell({
             <p className="mt-1 text-sm text-ink-muted">{subtitle}</p>
           )}
           <AdminSyncIndicator />
-          {showLocation && (
-            <p className="admin-location-hint mt-3 max-w-full break-words">
-              Редактируете меню и интерьер для выбранной точки выше
-            </p>
-          )}
           <div className="min-w-0">{children}</div>
         </main>
       </div>

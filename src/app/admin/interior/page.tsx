@@ -24,7 +24,6 @@ export default function AdminInteriorPage() {
       active="interior"
       title="Интерьер"
       subtitle={`${franchise.shortAddress} · фото блока «Атмосфера»`}
-      showLocation
     >
       <section className="mt-8">
         <p className="text-sm text-ink-muted">

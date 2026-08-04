@@ -1,6 +1,6 @@
-import type { FranchiseId, MenuCategory, MenuItem } from "./types";
+import type { DefaultMenuCategory, FranchiseId, MenuItem } from "./types";
 
-export const CATEGORY_LABELS: Record<MenuCategory, string> = {
+export const CATEGORY_LABELS: Record<DefaultMenuCategory, string> = {
   sandwiches: "Сэндвичи",
   burgers: "Бургеры",
   panini: "Панини",
@@ -14,7 +14,7 @@ export const CATEGORY_LABELS: Record<MenuCategory, string> = {
   coffeeShop: "Кофейня",
 };
 
-export const CATEGORY_ORDER: MenuCategory[] = [
+export const CATEGORY_ORDER: DefaultMenuCategory[] = [
   "sandwiches",
   "burgers",
   "panini",
@@ -31,7 +31,7 @@ export const CATEGORY_ORDER: MenuCategory[] = [
 /** Общее фото блюд (можно менять в админке у каждой позиции) */
 const DISH_IMAGE = "/menu/dish.png";
 
-export const CATEGORY_IMAGES: Record<MenuCategory, string> = {
+export const CATEGORY_IMAGES: Record<DefaultMenuCategory, string> = {
   sandwiches: DISH_IMAGE,
   burgers: DISH_IMAGE,
   panini: DISH_IMAGE,
@@ -45,7 +45,7 @@ export const CATEGORY_IMAGES: Record<MenuCategory, string> = {
   coffeeShop: DISH_IMAGE,
 };
 
-const CATEGORY_ID: Record<MenuCategory, string> = {
+const CATEGORY_ID: Record<DefaultMenuCategory, string> = {
   sandwiches: "sw",
   burgers: "bg",
   panini: "pn",
@@ -68,7 +68,10 @@ function item(
   return {
     ...partial,
     description: partial.description ?? "Состав уточняется",
-    image: partial.image ?? CATEGORY_IMAGES[partial.category],
+    image:
+      partial.image ??
+      CATEGORY_IMAGES[partial.category as DefaultMenuCategory] ??
+      DISH_IMAGE,
     available: true,
   };
 }
@@ -77,7 +80,7 @@ function item(
 const MENU_CATALOG: Array<{
   name: string;
   price: number;
-  category: MenuCategory;
+  category: DefaultMenuCategory;
 }> = [
   // Сэндвичи
   { name: "Сендвич с курицей", price: 290, category: "sandwiches" },
@@ -158,7 +161,7 @@ function buildFranchiseMenu(
   prefix: "c" | "h",
   articleBase: number,
 ): MenuItem[] {
-  const counters: Partial<Record<MenuCategory, number>> = {};
+  const counters: Partial<Record<DefaultMenuCategory, number>> = {};
 
   return MENU_CATALOG.map((entry, index) => {
     const next = (counters[entry.category] ?? 0) + 1;

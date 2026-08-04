@@ -1,0 +1,25 @@
+{
+  "center": [
+    { "id": "sandwiches", "label": "Сэндвичи" },
+    { "id": "burgers", "label": "Бургеры" },
+    { "id": "panini", "label": "Панини" },
+    { "id": "fryBoxes", "label": "Фри-боксы" },
+    { "id": "waffles", "label": "Венские вафли" },
+    { "id": "salads", "label": "Салаты" },
+    { "id": "fried", "label": "Фритюр" },
+    { "id": "sauces", "label": "Соусы" },
+    { "id": "rolls", "label": "Роллы" },
+    { "id": "pizzas", "label": "Пицца" },
+    { "id": "coffeeShop", "label": "Кофейня" }
+  ],
+  "hippodrome": [
+    { "id": "fried", "label": "Фритюр" },
+    { "id": "sandwiches", "label": "Сэндвичи" },
+    { "id": "hotDogs", "label": "Хот-доги" },
+    { "id": "burgers", "label": "Бургеры" },
+    { "id": "salads", "label": "Салаты" },
+    { "id": "sauces", "label": "Соусы" },
+    { "id": "waffles", "label": "Десерты" },
+    { "id": "coffeeShop", "label": "Напитки" }
+  ]
+}
