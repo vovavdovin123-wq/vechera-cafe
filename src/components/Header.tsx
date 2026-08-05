@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { MapPin, Phone, Search, ShoppingBag } from "lucide-react";
+import { MapPin, Phone, Search, ShoppingBag, UserRound } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { CustomSelect } from "@/components/CustomSelect";
 import { FRANCHISE_LIST } from "@/lib/franchises";
@@ -9,6 +10,7 @@ import { PAGE } from "@/lib/layout";
 import { categoryLabel } from "@/lib/menu-categories";
 import { useCart } from "@/context/CartContext";
 import { useFranchise } from "@/context/FranchiseContext";
+import { useUser } from "@/context/UserContext";
 import { useMenu } from "@/context/MenuContext";
 import { useSearch } from "@/context/SearchContext";
 import type { FranchiseId } from "@/lib/types";
@@ -20,6 +22,7 @@ const franchiseOptions = FRANCHISE_LIST.map((f) => ({
 
 export function Header() {
   const { franchiseId, setFranchiseId } = useFranchise();
+  const { user } = useUser();
   const { count, setOpen, addItem } = useCart();
   const { query, setQuery } = useSearch();
   const { items, categories } = useMenu();
@@ -163,6 +166,16 @@ export function Header() {
             <Phone className="h-4 w-4" />
             Контакты
           </a>
+          <Link
+            href="/account"
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/25 px-3 py-2 text-sm text-white/90 transition hover:border-[var(--gold)] hover:bg-white/10"
+            title="Личный кабинет"
+          >
+            <UserRound className="h-4 w-4" />
+            <span className="hidden max-w-[7rem] truncate sm:inline">
+              {user?.name || "Кабинет"}
+            </span>
+          </Link>
           <button
             type="button"
             onClick={() => setOpen(true)}

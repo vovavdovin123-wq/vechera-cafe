@@ -8,22 +8,25 @@ import { InteriorProvider } from "@/context/InteriorContext";
 import { MenuProvider } from "@/context/MenuContext";
 import { PromoProvider } from "@/context/PromoContext";
 import { SearchProvider } from "@/context/SearchContext";
+import { UserProvider } from "@/context/UserContext";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <FranchiseProvider>
-      <MenuProvider>
-        <PromoProvider>
-          <InteriorProvider>
-            <SearchProvider>
-              <CartProvider>
-                <ChunkLoadRecovery />
-                <FranchiseEntryGuard>{children}</FranchiseEntryGuard>
-              </CartProvider>
-            </SearchProvider>
-          </InteriorProvider>
-        </PromoProvider>
-      </MenuProvider>
+      <UserProvider>
+        <MenuProvider>
+          <PromoProvider>
+            <InteriorProvider>
+              <SearchProvider>
+                <CartProvider>
+                  <ChunkLoadRecovery />
+                  <FranchiseEntryGuard>{children}</FranchiseEntryGuard>
+                </CartProvider>
+              </SearchProvider>
+            </InteriorProvider>
+          </PromoProvider>
+        </MenuProvider>
+      </UserProvider>
     </FranchiseProvider>
   );
 }

@@ -21,6 +21,7 @@ import {
 } from "@/components/OrderStatusPanel";
 import { useCart } from "@/context/CartContext";
 import { getStoredFranchiseId, useFranchise } from "@/context/FranchiseContext";
+import { useUser } from "@/context/UserContext";
 import { franchiseFromOrderItems } from "@/lib/order-franchise";
 
 type PromoState =
@@ -62,6 +63,7 @@ function maxPreorderLocal(): string {
 
 export function CartDrawer() {
   const { franchise, franchiseId } = useFranchise();
+  const { login: loginUser } = useUser();
   const {
     items,
     total,
@@ -285,6 +287,10 @@ export function CartDrawer() {
       };
       saveTrackedOrder(track);
       setTracked(track);
+
+      if (phone.trim()) {
+        void loginUser(phone, name.trim() || undefined);
+      }
 
       setResult(
         data.orderNumber

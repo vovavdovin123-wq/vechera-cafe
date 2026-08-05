@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { normalizePhone } from "./phone";
 import type { OrderPayload } from "./types";
 
 export interface StoredOrder extends OrderPayload {
@@ -90,4 +91,18 @@ export async function deleteOrder(id: string): Promise<boolean> {
   if (next.length === list.length) return false;
   await fs.writeFile(FILE, JSON.stringify(next, null, 2), "utf8");
   return true;
+}
+
+/** Заказы гостя по номеру телефона (новые первыми) */
+export async function findOrdersByPhone(phone: string): Promise<StoredOrder[]> {
+  const target = normalizePhone(phone);
+  if (!target) return [];
+
+  const list = await readOrders();
+  return list.filter((order) => {
+    const orderPhone = order.customerPhone
+      ? normalizePhone(order.customerPhone)
+      : "";
+    return orderPhone === target;
+  });
 }

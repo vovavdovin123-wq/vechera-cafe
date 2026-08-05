@@ -13,7 +13,8 @@ export function FranchiseEntryGuard({ children }: { children: ReactNode }) {
 
   const isPick = pathname === "/pick";
   const isAdmin = pathname.startsWith("/admin");
-  const needsEntryPick = ready && needsPick && !isPick && !isAdmin;
+  const isAccount = pathname.startsWith("/account");
+  const needsEntryPick = ready && needsPick && !isPick && !isAdmin && !isAccount;
 
   useEffect(() => {
     if (!ready) return;
@@ -26,7 +27,7 @@ export function FranchiseEntryGuard({ children }: { children: ReactNode }) {
     if (needsEntryPick) {
       router.replace("/pick");
     }
-  }, [ready, needsPick, isPick, isAdmin, needsEntryPick, router]);
+  }, [ready, needsPick, isPick, isAdmin, isAccount, needsEntryPick, router]);
 
   useEffect(() => {
     if (!needsEntryPick) {
@@ -38,7 +39,7 @@ export function FranchiseEntryGuard({ children }: { children: ReactNode }) {
     return () => window.clearTimeout(timer);
   }, [needsEntryPick]);
 
-  if (isPick || isAdmin) {
+  if (isPick || isAdmin || isAccount) {
     return <>{children}</>;
   }
 
