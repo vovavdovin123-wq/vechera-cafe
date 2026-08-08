@@ -6,7 +6,7 @@
       "price": 350,
       "category": "rolls",
       "frontpadArticle": "9023",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, краб, соус унаги, масаго",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -16,7 +16,7 @@
       "price": 370,
       "category": "rolls",
       "frontpadArticle": "9022",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, креветка, соус унаги, масаго",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -26,7 +26,7 @@
       "price": 380,
       "category": "rolls",
       "frontpadArticle": "9021",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, лосось, соус унаги, масаго",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -36,7 +36,7 @@
       "price": 430,
       "category": "rolls",
       "frontpadArticle": "9025",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, угорь, соус унаги, масаго",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -46,7 +46,7 @@
       "price": 320,
       "category": "rolls",
       "frontpadArticle": "9024",
-      "description": "Состав уточняется",
+      "description": "Рис, соус цезарь, курица, помидор, айсберг, пармезан",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -56,7 +56,7 @@
       "price": 350,
       "category": "burgers",
       "frontpadArticle": "2002",
-      "description": "Состав уточняется",
+      "description": "Булочка, соус, помидоры, картофель фри, котлета, сыр, салат",
       "image": "/menu/beyrut.png",
       "available": true
     },
@@ -66,7 +66,7 @@
       "price": 420,
       "category": "sandwiches",
       "frontpadArticle": "1003",
-      "description": "Состав уточняется",
+      "description": "Хлеб, соус, сыр, помидоры, котлета, айсберг",
       "image": "/menu/double-beef-sandwich.png",
       "available": true
     },
@@ -76,7 +76,7 @@
       "price": 370,
       "category": "sandwiches",
       "frontpadArticle": "1001",
-      "description": "Состав уточняется",
+      "description": "Хлеб, соус, помидоры, сыр, курица, айсберг",
       "image": "/menu/double-chicken-sandwich.png",
       "available": true
     },
@@ -86,7 +86,7 @@
       "price": 280,
       "category": "panini",
       "frontpadArticle": "3000",
-      "description": "Состав уточняется",
+      "description": "Соус, сыр, курица, помидоры, айсберг",
       "image": "/menu/panini-chicken.png",
       "available": true
     },
@@ -96,7 +96,7 @@
       "price": 350,
       "category": "sandwiches",
       "frontpadArticle": "1002",
-      "description": "Состав уточняется",
+      "description": "Хлеб, соус, помидоры, сыр, котлета, айсберг, огурцы",
       "image": "/menu/beef-sandwich.png",
       "available": true
     },
@@ -106,7 +106,7 @@
       "price": 290,
       "category": "sandwiches",
       "frontpadArticle": "1000",
-      "description": "Состав уточняется",
+      "description": "Хлеб, соус, помидоры, сыр, курица, айсберг",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -116,7 +116,7 @@
       "price": 390,
       "category": "sandwiches",
       "frontpadArticle": "1004",
-      "description": "Состав уточняется",
+      "description": "Хлеб, соус, помидоры, сыр, курица, котлета, айсберг, огурец",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -126,7 +126,7 @@
       "price": 330,
       "category": "burgers",
       "frontpadArticle": "2000",
-      "description": "Состав уточняется",
+      "description": "Булочка, соус, котлета, помидоры, сыр, айсберг, огурцы",
       "image": "/menu/cheeseburger.png",
       "available": true
     },
@@ -136,7 +136,7 @@
       "price": 270,
       "category": "burgers",
       "frontpadArticle": "2001",
-      "description": "Состав уточняется",
+      "description": "Булочка, соус, курица, сыр, помидоры, айсберг",
       "image": "/menu/chicken-burger.png",
       "available": true
     },
@@ -146,7 +146,7 @@
       "price": 380,
       "category": "sandwiches",
       "frontpadArticle": "10",
-      "description": "Состав уточняется",
+      "description": "Хлеб, соус, сыр, котлета, помидоры",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -156,7 +156,7 @@
       "price": 530,
       "category": "pizzas",
       "frontpadArticle": "10002",
-      "description": "Состав уточняется",
+      "description": "Тесто, томатный соус, моцарелла, чеддер, пармезан, горгонзола, сыр с плесенью",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -166,7 +166,7 @@
       "price": 550,
       "category": "pizzas",
       "frontpadArticle": "10003",
-      "description": "Состав уточняется",
+      "description": "Тесто, томатный соус, моцарелла, ветчина, шампиньоны",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -176,7 +176,7 @@
       "price": 470,
       "category": "pizzas",
       "frontpadArticle": "10000",
-      "description": "Состав уточняется",
+      "description": "Тесто, томатный соус, моцарелла, базилик",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -186,7 +186,7 @@
       "price": 530,
       "category": "pizzas",
       "frontpadArticle": "10001",
-      "description": "Состав уточняется",
+      "description": "Тесто, томатный соус, моцарелла, пепперони",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -196,7 +196,7 @@
       "price": 480,
       "category": "salads",
       "frontpadArticle": "10004",
-      "description": "Состав уточняется",
+      "description": "Айсберг, соус, помидор, яйца, хлеб, пармезан",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -206,7 +206,7 @@
       "price": 250,
       "category": "salads",
       "frontpadArticle": "6003",
-      "description": "Состав уточняется",
+      "description": "Помидоры, огурцы, перец, лук, оливки, сыр фета, салат",
       "image": "/menu/greek-salad.png",
       "available": true
     },
@@ -216,7 +216,7 @@
       "price": 330,
       "category": "rolls",
       "frontpadArticle": "9011",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, краб",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -226,7 +226,7 @@
       "price": 370,
       "category": "rolls",
       "frontpadArticle": "9010",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, креветка",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -236,7 +236,7 @@
       "price": 370,
       "category": "rolls",
       "frontpadArticle": "9009",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, лосось",
       "image": "/menu/fried-salmon-roll.png",
       "available": true
     },
@@ -246,7 +246,7 @@
       "price": 340,
       "category": "rolls",
       "frontpadArticle": "9013",
-      "description": "Состав уточняется",
+      "description": "Рис, соус цезарь, курица, помидор, айсберг, пармезан",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -256,7 +256,7 @@
       "price": 400,
       "category": "rolls",
       "frontpadArticle": "21",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, лосось, креветка, краб",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -266,7 +266,7 @@
       "price": 390,
       "category": "rolls",
       "frontpadArticle": "9012",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, угорь",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -276,7 +276,7 @@
       "price": 400,
       "category": "rolls",
       "frontpadArticle": "9003",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, краб, лосось, соус унаги, спайси-соус, кунжут",
       "image": "/menu/baked-philadelphia.png",
       "available": true
     },
@@ -286,7 +286,7 @@
       "price": 350,
       "category": "rolls",
       "frontpadArticle": "9017",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, краб, масаго, кунжут, сырная шапочка",
       "image": "/menu/baked-crab-roll.png",
       "available": true
     },
@@ -296,7 +296,7 @@
       "price": 370,
       "category": "rolls",
       "frontpadArticle": "9018",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, креветка, масаго, кунжут, сырная шапочка",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -306,7 +306,7 @@
       "price": 370,
       "category": "rolls",
       "frontpadArticle": "9019",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, лосось, масаго, кунжут, сырная шапочка",
       "image": "/menu/baked-salmon-roll.png",
       "available": true
     },
@@ -316,7 +316,7 @@
       "price": 400,
       "category": "rolls",
       "frontpadArticle": "9020",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, угорь, кунжут, сырная шапочка, соус унаги",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -326,7 +326,7 @@
       "price": 330,
       "category": "rolls",
       "frontpadArticle": "9007",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, краб, масаго",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -336,7 +336,7 @@
       "price": 370,
       "category": "rolls",
       "frontpadArticle": "9006",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, креветка, масаго",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -346,7 +346,7 @@
       "price": 370,
       "category": "rolls",
       "frontpadArticle": "9005",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, лосось, масаго",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -356,7 +356,7 @@
       "price": 390,
       "category": "rolls",
       "frontpadArticle": "9008",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, угорь, масаго",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -366,7 +366,7 @@
       "price": 400,
       "category": "rolls",
       "frontpadArticle": "32",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, креветка в темпуре",
       "image": "/menu/fried-roll-tempura.png",
       "available": true
     },
@@ -376,7 +376,7 @@
       "price": 350,
       "category": "rolls",
       "frontpadArticle": "33",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, креветка, масаго",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -386,7 +386,7 @@
       "price": 370,
       "category": "hotDogs",
       "frontpadArticle": "34",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, сосиска, соус",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -396,7 +396,7 @@
       "price": 230,
       "category": "salads",
       "frontpadArticle": "6002",
-      "description": "Состав уточняется",
+      "description": "Огурец, помидоры",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -406,7 +406,7 @@
       "price": 300,
       "category": "sandwiches",
       "frontpadArticle": "1005",
-      "description": "Состав уточняется",
+      "description": "Крем-чиз, огурец, лосось, айсберг",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -416,7 +416,7 @@
       "price": 330,
       "category": "rolls",
       "frontpadArticle": "9016",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, краб, спайси-соус, кунжут",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -426,7 +426,7 @@
       "price": 350,
       "category": "rolls",
       "frontpadArticle": "9015",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, креветка, спайси-соус, кунжут",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -436,7 +436,7 @@
       "price": 350,
       "category": "rolls",
       "frontpadArticle": "9014",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, лосось, спайси-соус, кунжут",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -446,7 +446,7 @@
       "price": 370,
       "category": "rolls",
       "frontpadArticle": "9000",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, лосось",
       "image": "/menu/philadelphia.png",
       "available": true
     },
@@ -456,7 +456,7 @@
       "price": 380,
       "category": "rolls",
       "frontpadArticle": "9001",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, масаго, огурец",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -466,7 +466,7 @@
       "price": 420,
       "category": "rolls",
       "frontpadArticle": "9002",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, креветка",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -476,7 +476,7 @@
       "price": 390,
       "category": "rolls",
       "frontpadArticle": "9004",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, угорь",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -486,7 +486,7 @@
       "price": 300,
       "category": "salads",
       "frontpadArticle": "6001",
-      "description": "Состав уточняется",
+      "description": "Айсберг, соус, помидор, яйца, хлеб, креветка, пармезан",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -496,7 +496,7 @@
       "price": 270,
       "category": "salads",
       "frontpadArticle": "6000",
-      "description": "Состав уточняется",
+      "description": "Айсберг, соус, помидор, яйца, хлеб, курица, пармезан",
       "image": "/menu/caesar-chicken.png",
       "available": true
     },
@@ -506,7 +506,7 @@
       "price": 350,
       "category": "fryBoxes",
       "frontpadArticle": "4000",
-      "description": "Состав уточняется",
+      "description": "Сосиски, картофель фри, коул-слоу, кетчуп, халапеньо",
       "image": "/menu/bavarskiy.png",
       "available": true
     },
@@ -516,7 +516,7 @@
       "price": 250,
       "category": "salads",
       "frontpadArticle": "4002",
-      "description": "Состав уточняется",
+      "description": "Огурец, помидоры",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -526,7 +526,7 @@
       "price": 300,
       "category": "fryBoxes",
       "frontpadArticle": "4001",
-      "description": "Состав уточняется",
+      "description": "Картофель фри, курица, сыр, халапеньо, кетчуп, горчичный соус",
       "image": "/menu/chicken-box.png",
       "available": true
     },
@@ -536,7 +536,7 @@
       "price": 180,
       "category": "fried",
       "frontpadArticle": "7000",
-      "description": "Состав уточняется",
+      "description": "Картофель",
       "image": "/menu/fries.png",
       "available": true
     },
@@ -546,7 +546,7 @@
       "price": 200,
       "category": "fried",
       "frontpadArticle": "7001",
-      "description": "Состав уточняется",
+      "description": "Куриное филе в панировке",
       "image": "/menu/nuggets.png",
       "available": true
     },
@@ -556,7 +556,7 @@
       "price": 190,
       "category": "fried",
       "frontpadArticle": "7002",
-      "description": "Состав уточняется",
+      "description": "Куриные полоски в панировке",
       "image": "/menu/strips.png",
       "available": true
     },
@@ -566,7 +566,7 @@
       "price": 180,
       "category": "fried",
       "frontpadArticle": "7003",
-      "description": "Состав уточняется",
+      "description": "Сыр в панировке",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -576,7 +576,7 @@
       "price": 130,
       "category": "waffles",
       "frontpadArticle": "58",
-      "description": "Состав уточняется",
+      "description": "Арбуз, лимон, лёд",
       "image": "/menu/watermelon-drink.png",
       "available": true
     },
@@ -586,7 +586,7 @@
       "price": 270,
       "category": "waffles",
       "frontpadArticle": "5003",
-      "description": "Состав уточняется",
+      "description": "Вафля, клубника, банан",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -596,7 +596,7 @@
       "price": 300,
       "category": "waffles",
       "frontpadArticle": "5002",
-      "description": "Состав уточняется",
+      "description": "Вафля, клубника, нутелла",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -606,7 +606,7 @@
       "price": 250,
       "category": "waffles",
       "frontpadArticle": "5001",
-      "description": "Состав уточняется",
+      "description": "Вафля, банан",
       "image": "/menu/vaflya-banan.png",
       "available": true
     },
@@ -616,7 +616,7 @@
       "price": 200,
       "category": "waffles",
       "frontpadArticle": "5000",
-      "description": "Состав уточняется",
+      "description": "Вафля, нутелла",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -626,7 +626,7 @@
       "price": 150,
       "category": "waffles",
       "frontpadArticle": "63",
-      "description": "Состав уточняется",
+      "description": "Дыня, лимон, лёд",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -636,7 +636,7 @@
       "price": 150,
       "category": "rolls",
       "frontpadArticle": "64",
-      "description": "Состав уточняется",
+      "description": "Рис, крем-чиз, огурец, лосось, креветка, краб",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -646,7 +646,7 @@
       "price": 120,
       "category": "waffles",
       "frontpadArticle": "65",
-      "description": "Состав уточняется",
+      "description": "Пломбир",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -656,7 +656,7 @@
       "price": 50,
       "category": "waffles",
       "frontpadArticle": "5004",
-      "description": "Состав уточняется",
+      "description": "Дополнительный шарик пломбира",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -666,7 +666,7 @@
       "price": 250,
       "category": "waffles",
       "frontpadArticle": "67",
-      "description": "Состав уточняется",
+      "description": "Рисовое тесто, начинка",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -676,7 +676,7 @@
       "price": 230,
       "category": "salads",
       "frontpadArticle": "68",
-      "description": "Состав уточняется",
+      "description": "Сезонные фрукты",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -686,7 +686,7 @@
       "price": 130,
       "category": "coffeeShop",
       "frontpadArticle": "69",
-      "description": "Состав уточняется",
+      "description": "Мороженое, жвачка, маршмelloу",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -696,7 +696,7 @@
       "price": 50,
       "category": "coffeeShop",
       "frontpadArticle": "70",
-      "description": "Состав уточняется",
+      "description": "Мороженое, жвачка",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -706,7 +706,7 @@
       "price": 150,
       "category": "coffeeShop",
       "frontpadArticle": "71",
-      "description": "Состав уточняется",
+      "description": "Мороженое, кокос, шоколад",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -716,7 +716,7 @@
       "price": 90,
       "category": "coffeeShop",
       "frontpadArticle": "72",
-      "description": "Состав уточняется",
+      "description": "Мороженое с жемчужной крошкой",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -726,7 +726,7 @@
       "price": 150,
       "category": "coffeeShop",
       "frontpadArticle": "73",
-      "description": "Состав уточняется",
+      "description": "Мороженое, шоколад, орехи",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -736,7 +736,7 @@
       "price": 150,
       "category": "coffeeShop",
       "frontpadArticle": "74",
-      "description": "Состав уточняется",
+      "description": "Мороженое, шоколад, карамель",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -746,7 +746,7 @@
       "price": 150,
       "category": "coffeeShop",
       "frontpadArticle": "75",
-      "description": "Состав уточняется",
+      "description": "Мороженое, шоколад Milka",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -756,7 +756,7 @@
       "price": 90,
       "category": "coffeeShop",
       "frontpadArticle": "76",
-      "description": "Состав уточняется",
+      "description": "Натуральное мороженое",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -766,7 +766,7 @@
       "price": 150,
       "category": "coffeeShop",
       "frontpadArticle": "77",
-      "description": "Состав уточняется",
+      "description": "Мороженое, печенье Oreo",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -776,7 +776,7 @@
       "price": 60,
       "category": "coffeeShop",
       "frontpadArticle": "78",
-      "description": "Состав уточняется",
+      "description": "Мороженое",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -786,7 +786,7 @@
       "price": 80,
       "category": "sandwiches",
       "frontpadArticle": "79",
-      "description": "Состав уточняется",
+      "description": "Хлеб, соус, сыр, курица, котлета, помидоры, айсберг",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -796,7 +796,7 @@
       "price": 150,
       "category": "coffeeShop",
       "frontpadArticle": "80",
-      "description": "Состав уточняется",
+      "description": "Мороженое, арахис, карамель, шоколад",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -806,7 +806,7 @@
       "price": 190,
       "category": "coffeeShop",
       "frontpadArticle": "81",
-      "description": "Состав уточняется",
+      "description": "Мороженое, чизкейк, клубника",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -816,7 +816,7 @@
       "price": 130,
       "category": "rolls",
       "frontpadArticle": "82",
-      "description": "Состав уточняется",
+      "description": "Мороженое, ягоды, шоколад",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -826,7 +826,7 @@
       "price": 90,
       "category": "coffeeShop",
       "frontpadArticle": "83",
-      "description": "Состав уточняется",
+      "description": "Натуральное мороженое",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -836,7 +836,7 @@
       "price": 40,
       "category": "coffeeShop",
       "frontpadArticle": "84",
-      "description": "Состав уточняется",
+      "description": "Мороженое",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -846,7 +846,7 @@
       "price": 80,
       "category": "coffeeShop",
       "frontpadArticle": "85",
-      "description": "Состав уточняется",
+      "description": "Мороженое, ириска, карамель",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -856,7 +856,7 @@
       "price": 100,
       "category": "coffeeShop",
       "frontpadArticle": "86",
-      "description": "Состав уточняется",
+      "description": "Мороженое, фисташка, рожок",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -866,7 +866,7 @@
       "price": 60,
       "category": "coffeeShop",
       "frontpadArticle": "87",
-      "description": "Состав уточняется",
+      "description": "Фруктовый лёд",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -876,7 +876,7 @@
       "price": 130,
       "category": "coffeeShop",
       "frontpadArticle": "88",
-      "description": "Состав уточняется",
+      "description": "Мороженое, шоколад, орехи",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -886,7 +886,7 @@
       "price": 70,
       "category": "coffeeShop",
       "frontpadArticle": "89",
-      "description": "Состав уточняется",
+      "description": "Мороженое в шоколадной глазури",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -896,7 +896,7 @@
       "price": 80,
       "category": "coffeeShop",
       "frontpadArticle": "90",
-      "description": "Состав уточняется",
+      "description": "Мороженое, вишня, глазурь",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -906,7 +906,7 @@
       "price": 60,
       "category": "coffeeShop",
       "frontpadArticle": "91",
-      "description": "Состав уточняется",
+      "description": "Мороженое, мята, лайм",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -916,7 +916,7 @@
       "price": 80,
       "category": "coffeeShop",
       "frontpadArticle": "92",
-      "description": "Состав уточняется",
+      "description": "Мороженое, орехи, глазурь",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -926,7 +926,7 @@
       "price": 70,
       "category": "coffeeShop",
       "frontpadArticle": "93",
-      "description": "Состав уточняется",
+      "description": "Пломбир в глазури",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -936,7 +936,7 @@
       "price": 80,
       "category": "coffeeShop",
       "frontpadArticle": "94",
-      "description": "Состав уточняется",
+      "description": "Пломбир в глазури",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -946,7 +946,7 @@
       "price": 40,
       "category": "sauces",
       "frontpadArticle": "8002",
-      "description": "Состав уточняется",
+      "description": "Фирменный соус",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -956,7 +956,7 @@
       "price": 40,
       "category": "sauces",
       "frontpadArticle": "8000",
-      "description": "Состав уточняется",
+      "description": "Сыр, сливки",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -966,7 +966,7 @@
       "price": 40,
       "category": "sauces",
       "frontpadArticle": "8001",
-      "description": "Состав уточняется",
+      "description": "Томаты, специи",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -976,7 +976,7 @@
       "price": 40,
       "category": "sauces",
       "frontpadArticle": "8003",
-      "description": "Состав уточняется",
+      "description": "Маринованный перец халапеньо",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -986,7 +986,7 @@
       "price": 20,
       "category": "sauces",
       "frontpadArticle": "99",
-      "description": "Состав уточняется",
+      "description": "Маринованный перец халапеньо",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -996,7 +996,7 @@
       "price": 150,
       "category": "coffeeShop",
       "frontpadArticle": "100",
-      "description": "Состав уточняется",
+      "description": "Газированный напиток",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1006,7 +1006,7 @@
       "price": 110,
       "category": "coffeeShop",
       "frontpadArticle": "101",
-      "description": "Состав уточняется",
+      "description": "Газированный напиток",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1016,7 +1016,7 @@
       "price": 110,
       "category": "coffeeShop",
       "frontpadArticle": "102",
-      "description": "Состав уточняется",
+      "description": "Холодный чай",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1026,7 +1026,7 @@
       "price": 110,
       "category": "coffeeShop",
       "frontpadArticle": "103",
-      "description": "Состав уточняется",
+      "description": "Фруктовый напиток",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1036,7 +1036,7 @@
       "price": 60,
       "category": "coffeeShop",
       "frontpadArticle": "104",
-      "description": "Состав уточняется",
+      "description": "Фруктовый сок",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1046,7 +1046,7 @@
       "price": 110,
       "category": "coffeeShop",
       "frontpadArticle": "105",
-      "description": "Состав уточняется",
+      "description": "Газированный напиток",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1056,7 +1056,7 @@
       "price": 30,
       "category": "coffeeShop",
       "frontpadArticle": "106",
-      "description": "Состав уточняется",
+      "description": "Газированный напиток",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1066,7 +1066,7 @@
       "price": 150,
       "category": "coffeeShop",
       "frontpadArticle": "107",
-      "description": "Состав уточняется",
+      "description": "Газированный напиток",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1076,7 +1076,7 @@
       "price": 110,
       "category": "coffeeShop",
       "frontpadArticle": "108",
-      "description": "Состав уточняется",
+      "description": "Газированный напиток",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1086,7 +1086,7 @@
       "price": 80,
       "category": "coffeeShop",
       "frontpadArticle": "109",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, вода",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1096,7 +1096,7 @@
       "price": 80,
       "category": "coffeeShop",
       "frontpadArticle": "110",
-      "description": "Состав уточняется",
+      "description": "Какао, молоко, сахар",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1106,7 +1106,7 @@
       "price": 80,
       "category": "coffeeShop",
       "frontpadArticle": "111",
-      "description": "Состав уточняется",
+      "description": "Какао, молоко, сахар",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1116,7 +1116,7 @@
       "price": 140,
       "category": "coffeeShop",
       "frontpadArticle": "112",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, молоко, молочная пена",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1126,7 +1126,7 @@
       "price": 120,
       "category": "coffeeShop",
       "frontpadArticle": "113",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, молоко, молочная пена",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1136,7 +1136,7 @@
       "price": 140,
       "category": "coffeeShop",
       "frontpadArticle": "114",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, молоко",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1146,7 +1146,7 @@
       "price": 120,
       "category": "coffeeShop",
       "frontpadArticle": "115",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, молоко",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1156,7 +1156,7 @@
       "price": 140,
       "category": "coffeeShop",
       "frontpadArticle": "116",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, сливки, ваниль",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1166,7 +1166,7 @@
       "price": 170,
       "category": "coffeeShop",
       "frontpadArticle": "117",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, сливки, карамель, миндаль",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1176,7 +1176,7 @@
       "price": 150,
       "category": "coffeeShop",
       "frontpadArticle": "118",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, сливки, карамель, миндаль",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1186,7 +1186,7 @@
       "price": 130,
       "category": "coffeeShop",
       "frontpadArticle": "119",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, сливки, ваниль",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1196,7 +1196,7 @@
       "price": 170,
       "category": "coffeeShop",
       "frontpadArticle": "120",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, сливки, фисташка, малина",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1206,7 +1206,7 @@
       "price": 150,
       "category": "coffeeShop",
       "frontpadArticle": "121",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, сливки, фисташка, малина",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1216,7 +1216,7 @@
       "price": 80,
       "category": "coffeeShop",
       "frontpadArticle": "122",
-      "description": "Состав уточняется",
+      "description": "Чёрный чай",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1226,7 +1226,7 @@
       "price": 60,
       "category": "coffeeShop",
       "frontpadArticle": "123",
-      "description": "Состав уточняется",
+      "description": "Чёрный чай",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1236,7 +1236,7 @@
       "price": 120,
       "category": "coffeeShop",
       "frontpadArticle": "124",
-      "description": "Состав уточняется",
+      "description": "Чай, варенье",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1246,7 +1246,7 @@
       "price": 100,
       "category": "coffeeShop",
       "frontpadArticle": "125",
-      "description": "Состав уточняется",
+      "description": "Чай, варенье",
       "image": "/menu/dish.png",
       "available": true
     }
@@ -1258,7 +1258,7 @@
       "price": 190,
       "category": "coffeeShop",
       "frontpadArticle": "200",
-      "description": "Состав уточняется",
+      "description": "Базилик, арбуз, лимон, лёд",
       "image": "/menu/watermelon-drink.png",
       "available": true
     },
@@ -1268,7 +1268,7 @@
       "price": 210,
       "category": "coffeeShop",
       "frontpadArticle": "201",
-      "description": "Состав уточняется",
+      "description": "Базилик, арбуз, лимон, лёд",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1278,7 +1278,7 @@
       "price": 190,
       "category": "coffeeShop",
       "frontpadArticle": "202",
-      "description": "Состав уточняется",
+      "description": "Лаванда, ананас, лимон, лёд",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1288,7 +1288,7 @@
       "price": 210,
       "category": "coffeeShop",
       "frontpadArticle": "203",
-      "description": "Состав уточняется",
+      "description": "Лаванда, ананас, лимон, лёд",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1298,7 +1298,7 @@
       "price": 170,
       "category": "coffeeShop",
       "frontpadArticle": "204",
-      "description": "Состав уточняется",
+      "description": "Мята, лайм, лимон, лёд",
       "image": "/menu/lemonade.png",
       "available": true
     },
@@ -1308,7 +1308,7 @@
       "price": 200,
       "category": "coffeeShop",
       "frontpadArticle": "205",
-      "description": "Состав уточняется",
+      "description": "Мята, лайм, лимон, лёд",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1318,7 +1318,7 @@
       "price": 190,
       "category": "coffeeShop",
       "frontpadArticle": "206",
-      "description": "Состав уточняется",
+      "description": "Апельсин, лимон, клубника, лёд",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1328,7 +1328,7 @@
       "price": 210,
       "category": "coffeeShop",
       "frontpadArticle": "207",
-      "description": "Состав уточняется",
+      "description": "Апельсин, лимон, клубника, лёд",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1338,7 +1338,7 @@
       "price": 200,
       "category": "coffeeShop",
       "frontpadArticle": "208",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, молоко, лёд",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1348,7 +1348,7 @@
       "price": 230,
       "category": "coffeeShop",
       "frontpadArticle": "209",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, молоко, лёд",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1358,7 +1358,7 @@
       "price": 130,
       "category": "coffeeShop",
       "frontpadArticle": "210",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, вода",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1368,7 +1368,7 @@
       "price": 210,
       "category": "coffeeShop",
       "frontpadArticle": "211",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, апельсиновый сок, лёд",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1378,7 +1378,7 @@
       "price": 240,
       "category": "coffeeShop",
       "frontpadArticle": "212",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, апельсиновый сок, лёд",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1388,7 +1388,7 @@
       "price": 170,
       "category": "coffeeShop",
       "frontpadArticle": "213",
-      "description": "Состав уточняется",
+      "description": "Какао, молоко, сахар",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1398,7 +1398,7 @@
       "price": 60,
       "category": "coffeeShop",
       "frontpadArticle": "214",
-      "description": "Состав уточняется",
+      "description": "Зелёный чай",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1408,7 +1408,7 @@
       "price": 140,
       "category": "coffeeShop",
       "frontpadArticle": "215",
-      "description": "Состав уточняется",
+      "description": "Какао, молоко, сахар",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1418,7 +1418,7 @@
       "price": 170,
       "category": "coffeeShop",
       "frontpadArticle": "216",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, молоко, молочная пена",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1428,7 +1428,7 @@
       "price": 200,
       "category": "coffeeShop",
       "frontpadArticle": "217",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, молоко, молочная пена",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1438,7 +1438,7 @@
       "price": 170,
       "category": "coffeeShop",
       "frontpadArticle": "218",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, молоко",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1448,7 +1448,7 @@
       "price": 200,
       "category": "coffeeShop",
       "frontpadArticle": "219",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, молоко",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1458,7 +1458,7 @@
       "price": 180,
       "category": "coffeeShop",
       "frontpadArticle": "220",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, сливки, ваниль",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1468,7 +1468,7 @@
       "price": 210,
       "category": "coffeeShop",
       "frontpadArticle": "221",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, сливки, ваниль",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1478,7 +1478,7 @@
       "price": 200,
       "category": "coffeeShop",
       "frontpadArticle": "222",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, сливки, карамель, миндаль",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1488,7 +1488,7 @@
       "price": 230,
       "category": "coffeeShop",
       "frontpadArticle": "223",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, сливки, карамель, миндаль",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1498,7 +1498,7 @@
       "price": 200,
       "category": "coffeeShop",
       "frontpadArticle": "224",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, сливки, фисташка, малина",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1508,7 +1508,7 @@
       "price": 230,
       "category": "coffeeShop",
       "frontpadArticle": "225",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, сливки, фисташка, малина",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1518,7 +1518,7 @@
       "price": 210,
       "category": "coffeeShop",
       "frontpadArticle": "226",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, тоник, лёд",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1528,7 +1528,7 @@
       "price": 240,
       "category": "coffeeShop",
       "frontpadArticle": "227",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, тоник, лёд",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1538,7 +1538,7 @@
       "price": 200,
       "category": "coffeeShop",
       "frontpadArticle": "228",
-      "description": "Состав уточняется",
+      "description": "Эспрессо, молоко",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1548,7 +1548,7 @@
       "price": 120,
       "category": "coffeeShop",
       "frontpadArticle": "229",
-      "description": "Состав уточняется",
+      "description": "Чай, варенье",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1558,7 +1558,7 @@
       "price": 140,
       "category": "coffeeShop",
       "frontpadArticle": "230",
-      "description": "Состав уточняется",
+      "description": "Чай, варенье",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1568,7 +1568,7 @@
       "price": 80,
       "category": "coffeeShop",
       "frontpadArticle": "231",
-      "description": "Состав уточняется",
+      "description": "Зелёный чай",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1578,7 +1578,7 @@
       "price": 60,
       "category": "coffeeShop",
       "frontpadArticle": "232",
-      "description": "Состав уточняется",
+      "description": "Чёрный чай",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1588,7 +1588,7 @@
       "price": 80,
       "category": "coffeeShop",
       "frontpadArticle": "233",
-      "description": "Состав уточняется",
+      "description": "Чёрный чай",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1598,7 +1598,7 @@
       "price": 100,
       "category": "coffeeShop",
       "frontpadArticle": "234",
-      "description": "Состав уточняется",
+      "description": "Кофе",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1608,7 +1608,7 @@
       "price": 350,
       "category": "burgers",
       "frontpadArticle": "2002",
-      "description": "Состав уточняется",
+      "description": "Булочка, соус, помидоры, картофель фри, котлета, сыр, салат",
       "image": "/menu/beyrut.png",
       "available": true
     },
@@ -1618,7 +1618,7 @@
       "price": 370,
       "category": "sandwiches",
       "frontpadArticle": "1001",
-      "description": "Состав уточняется",
+      "description": "Хлеб, соус, помидоры, сыр, курица, айсберг",
       "image": "/menu/double-chicken-sandwich.png",
       "available": true
     },
@@ -1628,7 +1628,7 @@
       "price": 290,
       "category": "sandwiches",
       "frontpadArticle": "1000",
-      "description": "Состав уточняется",
+      "description": "Хлеб, соус, помидоры, сыр, курица, айсберг",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1638,7 +1638,7 @@
       "price": 420,
       "category": "sandwiches",
       "frontpadArticle": "1003",
-      "description": "Состав уточняется",
+      "description": "Хлеб, соус, сыр, помидоры, котлета, айсберг",
       "image": "/menu/double-beef-sandwich.png",
       "available": true
     },
@@ -1648,7 +1648,7 @@
       "price": 350,
       "category": "sandwiches",
       "frontpadArticle": "1002",
-      "description": "Состав уточняется",
+      "description": "Хлеб, соус, помидоры, сыр, котлета, айсберг, огурцы",
       "image": "/menu/beef-sandwich.png",
       "available": true
     },
@@ -1658,7 +1658,7 @@
       "price": 390,
       "category": "sandwiches",
       "frontpadArticle": "1004",
-      "description": "Состав уточняется",
+      "description": "Хлеб, соус, помидоры, сыр, курица, котлета, айсберг, огурец",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1668,7 +1668,7 @@
       "price": 220,
       "category": "hotDogs",
       "frontpadArticle": "100",
-      "description": "Состав уточняется",
+      "description": "Булочка, сосиска, лук, зелень, острый соус",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1678,7 +1678,7 @@
       "price": 200,
       "category": "hotDogs",
       "frontpadArticle": "101",
-      "description": "Состав уточняется",
+      "description": "Булочка, сосиска, горчица, кетчуп",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1688,7 +1688,7 @@
       "price": 330,
       "category": "burgers",
       "frontpadArticle": "2000",
-      "description": "Состав уточняется",
+      "description": "Булочка, соус, котлета, помидоры, сыр, айсберг, огурцы",
       "image": "/menu/cheeseburger.png",
       "available": true
     },
@@ -1698,7 +1698,7 @@
       "price": 270,
       "category": "burgers",
       "frontpadArticle": "2001",
-      "description": "Состав уточняется",
+      "description": "Булочка, соус, курица, сыр, помидоры, айсберг",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1708,7 +1708,7 @@
       "price": 250,
       "category": "fried",
       "frontpadArticle": "7004",
-      "description": "Состав уточняется",
+      "description": "Куриные крылья в панировке",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1718,7 +1718,7 @@
       "price": 200,
       "category": "fried",
       "frontpadArticle": "7001",
-      "description": "Состав уточняется",
+      "description": "Куриное филе в панировке",
       "image": "/menu/nuggets.png",
       "available": true
     },
@@ -1728,7 +1728,7 @@
       "price": 180,
       "category": "fried",
       "frontpadArticle": "7002",
-      "description": "Состав уточняется",
+      "description": "Куриные полоски в панировке",
       "image": "/menu/strips.png",
       "available": true
     },
@@ -1738,7 +1738,7 @@
       "price": 180,
       "category": "fried",
       "frontpadArticle": "7003",
-      "description": "Состав уточняется",
+      "description": "Сыр в панировке",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1748,7 +1748,7 @@
       "price": 180,
       "category": "fried",
       "frontpadArticle": "7000",
-      "description": "Состав уточняется",
+      "description": "Картофель",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1758,7 +1758,7 @@
       "price": 250,
       "category": "waffles",
       "frontpadArticle": "5001",
-      "description": "Состав уточняется",
+      "description": "Вафля, банан, шоколад",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1768,7 +1768,7 @@
       "price": 300,
       "category": "waffles",
       "frontpadArticle": "5002",
-      "description": "Состав уточняется",
+      "description": "Вафля, клубника",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1778,7 +1778,7 @@
       "price": 270,
       "category": "waffles",
       "frontpadArticle": "5003",
-      "description": "Состав уточняется",
+      "description": "Вафля, клубника, банан",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1788,7 +1788,7 @@
       "price": 200,
       "category": "waffles",
       "frontpadArticle": "5000",
-      "description": "Состав уточняется",
+      "description": "Вафля, шоколад",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1798,7 +1798,7 @@
       "price": 250,
       "category": "waffles",
       "frontpadArticle": "5005",
-      "description": "Состав уточняется",
+      "description": "Рисовое тесто, начинка",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1808,7 +1808,7 @@
       "price": 50,
       "category": "waffles",
       "frontpadArticle": "5004",
-      "description": "Состав уточняется",
+      "description": "Пломбир",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1818,7 +1818,7 @@
       "price": 200,
       "category": "salads",
       "frontpadArticle": "6002",
-      "description": "Состав уточняется",
+      "description": "Огурец, помидоры",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1828,7 +1828,7 @@
       "price": 270,
       "category": "salads",
       "frontpadArticle": "6000",
-      "description": "Состав уточняется",
+      "description": "Айсберг, соус, помидор, яйца, хлеб, курица, пармезан",
       "image": "/menu/caesar-chicken.png",
       "available": true
     },
@@ -1838,7 +1838,7 @@
       "price": 40,
       "category": "sauces",
       "frontpadArticle": "8001",
-      "description": "Состав уточняется",
+      "description": "Сыр, сливки",
       "image": "/menu/dish.png",
       "available": true
     },
@@ -1848,7 +1848,7 @@
       "price": 40,
       "category": "sauces",
       "frontpadArticle": "8000",
-      "description": "Состав уточняется",
+      "description": "Томаты, специи",
       "image": "/menu/dish.png",
       "available": true
     }
