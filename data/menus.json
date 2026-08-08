@@ -57,7 +57,7 @@
       "category": "burgers",
       "frontpadArticle": "2002",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/beyrut.png",
       "available": true
     },
     {
@@ -67,7 +67,7 @@
       "category": "sandwiches",
       "frontpadArticle": "1003",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/double-beef-sandwich.png",
       "available": true
     },
     {
@@ -77,7 +77,7 @@
       "category": "sandwiches",
       "frontpadArticle": "1001",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/double-chicken-sandwich.png",
       "available": true
     },
     {
@@ -87,7 +87,7 @@
       "category": "panini",
       "frontpadArticle": "3000",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/panini-chicken.png",
       "available": true
     },
     {
@@ -97,7 +97,7 @@
       "category": "sandwiches",
       "frontpadArticle": "1002",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/beef-sandwich.png",
       "available": true
     },
     {
@@ -127,7 +127,7 @@
       "category": "burgers",
       "frontpadArticle": "2000",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/cheeseburger.png",
       "available": true
     },
     {
@@ -137,7 +137,7 @@
       "category": "burgers",
       "frontpadArticle": "2001",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/chicken-burger.png",
       "available": true
     },
     {
@@ -207,7 +207,7 @@
       "category": "salads",
       "frontpadArticle": "6003",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/greek-salad.png",
       "available": true
     },
     {
@@ -237,7 +237,7 @@
       "category": "rolls",
       "frontpadArticle": "9009",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/fried-salmon-roll.png",
       "available": true
     },
     {
@@ -277,7 +277,7 @@
       "category": "rolls",
       "frontpadArticle": "9003",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/baked-philadelphia.png",
       "available": true
     },
     {
@@ -287,7 +287,7 @@
       "category": "rolls",
       "frontpadArticle": "9017",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/baked-crab-roll.png",
       "available": true
     },
     {
@@ -307,7 +307,7 @@
       "category": "rolls",
       "frontpadArticle": "9019",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/baked-salmon-roll.png",
       "available": true
     },
     {
@@ -367,7 +367,7 @@
       "category": "rolls",
       "frontpadArticle": "32",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/fried-roll-tempura.png",
       "available": true
     },
     {
@@ -447,7 +447,7 @@
       "category": "rolls",
       "frontpadArticle": "9000",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/philadelphia.png",
       "available": true
     },
     {
@@ -497,7 +497,7 @@
       "category": "salads",
       "frontpadArticle": "6000",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/caesar-chicken.png",
       "available": true
     },
     {
@@ -507,7 +507,7 @@
       "category": "fryBoxes",
       "frontpadArticle": "4000",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/bavarskiy.png",
       "available": true
     },
     {
@@ -527,7 +527,7 @@
       "category": "fryBoxes",
       "frontpadArticle": "4001",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/chicken-box.png",
       "available": true
     },
     {
@@ -537,7 +537,7 @@
       "category": "fried",
       "frontpadArticle": "7000",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/fries.png",
       "available": true
     },
     {
@@ -547,7 +547,7 @@
       "category": "fried",
       "frontpadArticle": "7001",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/nuggets.png",
       "available": true
     },
     {
@@ -557,7 +557,7 @@
       "category": "fried",
       "frontpadArticle": "7002",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/strips.png",
       "available": true
     },
     {
@@ -577,7 +577,7 @@
       "category": "waffles",
       "frontpadArticle": "58",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/watermelon-drink.png",
       "available": true
     },
     {
@@ -607,7 +607,7 @@
       "category": "waffles",
       "frontpadArticle": "5001",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/vaflya-banan.png",
       "available": true
     },
     {
@@ -1259,7 +1259,7 @@
       "category": "coffeeShop",
       "frontpadArticle": "200",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/watermelon-drink.png",
       "available": true
     },
     {
@@ -1299,7 +1299,7 @@
       "category": "coffeeShop",
       "frontpadArticle": "204",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/lemonade.png",
       "available": true
     },
     {
@@ -1609,7 +1609,7 @@
       "category": "burgers",
       "frontpadArticle": "2002",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/beyrut.png",
       "available": true
     },
     {
@@ -1619,7 +1619,7 @@
       "category": "sandwiches",
       "frontpadArticle": "1001",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/double-chicken-sandwich.png",
       "available": true
     },
     {
@@ -1639,7 +1639,7 @@
       "category": "sandwiches",
       "frontpadArticle": "1003",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/double-beef-sandwich.png",
       "available": true
     },
     {
@@ -1649,7 +1649,7 @@
       "category": "sandwiches",
       "frontpadArticle": "1002",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/beef-sandwich.png",
       "available": true
     },
     {
@@ -1689,7 +1689,7 @@
       "category": "burgers",
       "frontpadArticle": "2000",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/cheeseburger.png",
       "available": true
     },
     {
@@ -1719,7 +1719,7 @@
       "category": "fried",
       "frontpadArticle": "7001",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/nuggets.png",
       "available": true
     },
     {
@@ -1729,7 +1729,7 @@
       "category": "fried",
       "frontpadArticle": "7002",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/strips.png",
       "available": true
     },
     {
@@ -1829,7 +1829,7 @@
       "category": "salads",
       "frontpadArticle": "6000",
       "description": "Состав уточняется",
-      "image": "/menu/dish.png",
+      "image": "/menu/caesar-chicken.png",
       "available": true
     },
     {

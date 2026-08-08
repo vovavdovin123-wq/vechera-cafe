@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { MapPin, Phone, Search, ShoppingBag, UserRound } from "lucide-react";
+import { MapPin, Search, ShoppingBag, UserRound } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { CustomSelect } from "@/components/CustomSelect";
 import { FRANCHISE_LIST } from "@/lib/franchises";
@@ -159,13 +159,6 @@ export function Header() {
               className="min-w-0 w-[min(42vw,10rem)]"
             />
           </div>
-          <a
-            href="#contacts"
-            className="hidden items-center gap-1.5 rounded-full border border-white/25 px-3 py-2 text-sm text-white/90 transition hover:border-[var(--gold)] hover:bg-white/10 lg:inline-flex"
-          >
-            <Phone className="h-4 w-4" />
-            Контакты
-          </a>
           <Link
             href="/account"
             className="inline-flex items-center gap-1.5 rounded-full border border-white/25 px-3 py-2 text-sm text-white/90 transition hover:border-[var(--gold)] hover:bg-white/10"

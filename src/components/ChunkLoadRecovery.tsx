@@ -22,6 +22,8 @@ function isChunkLoadError(value: unknown): boolean {
 /** Дублирует inline-скрипт из layout — подстраховка после монтирования React. */
 export function ChunkLoadRecovery() {
   useEffect(() => {
+    if (process.env.NODE_ENV !== "production") return;
+
     try {
       sessionStorage.removeItem(RELOAD_KEY);
     } catch {

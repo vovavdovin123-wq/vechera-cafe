@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { CircleAlert, ShoppingBag, UtensilsCrossed, X } from "lucide-react";
 import { MenuCategorySelect } from "@/components/MenuCategorySelect";
+import { MenuSkeleton } from "@/components/MenuSkeleton";
 import { PAGE } from "@/lib/layout";
 import type { MenuItem } from "@/lib/types";
 import { useCart } from "@/context/CartContext";
@@ -57,11 +58,7 @@ export function MenuSection() {
   }, [items, category]);
 
   if (!contentReady) {
-    return (
-      <section id="menu" className={`${PAGE} py-8 sm:py-10 md:py-12`} aria-busy>
-        <div className="h-40 animate-pulse rounded-2xl bg-[var(--bg-deep)]/60" />
-      </section>
-    );
+    return <MenuSkeleton />;
   }
 
   return (

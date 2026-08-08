@@ -4,14 +4,19 @@ import {
   createUserSessionToken,
   userSessionCookieOptions,
 } from "@/lib/user-auth";
-import { isValidPhone, normalizePhone } from "@/lib/phone";
-import { upsertUser } from "@/lib/users-store";
+import { verifyPassword } from "@/lib/password";
+import { isValidPhone } from "@/lib/phone";
+import { findUserByPhone, verifyUserPassword } from "@/lib/users-store";
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as { phone?: string; name?: string };
+    const body = (await request.json()) as {
+      phone?: string;
+      password?: string;
+    };
+
     const phone = String(body.phone ?? "").trim();
-    const name = String(body.name ?? "").trim();
+    const password = String(body.password ?? "");
 
     if (!isValidPhone(phone)) {
       return NextResponse.json(
@@ -20,8 +25,32 @@ export async function POST(request: Request) {
       );
     }
 
-    const normalized = normalizePhone(phone);
-    const user = await upsertUser(normalized, name || undefined);
+    if (!password) {
+      return NextResponse.json(
+        { ok: false, message: "Введите пароль" },
+        { status: 400 },
+      );
+    }
+
+    const existing = await findUserByPhone(phone);
+    if (!existing?.passwordHash) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Аккаунт не найден. Зарегистрируйтесь.",
+        },
+        { status: 401 },
+      );
+    }
+
+    const user = await verifyUserPassword(phone, password, verifyPassword);
+    if (!user) {
+      return NextResponse.json(
+        { ok: false, message: "Неверный телефон или пароль" },
+        { status: 401 },
+      );
+    }
+
     const token = createUserSessionToken({
       phone: user.phone,
       name: user.name,
@@ -36,6 +65,9 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error("[api/account/login]", error);
-    return NextResponse.json({ ok: false, message: "Ошибка сервера" }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, message: "Ошибка сервера" },
+      { status: 500 },
+    );
   }
 }

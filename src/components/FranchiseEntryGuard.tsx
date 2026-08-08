@@ -45,15 +45,23 @@ export function FranchiseEntryGuard({ children }: { children: ReactNode }) {
 
   if (!ready || needsPick) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-6 text-center text-ink-muted">
-        <p>Загрузка…</p>
-        {redirectStuck && (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-[var(--bg)] px-6">
+        <div className="w-full max-w-md rounded-3xl border border-[var(--gold)]/40 bg-white p-6 text-center shadow-[var(--shadow-soft)]">
+          <p className="font-display text-2xl font-semibold text-[var(--espresso)]">
+            Выберите точку
+          </p>
+          <p className="mt-2 text-sm text-ink-muted">
+            Чтобы показать меню и принять заказ, укажите кафе «Вечера»
+          </p>
           <Link
             href="/pick"
-            className="rounded-full bg-[var(--gold)] px-5 py-2.5 text-sm font-semibold text-[var(--espresso)]"
+            className="btn-soft mt-5 inline-flex w-full items-center justify-center"
           >
-            Выбрать точку
+            Выбрать кафе
           </Link>
+        </div>
+        {!redirectStuck && (
+          <p className="text-sm text-ink-muted">Переход…</p>
         )}
       </div>
     );

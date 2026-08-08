@@ -5,6 +5,7 @@ import { normalizePhone } from "./phone";
 export interface StoredUser {
   phone: string;
   name?: string;
+  passwordHash?: string;
   updatedAt: string;
 }
 
@@ -29,6 +30,53 @@ export async function readUsers(): Promise<StoredUser[]> {
   }
 }
 
+async function writeUsers(list: StoredUser[]) {
+  await fs.writeFile(FILE, JSON.stringify(list, null, 2), "utf8");
+}
+
+export async function findUserByPhone(
+  phone: string,
+): Promise<StoredUser | null> {
+  const normalized = normalizePhone(phone);
+  return (await readUsers()).find((u) => u.phone === normalized) ?? null;
+}
+
+export async function registerUser(
+  phone: string,
+  name: string,
+  passwordHash: string,
+): Promise<
+  { ok: true; user: StoredUser } | { ok: false; message: string }
+> {
+  const normalized = normalizePhone(phone);
+  const trimmedName = name.trim();
+  const list = await readUsers();
+  const idx = list.findIndex((u) => u.phone === normalized);
+
+  if (idx >= 0 && list[idx].passwordHash) {
+    return {
+      ok: false,
+      message: "Этот номер уже зарегистрирован. Войдите в аккаунт.",
+    };
+  }
+
+  const entry: StoredUser = {
+    phone: normalized,
+    name: trimmedName,
+    passwordHash,
+    updatedAt: new Date().toISOString(),
+  };
+
+  if (idx >= 0) {
+    list[idx] = { ...list[idx], ...entry };
+  } else {
+    list.unshift(entry);
+  }
+
+  await writeUsers(list);
+  return { ok: true, user: entry };
+}
+
 export async function upsertUser(
   phone: string,
   name?: string,
@@ -39,6 +87,7 @@ export async function upsertUser(
   const entry: StoredUser = {
     phone: normalized,
     name: name?.trim() || list[idx]?.name,
+    passwordHash: list[idx]?.passwordHash,
     updatedAt: new Date().toISOString(),
   };
 
@@ -48,13 +97,17 @@ export async function upsertUser(
     list.unshift(entry);
   }
 
-  await fs.writeFile(FILE, JSON.stringify(list, null, 2), "utf8");
+  await writeUsers(list);
   return entry;
 }
 
-export async function findUserByPhone(
+export async function verifyUserPassword(
   phone: string,
+  password: string,
+  verify: (password: string, hash: string) => boolean,
 ): Promise<StoredUser | null> {
-  const normalized = normalizePhone(phone);
-  return (await readUsers()).find((u) => u.phone === normalized) ?? null;
+  const user = await findUserByPhone(phone);
+  if (!user?.passwordHash) return null;
+  if (!verify(password, user.passwordHash)) return null;
+  return user;
 }

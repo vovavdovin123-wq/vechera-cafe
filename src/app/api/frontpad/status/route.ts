@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { fetchFrontPadStatus } from "@/lib/frontpad";
+import { sanitizeCustomerMessage } from "@/lib/customer-messages";
 import { formatFrontPadStatus, DEFAULT_CUSTOMER_STATUS } from "@/lib/frontpad-status";
 import { findOrderByFrontPadId } from "@/lib/orders-store";
 
@@ -65,15 +66,12 @@ export async function GET(request: Request) {
           ok: true,
           status: fmt(fp.status),
           source: fp.code === "invalid_method" ? "local" : "frontpad",
-          message: fp.message,
         });
       }
       return NextResponse.json({
         ok: true,
         status: DEFAULT_CUSTOMER_STATUS,
         source: "local",
-        message:
-          "Заказ в FrontPad. Статус обновится при смене в программе.",
       });
     }
   }
@@ -84,7 +82,16 @@ export async function GET(request: Request) {
     franchiseId,
   });
   if (!result.ok) {
-    return NextResponse.json(result, { status: 502 });
+    return NextResponse.json(
+      {
+        ok: false,
+        message: sanitizeCustomerMessage(
+          result.message,
+          "Не удалось получить статус заказа",
+        ),
+      },
+      { status: 502 },
+    );
   }
   return NextResponse.json({
     ...result,

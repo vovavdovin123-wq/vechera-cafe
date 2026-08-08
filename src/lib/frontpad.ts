@@ -316,8 +316,7 @@ export async function sendOrderToFrontPad(
         ok: true,
         orderId: stubId,
         mode: "stub",
-        message:
-          "Заказ принят (заглушка). Добавьте FRONTPAD_SECRET_CENTER и FRONTPAD_SECRET_HIPPODROME в .env.",
+        message: "Заказ принят",
       };
     }
 
@@ -342,14 +341,11 @@ export async function sendOrderToFrontPad(
     (item) => !item.frontpadArticle?.trim(),
   );
   if (missingItems.length) {
-    const names = missingItems.map((i) => i.name).slice(0, 5).join(", ");
-    const tail =
-      missingItems.length > 5 ? ` и ещё ${missingItems.length - 5}` : "";
     return {
       ok: false,
       orderId: stubId,
       mode: "live",
-      message: `Нет артикула FrontPad у: ${names}${tail}. Укажите артикул в админке (Меню) или в data/frontpad-article-map.json.`,
+      message: "Не удалось принять заказ онлайн. Позвоните в кафе.",
     };
   }
 
@@ -495,15 +491,15 @@ export async function sendOrderToFrontPad(
 
     const warnText = describeProductWarnings(raw.warnings, productArticles);
     const baseMsg = orderNumber
-      ? `Заказ №${orderNumber} отправлен в FrontPad`
-      : "Заказ отправлен в FrontPad";
+      ? `Заказ №${orderNumber} принят`
+      : "Заказ принят";
 
     return {
       ok: true,
       orderId,
       orderNumber,
       mode: "live",
-      message: warnText ? `${baseMsg}. ${warnText}` : baseMsg,
+      message: warnText ? `${baseMsg}` : baseMsg,
       warnings: raw.warnings,
       raw,
     };

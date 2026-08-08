@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import { LocationBanner } from "@/components/LocationBanner";
 import { PromoCarousel } from "@/components/PromoCarousel";
 import { Hero } from "@/components/Hero";
 import { MenuSection } from "@/components/MenuSection";
@@ -14,6 +15,7 @@ export default function HomePage() {
       <Header />
       <main>
         <Hero />
+        <LocationBanner />
         <PromoCarousel />
         <MenuSection />
         <InteriorSection />

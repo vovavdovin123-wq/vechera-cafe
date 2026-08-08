@@ -23,6 +23,11 @@ import { useCart } from "@/context/CartContext";
 import { getStoredFranchiseId, useFranchise } from "@/context/FranchiseContext";
 import { useUser } from "@/context/UserContext";
 import { franchiseFromOrderItems } from "@/lib/order-franchise";
+import {
+  loadCheckoutDraft,
+  saveCheckoutDraft,
+} from "@/lib/checkout-storage";
+import { sanitizeCustomerMessage } from "@/lib/customer-messages";
 
 type PromoState =
   | { kind: "none" }
@@ -63,7 +68,7 @@ function maxPreorderLocal(): string {
 
 export function CartDrawer() {
   const { franchise, franchiseId } = useFranchise();
-  const { login: loginUser } = useUser();
+  const { user } = useUser();
   const {
     items,
     total,
@@ -97,6 +102,33 @@ export function CartDrawer() {
   const [preorderAt, setPreorderAt] = useState("");
 
   const [tracked, setTracked] = useState<TrackedOrder | null>(null);
+
+  useEffect(() => {
+    const draft = loadCheckoutDraft();
+    if (draft.name) setName(draft.name);
+    if (draft.phone) setPhone(draft.phone);
+    if (draft.street) setStreet(draft.street);
+    if (draft.entrance) setEntrance(draft.entrance);
+    if (draft.addressNote) setAddressNote(draft.addressNote);
+    if (draft.mode) setMode(draft.mode);
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    if (user.name) setName(user.name);
+    if (user.phoneDisplay) setPhone(user.phoneDisplay);
+  }, [user]);
+
+  useEffect(() => {
+    saveCheckoutDraft({
+      name,
+      phone,
+      street,
+      entrance,
+      addressNote,
+      mode,
+    });
+  }, [name, phone, street, entrance, addressNote, mode]);
 
   useEffect(() => {
     if (isOpen) setTracked(loadTrackedOrder());
@@ -272,7 +304,12 @@ export function CartDrawer() {
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
-        setResult(data.message || "Не удалось оформить заказ");
+        setResult(
+          sanitizeCustomerMessage(
+            data.message,
+            "Не удалось оформить заказ",
+          ),
+        );
         return;
       }
 
@@ -288,21 +325,15 @@ export function CartDrawer() {
       saveTrackedOrder(track);
       setTracked(track);
 
-      if (phone.trim()) {
-        void loginUser(phone, name.trim() || undefined);
-      }
-
       setResult(
         data.orderNumber
           ? `Заказ №${data.orderNumber} принят`
-          : `Заказ ${data.orderId} принят`,
+          : "Заказ принят",
       );
       clear();
       setStreet("");
       setEntrance("");
       setAddressNote("");
-      setName("");
-      setPhone("");
       setDeliveryCoords(null);
       setGeocodeHint(null);
       setPromo({ kind: "none" });

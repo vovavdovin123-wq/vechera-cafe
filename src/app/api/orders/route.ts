@@ -3,6 +3,10 @@ import { cookies } from "next/headers";
 import { COOKIE_NAME, verifySessionToken } from "@/lib/admin-auth";
 import { sendOrderToFrontPad } from "@/lib/frontpad";
 import { notifyNewOrder } from "@/lib/notify";
+import {
+  sanitizeCustomerMessage,
+  sanitizeOrderSuccessMessage,
+} from "@/lib/customer-messages";
 import { appendOrder, deleteOrder, readOrders } from "@/lib/orders-store";
 import { resolveOrderFranchise } from "@/lib/order-franchise";
 import { applyPendingWebhooks } from "@/lib/webhook-log";
@@ -73,7 +77,16 @@ export async function POST(request: Request) {
 
     const frontpad = await sendOrderToFrontPad(order);
     if (!frontpad.ok) {
-      return NextResponse.json(frontpad, { status: 502 });
+      return NextResponse.json(
+        {
+          ok: false,
+          message: sanitizeCustomerMessage(
+            frontpad.message,
+            "Не удалось оформить заказ. Попробуйте ещё раз.",
+          ),
+        },
+        { status: 502 },
+      );
     }
 
     await appendOrder(order, {
@@ -89,8 +102,10 @@ export async function POST(request: Request) {
       orderId: frontpad.orderId,
       orderNumber: frontpad.orderNumber,
       mode: frontpad.mode,
-      message: frontpad.message,
-      warnings: frontpad.warnings,
+      message: sanitizeOrderSuccessMessage(
+        frontpad.message,
+        frontpad.orderNumber,
+      ),
     });
   } catch (error) {
     console.error("[api/orders]", error);

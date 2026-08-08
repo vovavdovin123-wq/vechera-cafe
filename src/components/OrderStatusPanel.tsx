@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Loader2, RefreshCw } from "lucide-react";
 import { DEFAULT_CUSTOMER_STATUS } from "@/lib/frontpad-status";
+import { sanitizeCustomerMessage } from "@/lib/customer-messages";
 
 const STORAGE_KEY = "vechera-last-order";
 
@@ -74,18 +75,17 @@ export function OrderStatusPanel({
       };
       if (!res.ok || !data.ok) {
         setStatus(DEFAULT_CUSTOMER_STATUS);
-        setHint(data.message || "Не удалось обновить статус");
+        setHint(
+          sanitizeCustomerMessage(
+            data.message,
+            "Не удалось обновить статус",
+          ),
+        );
         return;
       }
       setStatus(data.status || DEFAULT_CUSTOMER_STATUS);
       setUpdatedAt(data.updatedAt ?? null);
-      if (data.source === "webhook") {
-        setHint(null);
-      } else if (data.message) {
-        setHint(data.message);
-      } else {
-        setHint("Ожидаем обновление из FrontPad…");
-      }
+      setHint(null);
     } catch {
       setStatus(DEFAULT_CUSTOMER_STATUS);
       setHint("Сеть недоступна — попробуйте позже");
