@@ -4,12 +4,14 @@ import { useMemo, useState, type FormEvent } from "react";
 import { ArrowDown, ArrowUp, Loader2, Plus, RefreshCw, Save, Search, Trash2 } from "lucide-react";
 import { AdminCategorySelect } from "@/components/AdminCategorySelect";
 import { AdminShell } from "@/components/AdminShell";
+import { AdminVolumesEditor } from "@/components/AdminVolumesEditor";
 import { CustomSelect } from "@/components/CustomSelect";
 import { ImagePicker } from "@/components/ImagePicker";
 import { useFranchise } from "@/context/FranchiseContext";
 import { useMenu } from "@/context/MenuContext";
 import { DEFAULT_DISH_IMAGE } from "@/lib/menu-categories";
-import type { MenuCategoryDef, MenuItem } from "@/lib/types";
+import type { MenuCategoryDef, MenuItem, MenuVolumeOption } from "@/lib/types";
+import { normalizeVolumes } from "@/lib/menu-volumes";
 
 const ALL_CATEGORIES = "all";
 
@@ -45,6 +47,9 @@ export default function AdminPage() {
   const [price, setPrice] = useState("300");
   const [image, setImage] = useState("");
   const [frontpadArticle, setFrontpadArticle] = useState("");
+  const [addVolumes, setAddVolumes] = useState<MenuVolumeOption[] | undefined>(
+    undefined,
+  );
   const [syncLoading, setSyncLoading] = useState(false);
   const [syncMsg, setSyncMsg] = useState<string | null>(null);
 
@@ -130,20 +135,30 @@ export default function AdminPage() {
 
   function onAdd(e: FormEvent) {
     e.preventDefault();
+    const normalizedVolumes = normalizeVolumes(addVolumes);
     const parsed = Number(price);
-    if (!name.trim() || !Number.isFinite(parsed) || parsed <= 0) return;
+    if (!name.trim()) return;
+    if (!normalizedVolumes?.length) {
+      if (!Number.isFinite(parsed) || parsed <= 0) return;
+    }
     addMenuItem({
       name: name.trim(),
       description: description.trim() || "Состав уточняется",
-      price: Math.round(parsed),
+      price: normalizedVolumes?.length
+        ? Math.min(...normalizedVolumes.map((v) => v.price))
+        : Math.round(parsed),
       category: addCategoryId,
       image: image || DEFAULT_DISH_IMAGE,
-      frontpadArticle: frontpadArticle.trim() || undefined,
+      frontpadArticle: normalizedVolumes?.length
+        ? undefined
+        : frontpadArticle.trim() || undefined,
+      volumes: normalizedVolumes,
     });
     setName("");
     setDescription("");
     setPrice("300");
     setFrontpadArticle("");
+    setAddVolumes(undefined);
     setImage(DEFAULT_DISH_IMAGE);
     setFilterCategory(addCategoryId);
   }
@@ -208,7 +223,7 @@ export default function AdminPage() {
       subtitle={`${franchise.shortAddress} · категории и блюда`}
     >
       <div
-        className={`mt-4 flex flex-wrap items-center gap-3 rounded-2xl border px-4 py-3 ${
+        className={`mt-4 flex flex-col gap-3 rounded-2xl border px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center ${
           isDirty
             ? "border-[var(--gold)]/50 bg-[var(--gold-soft)]/30"
             : "border-line bg-surface"
@@ -218,7 +233,7 @@ export default function AdminPage() {
           type="button"
           onClick={() => void onSaveAll()}
           disabled={!isDirty || syncStatus === "saving"}
-          className="btn-soft inline-flex items-center gap-2 disabled:opacity-50"
+          className="btn-soft inline-flex w-full items-center justify-center gap-2 disabled:opacity-50 sm:w-auto"
         >
           {syncStatus === "saving" ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -246,16 +261,16 @@ export default function AdminPage() {
           {categories.map((cat, index) => (
             <li
               key={cat.id}
-              className="flex flex-wrap items-center gap-2 rounded-xl border border-line bg-bg/40 px-3 py-2"
+              className="admin-card flex flex-col gap-2 rounded-xl border border-line bg-bg/40 px-3 py-2 sm:flex-row sm:flex-wrap sm:items-center"
             >
               <input
                 value={cat.label}
                 onChange={(e) => updateCategory(cat.id, { label: e.target.value })}
-                className="admin-input min-w-0 flex-1"
+                className="admin-input min-w-0 w-full flex-1"
                 aria-label={`Название категории ${cat.id}`}
               />
-              <span className="text-xs text-ink-muted">{counts[cat.id] ?? 0} блюд</span>
-              <div className="flex gap-1">
+              <span className="text-xs text-ink-muted sm:shrink-0">{counts[cat.id] ?? 0} блюд</span>
+              <div className="flex gap-1 sm:ml-auto">
                 <button
                   type="button"
                   disabled={index === 0}
@@ -290,14 +305,14 @@ export default function AdminPage() {
           ))}
         </ul>
 
-        <form onSubmit={onAddCategory} className="mt-4 flex flex-wrap gap-2">
+        <form onSubmit={onAddCategory} className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
           <input
             value={newCategoryLabel}
             onChange={(e) => setNewCategoryLabel(e.target.value)}
             placeholder="Новая категория, напр. Хот-доги"
-            className="admin-input min-w-[220px] flex-1"
+            className="admin-input min-w-0 w-full flex-1"
           />
-          <button type="submit" className="btn-soft inline-flex items-center gap-2">
+          <button type="submit" className="btn-soft inline-flex w-full items-center justify-center gap-2 sm:w-auto">
             <Plus className="h-4 w-4" />
             Добавить категорию
           </button>
@@ -332,7 +347,7 @@ export default function AdminPage() {
           type="button"
           onClick={() => void syncFromFrontPad()}
           disabled={syncLoading}
-          className="inline-flex items-center justify-center gap-2 rounded-full border border-line bg-surface px-4 py-2.5 text-sm font-medium text-ink shadow-[var(--shadow-soft)] transition hover:border-[var(--gold)] disabled:opacity-50"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-line bg-surface px-4 py-2.5 text-sm font-medium text-ink shadow-[var(--shadow-soft)] transition hover:border-[var(--gold)] disabled:opacity-50 sm:w-auto"
         >
           {syncLoading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -395,13 +410,14 @@ export default function AdminPage() {
             className="admin-input"
           />
           <input
-            required
+            required={!addVolumes?.length}
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             type="number"
             min={1}
-            placeholder="Цена"
+            placeholder={addVolumes?.length ? "Базовая (не используется)" : "Цена"}
             className="admin-input"
+            disabled={Boolean(addVolumes?.length)}
           />
           <input
             value={description}
@@ -417,7 +433,11 @@ export default function AdminPage() {
             placeholder="Артикул FrontPad"
             inputMode="numeric"
             className="admin-input sm:col-span-2"
+            disabled={Boolean(addVolumes?.length)}
           />
+          <div className="sm:col-span-2">
+            <AdminVolumesEditor volumes={addVolumes} onChange={setAddVolumes} />
+          </div>
           <div className="sm:col-span-2">
             <ImagePicker
               persistOnServer
@@ -501,8 +521,8 @@ function AdminItemRow({
   onRemove: () => void;
 }) {
   return (
-    <li className="grid min-w-0 gap-3 rounded-2xl border border-line bg-surface p-3 shadow-[var(--shadow-soft)] sm:grid-cols-[1fr_auto] sm:p-4">
-      <div className="grid gap-3">
+    <li className="admin-card flex min-w-0 flex-col gap-3 rounded-2xl border border-line bg-surface p-3 shadow-[var(--shadow-soft)] lg:grid lg:grid-cols-[1fr_auto] lg:items-start lg:p-4">
+      <div className="min-w-0 grid gap-3">
         <ImagePicker
           persistOnServer
           uploadPrefix="menu"
@@ -526,6 +546,7 @@ function AdminItemRow({
             }
             className="admin-input"
             placeholder="Цена"
+            disabled={Boolean(item.volumes?.length)}
           />
           <div className="sm:col-span-2">
             <CustomSelect
@@ -552,19 +573,39 @@ function AdminItemRow({
             className="admin-input sm:col-span-2"
             placeholder="Артикул FrontPad"
             inputMode="numeric"
+            disabled={Boolean(item.volumes?.length)}
           />
+          <div className="sm:col-span-2">
+            <AdminVolumesEditor
+              volumes={item.volumes}
+              onChange={(volumes) => {
+                const normalized = normalizeVolumes(volumes);
+                onUpdate(item.id, {
+                  volumes: normalized,
+                  price: normalized?.length
+                    ? Math.min(...normalized.map((v) => v.price))
+                    : item.price,
+                  frontpadArticle: normalized?.length
+                    ? undefined
+                    : item.frontpadArticle,
+                });
+              }}
+            />
+          </div>
           <p className="text-xs text-ink-muted sm:col-span-2">
-            {item.frontpadArticle
-              ? `Артикул ${item.frontpadArticle}`
-              : "Нет артикула FrontPad"}
+            {item.volumes?.length
+              ? `${item.volumes.length} объём(а): ${item.volumes.map((v) => `${v.label} — ${v.price} ₽`).join(", ")}`
+              : item.frontpadArticle
+                ? `Артикул ${item.frontpadArticle}`
+                : "Нет артикула FrontPad"}
           </p>
         </div>
       </div>
-      <div className="flex flex-row gap-2 sm:flex-col sm:items-stretch">
+      <div className="flex flex-row items-center justify-end gap-2 border-t border-line pt-3 lg:flex-col lg:items-stretch lg:border-t-0 lg:pt-0">
         <button
           type="button"
           onClick={onToggle}
-          className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition ${
+          className={`shrink-0 rounded-full px-3 py-2 text-xs font-medium transition sm:py-1.5 ${
             item.available
               ? "bg-success/15 text-success"
               : "bg-danger/15 text-danger"

@@ -39,9 +39,7 @@ export function BrandLogo({
   const s = sizes[size];
 
   const content = (
-    <span
-      className={`inline-flex flex-col items-start leading-none ${className}`}
-    >
+    <span className="inline-flex min-w-0 flex-col items-start leading-none">
       <span
         className={`font-display font-normal uppercase ${s.title} ${titleClass}`}
       >
@@ -57,7 +55,7 @@ export function BrandLogo({
 
   if (href) {
     return (
-      <Link href={href} className="shrink-0 transition hover:opacity-80">
+      <Link href={href} className={`shrink-0 transition hover:opacity-80 ${className}`}>
         {content}
       </Link>
     );

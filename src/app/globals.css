@@ -568,3 +568,26 @@ h3,
 .admin-input-search {
   padding-left: 2.5rem;
 }
+
+.admin-shell {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.admin-shell header,
+.admin-shell main {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.admin-card {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+@media (max-width: 639px) {
+  .admin-input {
+    font-size: 1rem;
+  }
+}

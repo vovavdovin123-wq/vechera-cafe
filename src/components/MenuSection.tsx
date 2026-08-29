@@ -1,19 +1,18 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CircleAlert, ShoppingBag, UtensilsCrossed, X } from "lucide-react";
+import { CircleAlert, UtensilsCrossed, X } from "lucide-react";
 import { MenuCategorySelect } from "@/components/MenuCategorySelect";
+import { MenuItemAddControls } from "@/components/MenuItemAddControls";
 import { MenuSkeleton } from "@/components/MenuSkeleton";
 import { PAGE } from "@/lib/layout";
 import type { MenuItem } from "@/lib/types";
-import { useCart } from "@/context/CartContext";
 import { useFranchise } from "@/context/FranchiseContext";
 import { useMenu } from "@/context/MenuContext";
 
 export function MenuSection() {
   const { franchise } = useFranchise();
   const { items, contentReady, categories } = useMenu();
-  const { addItem, quantityOf } = useCart();
   const [category, setCategory] = useState<string | "all">("all");
   const [faqItem, setFaqItem] = useState<MenuItem | null>(null);
 
@@ -84,9 +83,7 @@ export function MenuSection() {
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-2.5 sm:mt-6 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
-        {filtered.map((item, index) => {
-          const qty = quantityOf(item.id);
-          return (
+        {filtered.map((item, index) => (
           <article
             key={item.id}
             className="menu-card animate-rise flex flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--white)] shadow-[var(--shadow-soft)]"
@@ -122,31 +119,10 @@ export function MenuSection() {
                   <CircleAlert className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </button>
               </div>
-              <div className="mt-2.5 flex flex-col gap-2 sm:mt-5 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-                <p className="text-base font-semibold text-ink sm:text-xl">
-                  {item.price} ₽
-                </p>
-                <button
-                  type="button"
-                  onClick={() => addItem(item)}
-                  className="btn-soft relative w-full gap-1.5 px-2.5 py-2 text-xs sm:w-auto sm:flex-1 sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm"
-                >
-                  <ShoppingBag className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  {qty > 0 ? "Ещё" : "В корзину"}
-                  {qty > 0 && (
-                    <span
-                      className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--espresso)] px-1 text-[10px] font-bold text-[var(--gold)] shadow-sm sm:h-6 sm:min-w-6 sm:text-xs"
-                      aria-label={`В корзине ${qty}`}
-                    >
-                      {qty}
-                    </span>
-                  )}
-                </button>
-              </div>
+              <MenuItemAddControls item={item} />
             </div>
           </article>
-          );
-        })}
+        ))}
       </div>
 
       {filtered.length === 0 && (

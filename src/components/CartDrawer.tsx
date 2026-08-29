@@ -19,7 +19,7 @@ import {
   saveTrackedOrder,
   type TrackedOrder,
 } from "@/components/OrderStatusPanel";
-import { useCart } from "@/context/CartContext";
+import { useCart, cartLineKey } from "@/context/CartContext";
 import { getStoredFranchiseId, useFranchise } from "@/context/FranchiseContext";
 import { useUser } from "@/context/UserContext";
 import { franchiseFromOrderItems } from "@/lib/order-franchise";
@@ -28,6 +28,12 @@ import {
   saveCheckoutDraft,
 } from "@/lib/checkout-storage";
 import { sanitizeCustomerMessage } from "@/lib/customer-messages";
+import {
+  findVolume,
+  getCartItemDisplayName,
+  getCartItemFrontpadArticle,
+  getCartItemPrice,
+} from "@/lib/menu-volumes";
 
 type PromoState =
   | { kind: "none" }
@@ -276,13 +282,21 @@ export function CartDrawer() {
                 note: addressNote || undefined,
               }
             : { street: franchise.address },
-        items: items.map((i) => ({
-          id: i.menuItem.id,
-          name: i.menuItem.name,
-          price: i.menuItem.price,
-          quantity: i.quantity,
-          frontpadArticle: i.menuItem.frontpadArticle,
-        })),
+        items: items.map((i) => {
+          const price = getCartItemPrice(i.menuItem, i.volumeId);
+          const volume = findVolume(i.menuItem, i.volumeId);
+          return {
+            id: i.menuItem.id,
+            name: getCartItemDisplayName(i.menuItem, i.volumeId),
+            price,
+            quantity: i.quantity,
+            frontpadArticle: getCartItemFrontpadArticle(
+              i.menuItem,
+              i.volumeId,
+            ),
+            volumeLabel: volume?.label,
+          };
+        }),
         total: payable,
       };
 
@@ -581,18 +595,21 @@ export function CartDrawer() {
                 </p>
               ) : (
                 <ul className="max-h-40 space-y-2 overflow-y-auto">
-                  {items.map(({ menuItem, quantity }) => (
+                  {items.map(({ menuItem, quantity, volumeId }) => {
+                    const lineKey = cartLineKey(menuItem.id, volumeId);
+                    const linePrice = getCartItemPrice(menuItem, volumeId);
+                    return (
                     <li
-                      key={menuItem.id}
+                      key={lineKey}
                       className="flex items-center gap-2 text-sm"
                     >
                       <span className="min-w-0 flex-1 truncate font-medium">
-                        {menuItem.name}
+                        {getCartItemDisplayName(menuItem, volumeId)}
                       </span>
                       <button
                         type="button"
                         className="rounded-full border border-line p-0.5"
-                        onClick={() => updateQty(menuItem.id, quantity - 1)}
+                        onClick={() => updateQty(lineKey, quantity - 1)}
                       >
                         <Minus className="h-3.5 w-3.5" />
                       </button>
@@ -602,22 +619,23 @@ export function CartDrawer() {
                       <button
                         type="button"
                         className="rounded-full border border-line p-0.5"
-                        onClick={() => updateQty(menuItem.id, quantity + 1)}
+                        onClick={() => updateQty(lineKey, quantity + 1)}
                       >
                         <Plus className="h-3.5 w-3.5" />
                       </button>
                       <span className="w-14 text-right text-xs font-semibold">
-                        {menuItem.price * quantity} ₽
+                        {linePrice * quantity} ₽
                       </span>
                       <button
                         type="button"
-                        onClick={() => removeItem(menuItem.id)}
+                        onClick={() => removeItem(lineKey)}
                         className="text-ink-muted hover:text-danger"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
                     </li>
-                  ))}
+                    );
+                  })}
                 </ul>
               )}
               <div className="mt-3 space-y-1 border-t border-line pt-2 text-sm">

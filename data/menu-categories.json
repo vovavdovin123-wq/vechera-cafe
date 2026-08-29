@@ -1,36 +1,62 @@
 {
   "center": [
     {
-      "id": "rolls",
-      "label": "Роллы"
+      "id": "sandwiches",
+      "label": "Сэндвичи"
     },
     {
       "id": "burgers",
       "label": "Бургеры"
     },
     {
-      "id": "sandwiches",
-      "label": "Сэндвичи"
-    },
-    {
       "id": "panini",
       "label": "Панини"
+    },
+    {
+      "id": "rolls",
+      "label": "Роллы"
+    },
+    {
+      "id": "waffles",
+      "label": "Венские вафли"
+    },
+    {
+      "id": "fryBoxes",
+      "label": "Фри-боксы"
     },
     {
       "id": "pizzas",
       "label": "Пицца"
     },
     {
+      "id": "fried",
+      "label": "Фритюр"
+    },
+    {
       "id": "salads",
       "label": "Салаты"
     },
     {
-      "id": "hotDogs",
-      "label": "Хот-доги"
+      "id": "drinks",
+      "label": "Напитки"
     },
     {
-      "id": "fryBoxes",
-      "label": "Фри-боксы"
+      "id": "sauces",
+      "label": "Соусы"
+    }
+  ],
+  "hippodrome": [
+    {
+      "id": "sandwiches",
+      "label": "Сэндвичи"
+    },
+    {
+      "id": "burgers",
+      "label": "Бургеры"
+    },
+    {
+      "id": "hotDogs",
+      "label": "Хот-доги"
     },
     {
       "id": "fried",
@@ -41,42 +67,20 @@
       "label": "Венские вафли"
     },
     {
-      "id": "coffeeShop",
-      "label": "Кофейня"
+      "id": "cat-jsf4y",
+      "label": "Фри-боксы"
     },
     {
-      "id": "sauces",
-      "label": "Соусы"
-    }
-  ],
-  "hippodrome": [
+      "id": "salads",
+      "label": "Салаты"
+    },
     {
       "id": "coffeeShop",
       "label": "Напитки"
     },
     {
-      "id": "burgers",
-      "label": "Бургеры"
-    },
-    {
-      "id": "sandwiches",
-      "label": "Сэндвичи"
-    },
-    {
-      "id": "hotDogs",
-      "label": "Хот-доги"
-    },
-    {
-      "id": "fried",
-      "label": "Фритюр"
-    },
-    {
-      "id": "waffles",
-      "label": "Десерты"
-    },
-    {
-      "id": "salads",
-      "label": "Салаты"
+      "id": "lemonades",
+      "label": "Лимонады"
     },
     {
       "id": "sauces",

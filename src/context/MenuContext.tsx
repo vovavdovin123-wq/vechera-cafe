@@ -29,6 +29,7 @@ import {
   type FrontPadProductSync,
   type FrontPadSyncMismatch,
 } from "@/lib/frontpad-menu-sync";
+import { normalizeVolumes } from "@/lib/menu-volumes";
 import type { FranchiseId, MenuCategoryDef, MenuItem } from "@/lib/types";
 import { useFranchise } from "./FranchiseContext";
 
@@ -97,6 +98,7 @@ function normalizeMenus(
             ? String(item.image).trim()
             : dishImageFor(category),
         available: item?.available ?? true,
+        volumes: normalizeVolumes(item?.volumes),
       };
     });
 

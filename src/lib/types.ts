@@ -22,6 +22,15 @@ export interface MenuCategoryDef {
   label: string;
 }
 
+/** Вариант объёма/размера (например М / С / Б для напитков) */
+export interface MenuVolumeOption {
+  id: string;
+  label: string;
+  price: number;
+  /** Артикул FrontPad для этого объёма */
+  frontpadArticle?: string;
+}
+
 export interface MenuItem {
   id: string;
   name: string;
@@ -33,11 +42,15 @@ export interface MenuItem {
   available: boolean;
   /** Цифровой артикул товара в FrontPad (обязателен для боевых заказов) */
   frontpadArticle?: string;
+  /** Если задано — гость выбирает объём перед добавлением в корзину */
+  volumes?: MenuVolumeOption[];
 }
 
 export interface CartItem {
   menuItem: MenuItem;
   quantity: number;
+  /** id выбранного объёма из menuItem.volumes */
+  volumeId?: string;
 }
 
 export interface Franchise {
@@ -77,6 +90,8 @@ export interface OrderPayload {
     price: number;
     quantity: number;
     frontpadArticle?: string;
+    /** Подпись объёма для descr / отображения */
+    volumeLabel?: string;
     /** Индекс родителя в product[] для модификатора (product_mod) */
     frontpadModParentIndex?: number;
   }>;

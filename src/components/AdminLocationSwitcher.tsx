@@ -19,7 +19,7 @@ export function AdminLocationSwitcher({
   if (lockedScope !== "all") {
     return (
       <div
-        className={`inline-flex max-w-full items-center rounded-full border border-white/20 bg-black/15 px-3 py-1.5 text-xs font-medium text-white/90 ${className}`}
+        className={`inline-flex w-full max-w-full items-center justify-center rounded-full border border-white/20 bg-black/15 px-3 py-2 text-xs font-medium text-white/90 sm:w-auto sm:justify-start ${className}`}
       >
         {FRANCHISE_TAB_LABELS[lockedScope]}
       </div>
@@ -28,7 +28,7 @@ export function AdminLocationSwitcher({
 
   return (
     <div
-      className={`inline-flex max-w-full flex-wrap rounded-full border border-white/20 bg-black/15 p-0.5 ${className}`}
+      className={`flex w-full max-w-full rounded-full border border-white/20 bg-black/15 p-0.5 sm:inline-flex sm:w-auto ${className}`}
       role="group"
       aria-label="Выбор точки"
     >
@@ -40,7 +40,7 @@ export function AdminLocationSwitcher({
             type="button"
             aria-pressed={active}
             onClick={() => setFranchiseId(id)}
-            className={`rounded-full px-2.5 py-1 text-xs font-medium transition ${
+            className={`min-w-0 flex-1 rounded-full px-2.5 py-1.5 text-xs font-medium transition sm:flex-none sm:px-3 sm:py-1 ${
               active
                 ? "bg-[var(--orange)] text-ink shadow-sm"
                 : "text-white/75 hover:bg-white/10 hover:text-white"

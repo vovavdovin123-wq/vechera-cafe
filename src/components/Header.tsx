@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { MapPin, Search, ShoppingBag, UserRound } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { CustomSelect } from "@/components/CustomSelect";
+import { VolumePickerModal } from "@/components/VolumePickerModal";
 import { FRANCHISE_LIST } from "@/lib/franchises";
 import { PAGE } from "@/lib/layout";
 import { categoryLabel } from "@/lib/menu-categories";
@@ -13,7 +14,8 @@ import { useFranchise } from "@/context/FranchiseContext";
 import { useUser } from "@/context/UserContext";
 import { useMenu } from "@/context/MenuContext";
 import { useSearch } from "@/context/SearchContext";
-import type { FranchiseId } from "@/lib/types";
+import type { FranchiseId, MenuItem } from "@/lib/types";
+import { formatMenuPrice, itemHasVolumes } from "@/lib/menu-volumes";
 
 const franchiseOptions = FRANCHISE_LIST.map((f) => ({
   value: f.id,
@@ -27,6 +29,7 @@ export function Header() {
   const { query, setQuery } = useSearch();
   const { items, categories } = useMenu();
   const [openList, setOpenList] = useState(false);
+  const [volumeItem, setVolumeItem] = useState<MenuItem | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
 
   const results = useMemo(() => {
@@ -115,6 +118,11 @@ export function Header() {
                         type="button"
                         className="flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors duration-300 hover:bg-[var(--gold-soft)]"
                         onClick={() => {
+                          if (itemHasVolumes(item)) {
+                            setVolumeItem(item);
+                            setOpenList(false);
+                            return;
+                          }
                           addItem(item);
                           setQuery("");
                           setOpenList(false);
@@ -135,7 +143,7 @@ export function Header() {
                           </span>
                         </span>
                         <span className="shrink-0 text-sm font-semibold text-ink">
-                          {item.price} ₽
+                          {formatMenuPrice(item)}
                         </span>
                       </button>
                     </li>
@@ -184,6 +192,18 @@ export function Header() {
           </button>
         </div>
       </div>
+
+      {volumeItem && (
+        <VolumePickerModal
+          item={volumeItem}
+          onClose={() => setVolumeItem(null)}
+          onSelect={(volumeId) => {
+            addItem(volumeItem, volumeId);
+            setVolumeItem(null);
+            setQuery("");
+          }}
+        />
+      )}
     </header>
   );
 }

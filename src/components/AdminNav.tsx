@@ -34,7 +34,10 @@ export function AdminNav({ active }: { active: AdminTab }) {
     "border border-white/25 bg-white/10 text-white hover:border-[var(--gold)] hover:bg-white/15";
 
   return (
-    <nav className="-mx-1 flex max-w-full items-center gap-1.5 overflow-x-auto px-1 pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-2 [&::-webkit-scrollbar]:hidden">
+    <nav
+      className="flex min-w-0 items-center gap-1.5 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-2 [&::-webkit-scrollbar]:hidden"
+      aria-label="Разделы админки"
+    >
       {links.map((link) => {
         const Icon = link.icon;
         return (

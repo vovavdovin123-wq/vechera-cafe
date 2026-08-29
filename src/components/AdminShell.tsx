@@ -177,38 +177,43 @@ export function AdminShell({
       value={{ status: auth, scope: adminScope, login: adminLogin }}
     >
       <AdminOrderAlerts />
-      <div className="min-h-screen min-h-[100dvh]">
-        <header className="admin-top sticky top-0 z-40 border-b border-white/10 bg-[color-mix(in_srgb,var(--espresso)_92%,black)] text-white shadow-[var(--shadow-soft)] backdrop-blur-md pt-[env(safe-area-inset-top)]">
-          <div className={`${PAGE} py-3 sm:py-3.5`}>
-            <div className="flex items-start justify-between gap-2 sm:items-center sm:gap-3">
-              <div className="flex min-w-0 flex-1 flex-col gap-2.5 sm:gap-3">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <BrandLogo variant="light" href="/admin" size="sm" />
-                  <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:hidden">
-                    <Link
-                      href="/"
-                      className="rounded-full border border-white/25 px-2.5 py-1.5 text-xs text-white/90 transition hover:border-[var(--gold)] hover:bg-white/10"
-                    >
-                      Сайт
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={onLogout}
-                      className="inline-flex items-center gap-1 rounded-full border border-white/25 px-2.5 py-1.5 text-xs text-white/90 transition hover:border-[var(--gold)] hover:bg-white/10"
-                      aria-label="Выйти"
-                    >
-                      <LogOut className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
+      <div className="admin-shell min-h-screen min-h-[100dvh] overflow-x-hidden">
+        <header className="admin-top sticky top-0 z-40 overflow-x-hidden border-b border-white/10 bg-[color-mix(in_srgb,var(--espresso)_92%,black)] text-white shadow-[var(--shadow-soft)] backdrop-blur-md pt-[env(safe-area-inset-top)]">
+          <div className={`${PAGE} max-w-full min-w-0 py-3 sm:py-3.5`}>
+            {/* Мобилка и планшет: шапка в колонку. Десктоп (lg+): одна строка */}
+            <div className="flex min-w-0 flex-col gap-2.5 lg:flex-row lg:items-center lg:gap-3">
+              <div className="flex min-w-0 items-center gap-2">
+                <BrandLogo
+                  variant="light"
+                  href="/admin"
+                  size="sm"
+                  className="min-w-0 shrink"
+                />
+                <div className="ml-auto flex shrink-0 items-center gap-1.5 lg:hidden">
+                  <Link
+                    href="/"
+                    className="rounded-full border border-white/25 px-2.5 py-1.5 text-xs text-white/90 transition hover:border-[var(--gold)] hover:bg-white/10"
+                  >
+                    Сайт
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={onLogout}
+                    className="inline-flex items-center rounded-full border border-white/25 p-2 text-white/90 transition hover:border-[var(--gold)] hover:bg-white/10"
+                    aria-label="Выйти"
+                  >
+                    <LogOut className="h-3.5 w-3.5" />
+                  </button>
                 </div>
+              </div>
+
+              <div className="min-w-0 lg:min-w-0 lg:flex-1">
                 <AdminNav active={active} />
               </div>
-              <div className="hidden shrink-0 items-center gap-2 sm:flex">
+
+              <div className="hidden min-w-0 shrink-0 items-center gap-2 lg:flex">
                 {showLocationSwitcher && (
-                  <AdminLocationSwitcher
-                    className="hidden lg:inline-flex"
-                    lockedScope={adminScope}
-                  />
+                  <AdminLocationSwitcher lockedScope={adminScope} />
                 )}
                 <Link
                   href="/"
@@ -222,20 +227,20 @@ export function AdminShell({
                   className="inline-flex items-center gap-1.5 rounded-full border border-white/25 px-3 py-1.5 text-sm text-white/90 transition hover:border-[var(--gold)] hover:bg-white/10"
                 >
                   <LogOut className="h-4 w-4" />
-                  <span className="hidden md:inline">Выйти</span>
+                  <span className="hidden xl:inline">Выйти</span>
                 </button>
               </div>
             </div>
+
             {showLocationSwitcher && (
-              <AdminLocationSwitcher
-                className="mt-2.5 lg:hidden"
-                lockedScope={adminScope}
-              />
+              <div className="mt-2.5 min-w-0 lg:hidden">
+                <AdminLocationSwitcher lockedScope={adminScope} />
+              </div>
             )}
           </div>
         </header>
 
-        <main className={`${PAGE} py-5 sm:py-8`}>
+        <main className={`${PAGE} max-w-full min-w-0 overflow-x-hidden py-5 sm:py-8`}>
           <h1 className="font-display text-xl font-normal uppercase tracking-wide text-[var(--espresso)] sm:text-2xl">
             {title}
           </h1>

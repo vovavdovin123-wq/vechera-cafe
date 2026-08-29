@@ -7,7 +7,7 @@
       "category": "rolls",
       "frontpadArticle": "9023",
       "description": "Рис, крем-чиз, огурец, краб, соус унаги, масаго",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mskvreyg-2865d8d5.jpg",
       "available": true
     },
     {
@@ -17,17 +17,17 @@
       "category": "rolls",
       "frontpadArticle": "9022",
       "description": "Рис, крем-чиз, огурец, креветка, соус унаги, масаго",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mskvrib0-0dc5eb62.jpg",
       "available": true
     },
     {
       "id": "c-rl-3",
-      "name": "Онигири с лососем",
+      "name": "Онигири с семгой",
       "price": 380,
       "category": "rolls",
       "frontpadArticle": "9021",
       "description": "Рис, крем-чиз, огурец, лосось, соус унаги, масаго",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mskvrl6e-b9a2ac74.jpg",
       "available": true
     },
     {
@@ -37,17 +37,17 @@
       "category": "rolls",
       "frontpadArticle": "9025",
       "description": "Рис, крем-чиз, огурец, угорь, соус унаги, масаго",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mskvrnfb-f2097b92.jpg",
       "available": true
     },
     {
       "id": "c-rl-5",
-      "name": "Онигири с цезарь",
+      "name": "Онигири \"Цезарь\"",
       "price": 320,
       "category": "rolls",
       "frontpadArticle": "9024",
       "description": "Рис, соус цезарь, курица, помидор, айсберг, пармезан",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mskvrs2c-7fae6ea9.jpg",
       "available": true
     },
     {
@@ -107,7 +107,7 @@
       "category": "sandwiches",
       "frontpadArticle": "1000",
       "description": "Хлеб, соус, помидоры, сыр, курица, айсберг",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msnk7pkv-083c7c66.jpg",
       "available": true
     },
     {
@@ -141,23 +141,13 @@
       "available": true
     },
     {
-      "id": "c-sw-6",
-      "name": "Экспресс",
-      "price": 380,
-      "category": "sandwiches",
-      "frontpadArticle": "10",
-      "description": "Хлеб, соус, сыр, котлета, помидоры",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
       "id": "c-pz-1",
       "name": "5 сыров",
       "price": 530,
       "category": "pizzas",
       "frontpadArticle": "10002",
       "description": "Тесто, томатный соус, моцарелла, чеддер, пармезан, горгонзола, сыр с плесенью",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msrezbb1-ef6a926b.jpg",
       "available": true
     },
     {
@@ -167,7 +157,7 @@
       "category": "pizzas",
       "frontpadArticle": "10003",
       "description": "Тесто, томатный соус, моцарелла, ветчина, шампиньоны",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msreyuj0-6cb1fa51.jpg",
       "available": true
     },
     {
@@ -177,7 +167,7 @@
       "category": "pizzas",
       "frontpadArticle": "10000",
       "description": "Тесто, томатный соус, моцарелла, базилик",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msrf0a7r-02347477.jpg",
       "available": true
     },
     {
@@ -187,17 +177,7 @@
       "category": "pizzas",
       "frontpadArticle": "10001",
       "description": "Тесто, томатный соус, моцарелла, пепперони",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-sl-1",
-      "name": "Цезарь",
-      "price": 480,
-      "category": "salads",
-      "frontpadArticle": "10004",
-      "description": "Айсберг, соус, помидор, яйца, хлеб, пармезан",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msreqt2d-97ebccc5.jpg",
       "available": true
     },
     {
@@ -212,52 +192,42 @@
     },
     {
       "id": "c-rl-6",
-      "name": "Жаренный краб",
+      "name": "Жареный краб",
       "price": 330,
       "category": "rolls",
       "frontpadArticle": "9011",
       "description": "Рис, крем-чиз, огурец, краб",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mskvom17-72eea885.jpg",
       "available": true
     },
     {
       "id": "c-rl-7",
-      "name": "Жаренный креветка",
+      "name": "Жареный креветка",
       "price": 370,
       "category": "rolls",
       "frontpadArticle": "9010",
       "description": "Рис, крем-чиз, огурец, креветка",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mskvoolr-a93f6cc2.jpg",
       "available": true
     },
     {
       "id": "c-rl-8",
-      "name": "Жаренный лосось",
+      "name": "Жареный с семгой",
       "price": 370,
       "category": "rolls",
       "frontpadArticle": "9009",
       "description": "Рис, крем-чиз, огурец, лосось",
-      "image": "/menu/fried-salmon-roll.png",
+      "image": "/api/uploads/menu-mskvor0u-9473df48.jpg",
       "available": true
     },
     {
       "id": "c-rl-9",
-      "name": "Жаренный цезарь",
+      "name": "Жареный \"Цезарь\"",
       "price": 340,
       "category": "rolls",
       "frontpadArticle": "9013",
       "description": "Рис, соус цезарь, курица, помидор, айсберг, пармезан",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-rl-10",
-      "name": "Жареный микс",
-      "price": 400,
-      "category": "rolls",
-      "frontpadArticle": "21",
-      "description": "Рис, крем-чиз, огурец, лосось, креветка, краб",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mskvotnf-17e7850b.jpg",
       "available": true
     },
     {
@@ -267,8 +237,8 @@
       "category": "rolls",
       "frontpadArticle": "9012",
       "description": "Рис, крем-чиз, огурец, угорь",
-      "image": "/menu/dish.png",
-      "available": true
+      "image": "/api/uploads/menu-msnkd04o-4827e61c.jpg",
+      "available": false
     },
     {
       "id": "c-rl-12",
@@ -287,7 +257,7 @@
       "category": "rolls",
       "frontpadArticle": "9017",
       "description": "Рис, крем-чиз, огурец, краб, масаго, кунжут, сырная шапочка",
-      "image": "/menu/baked-crab-roll.png",
+      "image": "/api/uploads/menu-msrgxowk-54e2a4fe.jpg",
       "available": true
     },
     {
@@ -297,17 +267,17 @@
       "category": "rolls",
       "frontpadArticle": "9018",
       "description": "Рис, крем-чиз, огурец, креветка, масаго, кунжут, сырная шапочка",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msrgxr5j-4cb581c4.jpg",
       "available": true
     },
     {
       "id": "c-rl-15",
-      "name": "Запеченный с лососем",
+      "name": "Запеченный с семгой",
       "price": 370,
       "category": "rolls",
       "frontpadArticle": "9019",
       "description": "Рис, крем-чиз, огурец, лосось, масаго, кунжут, сырная шапочка",
-      "image": "/menu/baked-salmon-roll.png",
+      "image": "/api/uploads/menu-msrgxt1y-60cfd6ab.jpg",
       "available": true
     },
     {
@@ -317,7 +287,7 @@
       "category": "rolls",
       "frontpadArticle": "9020",
       "description": "Рис, крем-чиз, огурец, угорь, кунжут, сырная шапочка, соус унаги",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msrgxvdn-3f0746c5.jpg",
       "available": true
     },
     {
@@ -327,7 +297,7 @@
       "category": "rolls",
       "frontpadArticle": "9007",
       "description": "Рис, крем-чиз, огурец, краб, масаго",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msri56ni-d1fe7034.jpg",
       "available": true
     },
     {
@@ -337,17 +307,17 @@
       "category": "rolls",
       "frontpadArticle": "9006",
       "description": "Рис, крем-чиз, огурец, креветка, масаго",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msri59ui-3ce75a05.jpg",
       "available": true
     },
     {
       "id": "c-rl-19",
-      "name": "Калифорния лосось",
+      "name": "Калифорния с семгой",
       "price": 370,
       "category": "rolls",
       "frontpadArticle": "9005",
       "description": "Рис, крем-чиз, огурец, лосось, масаго",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msri5br1-fe7064c8.jpg",
       "available": true
     },
     {
@@ -357,42 +327,12 @@
       "category": "rolls",
       "frontpadArticle": "9008",
       "description": "Рис, крем-чиз, огурец, угорь, масаго",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-rl-21",
-      "name": "Креветка темпура",
-      "price": 400,
-      "category": "rolls",
-      "frontpadArticle": "32",
-      "description": "Рис, крем-чиз, огурец, креветка в темпуре",
-      "image": "/menu/fried-roll-tempura.png",
-      "available": true
-    },
-    {
-      "id": "c-rl-22",
-      "name": "Криспи Ролл",
-      "price": 350,
-      "category": "rolls",
-      "frontpadArticle": "33",
-      "description": "Рис, крем-чиз, огурец, креветка, масаго",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-hd-1",
-      "name": "Ролл хот-дог",
-      "price": 370,
-      "category": "hotDogs",
-      "frontpadArticle": "34",
-      "description": "Рис, крем-чиз, огурец, сосиска, соус",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msri5ex9-f4e1ec7c.jpg",
       "available": true
     },
     {
       "id": "c-sl-3",
-      "name": "Салат свежий",
+      "name": "Свежий",
       "price": 230,
       "category": "salads",
       "frontpadArticle": "6002",
@@ -407,7 +347,7 @@
       "category": "sandwiches",
       "frontpadArticle": "1005",
       "description": "Крем-чиз, огурец, лосось, айсберг",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msnk6x11-f2e25a78.jpg",
       "available": true
     },
     {
@@ -417,7 +357,7 @@
       "category": "rolls",
       "frontpadArticle": "9016",
       "description": "Рис, крем-чиз, огурец, краб, спайси-соус, кунжут",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msnk4r12-1b618f0a.jpg",
       "available": true
     },
     {
@@ -427,17 +367,17 @@
       "category": "rolls",
       "frontpadArticle": "9015",
       "description": "Рис, крем-чиз, огурец, креветка, спайси-соус, кунжут",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msnk4th7-4b2774fb.jpg",
       "available": true
     },
     {
       "id": "c-rl-25",
-      "name": "Спайси Лосось",
+      "name": "Спайси с семгой",
       "price": 350,
       "category": "rolls",
       "frontpadArticle": "9014",
       "description": "Рис, крем-чиз, огурец, лосось, спайси-соус, кунжут",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msnk4w00-37b7f525.jpg",
       "available": true
     },
     {
@@ -457,7 +397,7 @@
       "category": "rolls",
       "frontpadArticle": "9001",
       "description": "Рис, крем-чиз, масаго, огурец",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msrgzifl-ba156ac9.jpg",
       "available": true
     },
     {
@@ -467,7 +407,7 @@
       "category": "rolls",
       "frontpadArticle": "9002",
       "description": "Рис, крем-чиз, огурец, креветка",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msrgzrkv-eeb7679a.jpg",
       "available": true
     },
     {
@@ -477,7 +417,7 @@
       "category": "rolls",
       "frontpadArticle": "9004",
       "description": "Рис, крем-чиз, огурец, угорь",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msrgyiak-f230a93c.jpg",
       "available": true
     },
     {
@@ -508,16 +448,6 @@
       "frontpadArticle": "4000",
       "description": "Сосиски, картофель фри, коул-слоу, кетчуп, халапеньо",
       "image": "/menu/bavarskiy.png",
-      "available": true
-    },
-    {
-      "id": "c-sl-6",
-      "name": "Свежий",
-      "price": 250,
-      "category": "salads",
-      "frontpadArticle": "4002",
-      "description": "Огурец, помидоры",
-      "image": "/menu/dish.png",
       "available": true
     },
     {
@@ -571,28 +501,18 @@
       "available": true
     },
     {
-      "id": "c-wf-1",
-      "name": "Арбуз",
-      "price": 130,
-      "category": "waffles",
-      "frontpadArticle": "58",
-      "description": "Арбуз, лимон, лёд",
-      "image": "/menu/watermelon-drink.png",
-      "available": true
-    },
-    {
       "id": "c-wf-2",
-      "name": "Вафли клубника банан",
+      "name": "Вафля клубника-банан",
       "price": 270,
       "category": "waffles",
       "frontpadArticle": "5003",
       "description": "Вафля, клубника, банан",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msrh5ze5-a952ca1c.jpg",
       "available": true
     },
     {
       "id": "c-wf-3",
-      "name": "Вафли клубника нутелла",
+      "name": "Вафли клубника-нутелла",
       "price": 300,
       "category": "waffles",
       "frontpadArticle": "5002",
@@ -602,17 +522,17 @@
     },
     {
       "id": "c-wf-4",
-      "name": "Вафли с бананом",
+      "name": "Вафля банан-нутелла",
       "price": 250,
       "category": "waffles",
       "frontpadArticle": "5001",
-      "description": "Вафля, банан",
+      "description": "Вафля, банан, нутелла",
       "image": "/menu/vaflya-banan.png",
       "available": true
     },
     {
       "id": "c-wf-5",
-      "name": "Вафли с нутеллой",
+      "name": "Вафля с нутеллой",
       "price": 200,
       "category": "waffles",
       "frontpadArticle": "5000",
@@ -621,328 +541,18 @@
       "available": true
     },
     {
-      "id": "c-wf-6",
-      "name": "Дыня",
-      "price": 150,
-      "category": "waffles",
-      "frontpadArticle": "63",
-      "description": "Дыня, лимон, лёд",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-rl-30",
-      "name": "Микс",
-      "price": 150,
-      "category": "rolls",
-      "frontpadArticle": "64",
-      "description": "Рис, крем-чиз, огурец, лосось, креветка, краб",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
       "id": "c-wf-7",
-      "name": "Мороженое",
+      "name": "Доп. Мороженое",
       "price": 120,
       "category": "waffles",
       "frontpadArticle": "65",
       "description": "Пломбир",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-wf-8",
-      "name": "Мороженое доп",
-      "price": 50,
-      "category": "waffles",
-      "frontpadArticle": "5004",
-      "description": "Дополнительный шарик пломбира",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-wf-9",
-      "name": "Мотти",
-      "price": 250,
-      "category": "waffles",
-      "frontpadArticle": "67",
-      "description": "Рисовое тесто, начинка",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-sl-7",
-      "name": "Фруктовый салат",
-      "price": 230,
-      "category": "salads",
-      "frontpadArticle": "68",
-      "description": "Сезонные фрукты",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-1",
-      "name": "Бабл гам маршмелоу",
-      "price": 130,
-      "category": "coffeeShop",
-      "frontpadArticle": "69",
-      "description": "Мороженое, жвачка, маршмelloу",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-2",
-      "name": "Бабл-Гам",
-      "price": 50,
-      "category": "coffeeShop",
-      "frontpadArticle": "70",
-      "description": "Мороженое, жвачка",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-3",
-      "name": "Баунти",
-      "price": 150,
-      "category": "coffeeShop",
-      "frontpadArticle": "71",
-      "description": "Мороженое, кокос, шоколад",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-4",
-      "name": "Жемчужиное",
-      "price": 90,
-      "category": "coffeeShop",
-      "frontpadArticle": "72",
-      "description": "Мороженое с жемчужной крошкой",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-5",
-      "name": "Магнат",
-      "price": 150,
-      "category": "coffeeShop",
-      "frontpadArticle": "73",
-      "description": "Мороженое, шоколад, орехи",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-6",
-      "name": "Максидуо",
-      "price": 150,
-      "category": "coffeeShop",
-      "frontpadArticle": "74",
-      "description": "Мороженое, шоколад, карамель",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-7",
-      "name": "Милка",
-      "price": 150,
-      "category": "coffeeShop",
-      "frontpadArticle": "75",
-      "description": "Мороженое, шоколад Milka",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-8",
-      "name": "Настоящий пломбир",
-      "price": 90,
-      "category": "coffeeShop",
-      "frontpadArticle": "76",
-      "description": "Натуральное мороженое",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-9",
-      "name": "Орео",
-      "price": 150,
-      "category": "coffeeShop",
-      "frontpadArticle": "77",
-      "description": "Мороженое, печенье Oreo",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-10",
-      "name": "Плас стакан мал",
-      "price": 60,
-      "category": "coffeeShop",
-      "frontpadArticle": "78",
-      "description": "Мороженое",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-sw-8",
-      "name": "Сендвич золотой стандарт",
-      "price": 80,
-      "category": "sandwiches",
-      "frontpadArticle": "79",
-      "description": "Хлеб, соус, сыр, курица, котлета, помидоры, айсберг",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-11",
-      "name": "Сникерс",
-      "price": 150,
-      "category": "coffeeShop",
-      "frontpadArticle": "80",
-      "description": "Мороженое, арахис, карамель, шоколад",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-12",
-      "name": "Стакан пласт Чизкейк-клубника",
-      "price": 190,
-      "category": "coffeeShop",
-      "frontpadArticle": "81",
-      "description": "Мороженое, чизкейк, клубника",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-rl-31",
-      "name": "Стакан пласт ягодный шоколад микс",
-      "price": 130,
-      "category": "rolls",
-      "frontpadArticle": "82",
-      "description": "Мороженое, ягоды, шоколад",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-13",
-      "name": "Стакан пломбир настоящий",
-      "price": 90,
-      "category": "coffeeShop",
-      "frontpadArticle": "83",
-      "description": "Натуральное мороженое",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-14",
-      "name": "Стаканчик простой",
-      "price": 40,
-      "category": "coffeeShop",
-      "frontpadArticle": "84",
-      "description": "Мороженое",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-15",
-      "name": "Тоффи",
-      "price": 80,
-      "category": "coffeeShop",
-      "frontpadArticle": "85",
-      "description": "Мороженое, ириска, карамель",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-16",
-      "name": "Фисташковое рожок",
-      "price": 100,
-      "category": "coffeeShop",
-      "frontpadArticle": "86",
-      "description": "Мороженое, фисташка, рожок",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-17",
-      "name": "Фруктовый лед",
-      "price": 60,
-      "category": "coffeeShop",
-      "frontpadArticle": "87",
-      "description": "Фруктовый лёд",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-18",
-      "name": "Экстрем",
-      "price": 130,
-      "category": "coffeeShop",
-      "frontpadArticle": "88",
-      "description": "Мороженое, шоколад, орехи",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-19",
-      "name": "Эскимо",
-      "price": 70,
-      "category": "coffeeShop",
-      "frontpadArticle": "89",
-      "description": "Мороженое в шоколадной глазури",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-20",
-      "name": "Эскимо вишня",
-      "price": 80,
-      "category": "coffeeShop",
-      "frontpadArticle": "90",
-      "description": "Мороженое, вишня, глазурь",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-21",
-      "name": "Эскимо Махито",
-      "price": 60,
-      "category": "coffeeShop",
-      "frontpadArticle": "91",
-      "description": "Мороженое, мята, лайм",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-22",
-      "name": "Эскимо с орехом",
-      "price": 80,
-      "category": "coffeeShop",
-      "frontpadArticle": "92",
-      "description": "Мороженое, орехи, глазурь",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-23",
-      "name": "Эскимо чисто пломбир",
-      "price": 70,
-      "category": "coffeeShop",
-      "frontpadArticle": "93",
-      "description": "Пломбир в глазури",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-24",
-      "name": "Эскимо чисто пломбир",
-      "price": 80,
-      "category": "coffeeShop",
-      "frontpadArticle": "94",
-      "description": "Пломбир в глазури",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msnk9zmw-d75da242.jpg",
       "available": true
     },
     {
       "id": "c-sc-1",
-      "name": "Основной",
+      "name": "Соус \"Основной\" ",
       "price": 40,
       "category": "sauces",
       "frontpadArticle": "8002",
@@ -981,627 +591,46 @@
       "available": true
     },
     {
-      "id": "c-sc-5",
-      "name": "Холопеньо в сенд",
-      "price": 20,
-      "category": "sauces",
-      "frontpadArticle": "99",
-      "description": "Маринованный перец халапеньо",
-      "image": "/menu/dish.png",
+      "name": "Цезарь",
+      "description": "соус томатный, моцарела, чеддер, блю чиз, пармезан",
+      "price": 480,
+      "category": "pizzas",
+      "image": "/api/uploads/menu-msreyiot-0a0bc7bd.jpg",
+      "frontpadArticle": "10004",
+      "id": "center-msreydzk",
       "available": true
     },
     {
-      "id": "c-cs-25",
-      "name": "Кола 1л",
-      "price": 150,
-      "category": "coffeeShop",
-      "frontpadArticle": "100",
-      "description": "Газированный напиток",
-      "image": "/menu/dish.png",
+      "name": "Деревенский",
+      "description": "Состав уточняется",
+      "price": 250,
+      "category": "fryBoxes",
+      "image": "/api/uploads/menu-msrgsppg-8ddfd707.jpg",
+      "frontpadArticle": "4003",
+      "id": "center-msrf8rr1",
       "available": true
     },
     {
-      "id": "c-cs-26",
-      "name": "Кола жб",
-      "price": 110,
-      "category": "coffeeShop",
-      "frontpadArticle": "101",
-      "description": "Газированный напиток",
+      "name": "Панини с ветчиной",
+      "description": "-",
+      "price": 300,
+      "category": "panini",
       "image": "/menu/dish.png",
+      "id": "center-msrfagis",
       "available": true
     },
     {
-      "id": "c-cs-27",
-      "name": "Липтон 0.5",
-      "price": 110,
-      "category": "coffeeShop",
-      "frontpadArticle": "102",
-      "description": "Холодный чай",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-28",
-      "name": "Палпи 0.5",
-      "price": 110,
-      "category": "coffeeShop",
-      "frontpadArticle": "103",
-      "description": "Фруктовый напиток",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-29",
-      "name": "Сок с трубочкой",
-      "price": 60,
-      "category": "coffeeShop",
-      "frontpadArticle": "104",
-      "description": "Фруктовый сок",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-30",
-      "name": "Спрайт жб",
-      "price": 110,
-      "category": "coffeeShop",
-      "frontpadArticle": "105",
-      "description": "Газированный напиток",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-31",
-      "name": "Тбау",
-      "price": 30,
-      "category": "coffeeShop",
-      "frontpadArticle": "106",
-      "description": "Газированный напиток",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-32",
-      "name": "Фанта 1л",
-      "price": 150,
-      "category": "coffeeShop",
-      "frontpadArticle": "107",
-      "description": "Газированный напиток",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-33",
-      "name": "Фанта жб",
-      "price": 110,
-      "category": "coffeeShop",
-      "frontpadArticle": "108",
-      "description": "Газированный напиток",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-34",
-      "name": "Американо",
-      "price": 80,
-      "category": "coffeeShop",
-      "frontpadArticle": "109",
-      "description": "Эспрессо, вода",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-35",
-      "name": "Горячий шоколад",
-      "price": 80,
-      "category": "coffeeShop",
-      "frontpadArticle": "110",
-      "description": "Какао, молоко, сахар",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-36",
-      "name": "Какао",
-      "price": 80,
-      "category": "coffeeShop",
-      "frontpadArticle": "111",
-      "description": "Какао, молоко, сахар",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-37",
-      "name": "Капучино б",
-      "price": 140,
-      "category": "coffeeShop",
-      "frontpadArticle": "112",
-      "description": "Эспрессо, молоко, молочная пена",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-38",
-      "name": "Капучино м",
-      "price": 120,
-      "category": "coffeeShop",
-      "frontpadArticle": "113",
-      "description": "Эспрессо, молоко, молочная пена",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-39",
-      "name": "Латте б",
-      "price": 140,
-      "category": "coffeeShop",
-      "frontpadArticle": "114",
-      "description": "Эспрессо, молоко",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-40",
-      "name": "Латте м",
-      "price": 120,
-      "category": "coffeeShop",
-      "frontpadArticle": "115",
-      "description": "Эспрессо, молоко",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-41",
-      "name": "Раф б",
-      "price": 140,
-      "category": "coffeeShop",
-      "frontpadArticle": "116",
-      "description": "Эспрессо, сливки, ваниль",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-42",
-      "name": "Раф карамель миндаль б",
-      "price": 170,
-      "category": "coffeeShop",
-      "frontpadArticle": "117",
-      "description": "Эспрессо, сливки, карамель, миндаль",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-43",
-      "name": "Раф карамель миндаль м",
-      "price": 150,
-      "category": "coffeeShop",
-      "frontpadArticle": "118",
-      "description": "Эспрессо, сливки, карамель, миндаль",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-44",
-      "name": "Раф м",
-      "price": 130,
-      "category": "coffeeShop",
-      "frontpadArticle": "119",
-      "description": "Эспрессо, сливки, ваниль",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-45",
-      "name": "Раф фисташка малина б",
-      "price": 170,
-      "category": "coffeeShop",
-      "frontpadArticle": "120",
-      "description": "Эспрессо, сливки, фисташка, малина",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-46",
-      "name": "Раф фисташка малина м",
-      "price": 150,
-      "category": "coffeeShop",
-      "frontpadArticle": "121",
-      "description": "Эспрессо, сливки, фисташка, малина",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-47",
-      "name": "Чай Б",
-      "price": 80,
-      "category": "coffeeShop",
-      "frontpadArticle": "122",
-      "description": "Чёрный чай",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-48",
-      "name": "Чай М",
-      "price": 60,
-      "category": "coffeeShop",
-      "frontpadArticle": "123",
-      "description": "Чёрный чай",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-49",
-      "name": "Чай с вареньем Б",
-      "price": 120,
-      "category": "coffeeShop",
-      "frontpadArticle": "124",
-      "description": "Чай, варенье",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "c-cs-50",
-      "name": "Чай с вареньем м",
-      "price": 100,
-      "category": "coffeeShop",
-      "frontpadArticle": "125",
-      "description": "Чай, варенье",
-      "image": "/menu/dish.png",
+      "name": "Спайси с угрем",
+      "description": "Состав уточняется",
+      "price": 400,
+      "category": "rolls",
+      "image": "/api/uploads/menu-msrg8dqa-5f7b9e1d.jpg",
+      "frontpadArticle": "9026",
+      "id": "center-msrg7fyd",
       "available": true
     }
   ],
   "hippodrome": [
-    {
-      "id": "h-cs-1",
-      "name": "Базилик Арбуз",
-      "price": 190,
-      "category": "coffeeShop",
-      "frontpadArticle": "200",
-      "description": "Базилик, арбуз, лимон, лёд",
-      "image": "/menu/watermelon-drink.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-2",
-      "name": "Базилик Арбуз большой",
-      "price": 210,
-      "category": "coffeeShop",
-      "frontpadArticle": "201",
-      "description": "Базилик, арбуз, лимон, лёд",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-3",
-      "name": "Лаванда Ананас",
-      "price": 190,
-      "category": "coffeeShop",
-      "frontpadArticle": "202",
-      "description": "Лаванда, ананас, лимон, лёд",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-4",
-      "name": "Лаванда Ананас большой",
-      "price": 210,
-      "category": "coffeeShop",
-      "frontpadArticle": "203",
-      "description": "Лаванда, ананас, лимон, лёд",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-5",
-      "name": "Махито",
-      "price": 170,
-      "category": "coffeeShop",
-      "frontpadArticle": "204",
-      "description": "Мята, лайм, лимон, лёд",
-      "image": "/menu/lemonade.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-6",
-      "name": "Махито большой",
-      "price": 200,
-      "category": "coffeeShop",
-      "frontpadArticle": "205",
-      "description": "Мята, лайм, лимон, лёд",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-7",
-      "name": "Цитрус клубника",
-      "price": 190,
-      "category": "coffeeShop",
-      "frontpadArticle": "206",
-      "description": "Апельсин, лимон, клубника, лёд",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-8",
-      "name": "Цитрус Клубника большой",
-      "price": 210,
-      "category": "coffeeShop",
-      "frontpadArticle": "207",
-      "description": "Апельсин, лимон, клубника, лёд",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-9",
-      "name": "Айс Кофе",
-      "price": 200,
-      "category": "coffeeShop",
-      "frontpadArticle": "208",
-      "description": "Эспрессо, молоко, лёд",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-10",
-      "name": "Айс кофе большой",
-      "price": 230,
-      "category": "coffeeShop",
-      "frontpadArticle": "209",
-      "description": "Эспрессо, молоко, лёд",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-11",
-      "name": "Американо",
-      "price": 130,
-      "category": "coffeeShop",
-      "frontpadArticle": "210",
-      "description": "Эспрессо, вода",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-12",
-      "name": "Бамбл",
-      "price": 210,
-      "category": "coffeeShop",
-      "frontpadArticle": "211",
-      "description": "Эспрессо, апельсиновый сок, лёд",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-13",
-      "name": "Бамбл большой",
-      "price": 240,
-      "category": "coffeeShop",
-      "frontpadArticle": "212",
-      "description": "Эспрессо, апельсиновый сок, лёд",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-14",
-      "name": "Горячий шоколад",
-      "price": 170,
-      "category": "coffeeShop",
-      "frontpadArticle": "213",
-      "description": "Какао, молоко, сахар",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-15",
-      "name": "Зеленый чай",
-      "price": 60,
-      "category": "coffeeShop",
-      "frontpadArticle": "214",
-      "description": "Зелёный чай",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-16",
-      "name": "Какао",
-      "price": 140,
-      "category": "coffeeShop",
-      "frontpadArticle": "215",
-      "description": "Какао, молоко, сахар",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-17",
-      "name": "Капучино",
-      "price": 170,
-      "category": "coffeeShop",
-      "frontpadArticle": "216",
-      "description": "Эспрессо, молоко, молочная пена",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-18",
-      "name": "Капучино Большой",
-      "price": 200,
-      "category": "coffeeShop",
-      "frontpadArticle": "217",
-      "description": "Эспрессо, молоко, молочная пена",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-19",
-      "name": "Латте",
-      "price": 170,
-      "category": "coffeeShop",
-      "frontpadArticle": "218",
-      "description": "Эспрессо, молоко",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-20",
-      "name": "Латте Большой",
-      "price": 200,
-      "category": "coffeeShop",
-      "frontpadArticle": "219",
-      "description": "Эспрессо, молоко",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-21",
-      "name": "Раф",
-      "price": 180,
-      "category": "coffeeShop",
-      "frontpadArticle": "220",
-      "description": "Эспрессо, сливки, ваниль",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-22",
-      "name": "Раф большой",
-      "price": 210,
-      "category": "coffeeShop",
-      "frontpadArticle": "221",
-      "description": "Эспрессо, сливки, ваниль",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-23",
-      "name": "Раф карамель миндаль",
-      "price": 200,
-      "category": "coffeeShop",
-      "frontpadArticle": "222",
-      "description": "Эспрессо, сливки, карамель, миндаль",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-24",
-      "name": "Раф карамель миндаль Б",
-      "price": 230,
-      "category": "coffeeShop",
-      "frontpadArticle": "223",
-      "description": "Эспрессо, сливки, карамель, миндаль",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-25",
-      "name": "Раф фисташка малина",
-      "price": 200,
-      "category": "coffeeShop",
-      "frontpadArticle": "224",
-      "description": "Эспрессо, сливки, фисташка, малина",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-26",
-      "name": "Раф фисташка малина большой",
-      "price": 230,
-      "category": "coffeeShop",
-      "frontpadArticle": "225",
-      "description": "Эспрессо, сливки, фисташка, малина",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-27",
-      "name": "Тоник Кофе",
-      "price": 210,
-      "category": "coffeeShop",
-      "frontpadArticle": "226",
-      "description": "Эспрессо, тоник, лёд",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-28",
-      "name": "Тоник кофе большой",
-      "price": 240,
-      "category": "coffeeShop",
-      "frontpadArticle": "227",
-      "description": "Эспрессо, тоник, лёд",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-29",
-      "name": "Флэт уайт",
-      "price": 200,
-      "category": "coffeeShop",
-      "frontpadArticle": "228",
-      "description": "Эспрессо, молоко",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-30",
-      "name": "Чай варенье",
-      "price": 120,
-      "category": "coffeeShop",
-      "frontpadArticle": "229",
-      "description": "Чай, варенье",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-31",
-      "name": "Чай варенье большой",
-      "price": 140,
-      "category": "coffeeShop",
-      "frontpadArticle": "230",
-      "description": "Чай, варенье",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-32",
-      "name": "Чай Зеленый большой",
-      "price": 80,
-      "category": "coffeeShop",
-      "frontpadArticle": "231",
-      "description": "Зелёный чай",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-33",
-      "name": "Чай черный",
-      "price": 60,
-      "category": "coffeeShop",
-      "frontpadArticle": "232",
-      "description": "Чёрный чай",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-34",
-      "name": "Чай черный большой",
-      "price": 80,
-      "category": "coffeeShop",
-      "frontpadArticle": "233",
-      "description": "Чёрный чай",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
-      "id": "h-cs-35",
-      "name": "Эспрессо",
-      "price": 100,
-      "category": "coffeeShop",
-      "frontpadArticle": "234",
-      "description": "Кофе",
-      "image": "/menu/dish.png",
-      "available": true
-    },
     {
       "id": "h-bg-1",
       "name": "Бейрут",
@@ -1614,7 +643,7 @@
     },
     {
       "id": "h-sw-1",
-      "name": "Двойной сендвич с курицей",
+      "name": "Двойной сэндвич с курицей",
       "price": 370,
       "category": "sandwiches",
       "frontpadArticle": "1001",
@@ -1624,17 +653,17 @@
     },
     {
       "id": "h-sw-2",
-      "name": "Сандвич куриный",
+      "name": "Сэндвич куриный",
       "price": 290,
       "category": "sandwiches",
       "frontpadArticle": "1000",
       "description": "Хлеб, соус, помидоры, сыр, курица, айсберг",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msnkjgz4-e2b7c5d3.jpg",
       "available": true
     },
     {
       "id": "h-sw-3",
-      "name": "Сендвич двойной с говядиной",
+      "name": "Сэндвич двойной с говядиной",
       "price": 420,
       "category": "sandwiches",
       "frontpadArticle": "1003",
@@ -1644,7 +673,7 @@
     },
     {
       "id": "h-sw-4",
-      "name": "Сендвич с говядиной",
+      "name": "Сэндвич с говядиной",
       "price": 350,
       "category": "sandwiches",
       "frontpadArticle": "1002",
@@ -1654,7 +683,7 @@
     },
     {
       "id": "h-sw-5",
-      "name": "Смешанный",
+      "name": "Сэндвич \"Смешанный\"",
       "price": 390,
       "category": "sandwiches",
       "frontpadArticle": "1004",
@@ -1665,7 +694,7 @@
     {
       "id": "h-hd-1",
       "name": "Хот—дог Кавказский",
-      "price": 220,
+      "price": 230,
       "category": "hotDogs",
       "frontpadArticle": "100",
       "description": "Булочка, сосиска, лук, зелень, острый соус",
@@ -1699,7 +728,7 @@
       "category": "burgers",
       "frontpadArticle": "2001",
       "description": "Булочка, соус, курица, сыр, помидоры, айсберг",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msnkiz45-7b1e7f74.jpg",
       "available": true
     },
     {
@@ -1749,22 +778,22 @@
       "category": "fried",
       "frontpadArticle": "7000",
       "description": "Картофель",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msnkl7rp-f43aabd3.jpg",
       "available": true
     },
     {
       "id": "h-wf-1",
-      "name": "Вафли банан шоколад",
+      "name": "Вафля банан-нутелла",
       "price": 250,
       "category": "waffles",
       "frontpadArticle": "5001",
       "description": "Вафля, банан, шоколад",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msnklih1-3b80b134.jpg",
       "available": true
     },
     {
       "id": "h-wf-2",
-      "name": "Вафли клубника",
+      "name": "Вафля клубника-нутелла",
       "price": 300,
       "category": "waffles",
       "frontpadArticle": "5002",
@@ -1774,17 +803,17 @@
     },
     {
       "id": "h-wf-3",
-      "name": "Вафли клубника банан",
+      "name": "Вафля банан-клубника",
       "price": 270,
       "category": "waffles",
       "frontpadArticle": "5003",
       "description": "Вафля, клубника, банан",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msrjd74z-db4ffb9c.jpg",
       "available": true
     },
     {
       "id": "h-wf-4",
-      "name": "Вафли с шоколадом",
+      "name": "Вафля с нутеллой",
       "price": 200,
       "category": "waffles",
       "frontpadArticle": "5000",
@@ -1793,23 +822,13 @@
       "available": true
     },
     {
-      "id": "h-wf-5",
-      "name": "Мотти",
-      "price": 250,
-      "category": "waffles",
-      "frontpadArticle": "5005",
-      "description": "Рисовое тесто, начинка",
-      "image": "/menu/dish.png",
-      "available": true
-    },
-    {
       "id": "h-wf-6",
-      "name": "Шарик мороженого",
+      "name": "Доп, мороженое",
       "price": 50,
       "category": "waffles",
       "frontpadArticle": "5004",
       "description": "Пломбир",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-msrjdozb-a93589cb.jpg",
       "available": true
     },
     {
@@ -1850,6 +869,315 @@
       "frontpadArticle": "8000",
       "description": "Томаты, специи",
       "image": "/menu/dish.png",
+      "available": true
+    },
+    {
+      "name": "Кола",
+      "description": "Состав уточняется",
+      "price": 110,
+      "category": "coffeeShop",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjg8zx",
+      "available": true
+    },
+    {
+      "name": "Фанта",
+      "description": "Состав уточняется",
+      "price": 110,
+      "category": "coffeeShop",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjgf1p",
+      "available": true
+    },
+    {
+      "name": "Спрайт",
+      "description": "Состав уточняется",
+      "price": 110,
+      "category": "coffeeShop",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjgltd",
+      "available": true
+    },
+    {
+      "name": "Палпи",
+      "description": "Состав уточняется",
+      "price": 110,
+      "category": "coffeeShop",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjgtzq",
+      "available": true
+    },
+    {
+      "name": "Липтон",
+      "description": "Состав уточняется",
+      "price": 110,
+      "category": "coffeeShop",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjh008",
+      "available": true
+    },
+    {
+      "name": "Простая Вода",
+      "description": "Состав уточняется",
+      "price": 30,
+      "category": "coffeeShop",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjhfmp",
+      "available": true
+    },
+    {
+      "name": "Мохито",
+      "description": "Состав уточняется",
+      "price": 150,
+      "category": "lemonades",
+      "image": "/api/uploads/menu-msrjyx8h-df1731e4.jpg",
+      "id": "hippodrome-msrji7se",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-m-msrji7se",
+          "label": "М",
+          "price": 150
+        },
+        {
+          "id": "vol-b-msrjidz2",
+          "label": "Б",
+          "price": 180
+        }
+      ]
+    },
+    {
+      "name": "Базилик Арбуз",
+      "description": "Состав уточняется",
+      "price": 170,
+      "category": "lemonades",
+      "image": "/api/uploads/menu-msrjyg4h-a859daa1.jpg",
+      "id": "hippodrome-msrjip4f",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-m-msrjip4f",
+          "label": "М",
+          "price": 170
+        },
+        {
+          "id": "vol-b-msrjisc9",
+          "label": "Б",
+          "price": 200
+        }
+      ]
+    },
+    {
+      "name": "Цитрус клубника",
+      "description": "Состав уточняется",
+      "price": 170,
+      "category": "lemonades",
+      "image": "/api/uploads/menu-msrjykst-6ff3320e.jpg",
+      "id": "hippodrome-msrjjg1l",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-m-msrjjg1l",
+          "label": "М",
+          "price": 170
+        },
+        {
+          "id": "vol-b-msrjjm0t",
+          "label": "Б",
+          "price": 200
+        }
+      ]
+    },
+    {
+      "name": "Лаванда Ананас",
+      "description": "Состав уточняется",
+      "price": 170,
+      "category": "lemonades",
+      "image": "/api/uploads/menu-msrjz32j-a848e0af.jpg",
+      "id": "hippodrome-msrjjxm5",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-m-msrjjxm5",
+          "label": "М",
+          "price": 170
+        },
+        {
+          "id": "vol-b-msrjk229",
+          "label": "Б",
+          "price": 200
+        }
+      ]
+    },
+    {
+      "name": "Чай черный",
+      "description": "Состав уточняется",
+      "price": 80,
+      "category": "coffeeShop",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjkomz",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-m-msrjkomz",
+          "label": "М",
+          "price": 80
+        },
+        {
+          "id": "vol-b-msrjkwij",
+          "label": "Б",
+          "price": 80
+        }
+      ]
+    },
+    {
+      "name": "Чай зеленый",
+      "description": "Состав уточняется",
+      "price": 60,
+      "category": "coffeeShop",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjltdy",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-m-msrjltdy",
+          "label": "М",
+          "price": 60
+        },
+        {
+          "id": "vol-b-msrjlwgo",
+          "label": "Б",
+          "price": 80
+        }
+      ]
+    },
+    {
+      "name": "Горячий шоколад",
+      "description": "Состав уточняется",
+      "price": 150,
+      "category": "coffeeShop",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjn0n6",
+      "available": true
+    },
+    {
+      "name": "Какао",
+      "description": "Состав уточняется",
+      "price": 130,
+      "category": "coffeeShop",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjn6zr",
+      "available": true
+    },
+    {
+      "name": "Айс кофе",
+      "description": "Состав уточняется",
+      "price": 180,
+      "category": "coffeeShop",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjnpj5",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-m-msrjnpj5",
+          "label": "М",
+          "price": 180
+        },
+        {
+          "id": "vol-b-msrjnuis",
+          "label": "Б",
+          "price": 210
+        }
+      ]
+    },
+    {
+      "name": "Кофе эспрессо",
+      "description": "Состав уточняется",
+      "price": 90,
+      "category": "coffeeShop",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjoqqn",
+      "available": true
+    },
+    {
+      "name": "Кофе Американо",
+      "description": "Состав уточняется",
+      "price": 130,
+      "category": "coffeeShop",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjoxee",
+      "available": true
+    },
+    {
+      "name": "Кофе Флэт уайт",
+      "description": "Состав уточняется",
+      "price": 180,
+      "category": "coffeeShop",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjp5ed",
+      "available": true
+    },
+    {
+      "name": "Кофе капучино",
+      "description": "Состав уточняется",
+      "price": 170,
+      "category": "coffeeShop",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjpaos",
+      "available": true
+    },
+    {
+      "name": "Кофе латте",
+      "description": "Состав уточняется",
+      "price": 170,
+      "category": "coffeeShop",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjpdqg",
+      "available": true
+    },
+    {
+      "name": "кофе раф",
+      "description": "Состав уточняется",
+      "price": 175,
+      "category": "coffeeShop",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjpgfk",
+      "available": true
+    },
+    {
+      "name": "Деревенский",
+      "description": "Состав уточняется",
+      "price": 250,
+      "category": "cat-jsf4y",
+      "image": "/api/uploads/menu-msrjwyd6-8fcd5830.jpg",
+      "id": "hippodrome-msrjt091",
+      "available": true
+    },
+    {
+      "name": "Чикен бокс",
+      "description": "Состав уточняется",
+      "price": 300,
+      "category": "cat-jsf4y",
+      "image": "/api/uploads/menu-msrjwgld-eb878ac8.jpg",
+      "id": "hippodrome-msrjt6ph",
+      "available": true
+    },
+    {
+      "name": "Баварский ",
+      "description": "Состав уточняется",
+      "price": 350,
+      "category": "cat-jsf4y",
+      "image": "/api/uploads/menu-msrjw7jy-4b836360.jpg",
+      "id": "hippodrome-msrjtc1o",
+      "available": true
+    },
+    {
+      "name": "Основной",
+      "description": "Состав уточняется",
+      "price": 40,
+      "category": "sauces",
+      "image": "/menu/dish.png",
+      "id": "hippodrome-msrjtrim",
       "available": true
     }
   ]
