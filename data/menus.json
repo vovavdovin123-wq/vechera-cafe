@@ -337,7 +337,7 @@
       "category": "salads",
       "frontpadArticle": "6002",
       "description": "Огурец, помидоры",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtegnw17-588e8ece.jpg",
       "available": true
     },
     {
@@ -628,6 +628,709 @@
       "frontpadArticle": "9026",
       "id": "center-msrg7fyd",
       "available": true
+    },
+    {
+      "name": "Айс кофе",
+      "description": "Состав уточняется",
+      "price": 200,
+      "category": "drinks-2",
+      "image": "/menu/dish.png",
+      "volumes": [
+        {
+          "id": "vol-11020",
+          "label": "Средний",
+          "price": 200,
+          "frontpadArticle": "11020"
+        },
+        {
+          "id": "vol-11021",
+          "label": "Большой",
+          "price": 230,
+          "frontpadArticle": "11021"
+        }
+      ],
+      "id": "center-mthke9ow",
+      "available": true
+    },
+    {
+      "name": "Американо",
+      "description": "Состав уточняется",
+      "price": 130,
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-mtejxyji-dae8e9bb.jpg",
+      "frontpadArticle": "11022",
+      "id": "center-mtejy0zu",
+      "available": true
+    },
+    {
+      "name": "Апельсиновый кофе (Бамбл)",
+      "description": "Состав уточняется",
+      "price": 210,
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-mthkfkbi-4629223a.jpg",
+      "volumes": [
+        {
+          "id": "vol-11023",
+          "label": "Средний",
+          "price": 210,
+          "frontpadArticle": "11023"
+        },
+        {
+          "id": "vol-11024",
+          "label": "Большой",
+          "price": 240,
+          "frontpadArticle": "11024"
+        }
+      ],
+      "id": "center-mthkgkhm",
+      "available": true
+    },
+    {
+      "id": "center-fp-11025",
+      "name": "Ванильное мороженое",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "image": "/menu/dish.png",
+      "available": true,
+      "price": 220,
+      "frontpadArticle": "11025"
+    },
+    {
+      "name": "Горячий шоколад",
+      "description": "Состав уточняется",
+      "price": 170,
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-mtejyiaj-906e4a36.jpg",
+      "id": "center-mtejyki8",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-11027",
+          "label": "Средний",
+          "price": 170,
+          "frontpadArticle": "11027"
+        },
+        {
+          "id": "vol-11028",
+          "label": "Большой",
+          "price": 190,
+          "frontpadArticle": "11028"
+        }
+      ]
+    },
+    {
+      "name": "Какао",
+      "description": "Состав уточняется",
+      "price": 140,
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-mtejz4vx-5020db07.jpg",
+      "id": "center-mtejzbs1",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-11029",
+          "label": "Средний",
+          "price": 140,
+          "frontpadArticle": "11029"
+        },
+        {
+          "id": "vol-11030",
+          "label": "Большой",
+          "price": 170,
+          "frontpadArticle": "11030"
+        }
+      ]
+    },
+    {
+      "name": "Капучино",
+      "description": "Состав уточняется",
+      "price": 170,
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-mtek0dcn-39791b2b.jpg",
+      "volumes": [
+        {
+          "id": "vol-11031",
+          "label": "Средний",
+          "price": 170,
+          "frontpadArticle": "11031"
+        },
+        {
+          "id": "vol-11032",
+          "label": "Большой",
+          "price": 200,
+          "frontpadArticle": "11032"
+        }
+      ],
+      "id": "center-mtek0gr9",
+      "available": true
+    },
+    {
+      "name": "Латте",
+      "description": "Состав уточняется",
+      "price": 170,
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-mtek17tq-0433d14d.jpg",
+      "volumes": [
+        {
+          "id": "vol-11033",
+          "label": "Средний",
+          "price": 170,
+          "frontpadArticle": "11033"
+        },
+        {
+          "id": "vol-11034",
+          "label": "Большой",
+          "price": 200,
+          "frontpadArticle": "11034"
+        }
+      ],
+      "id": "center-mtek18bu",
+      "available": true
+    },
+    {
+      "id": "center-fp-11035",
+      "name": "Раф апельсин",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-drink-raf-8fd8eadb.jpg",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-11035",
+          "label": "Средний",
+          "price": 200,
+          "frontpadArticle": "11035"
+        },
+        {
+          "id": "vol-11036",
+          "label": "Большой",
+          "price": 230,
+          "frontpadArticle": "11036"
+        }
+      ],
+      "price": 200
+    },
+    {
+      "name": "Раф карамель миндаль",
+      "description": "Состав уточняется",
+      "price": 200,
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-drink-raf-8fd8eadb.jpg",
+      "volumes": [
+        {
+          "id": "vol-11037",
+          "label": "Средний",
+          "price": 200,
+          "frontpadArticle": "11037"
+        },
+        {
+          "id": "vol-11038",
+          "label": "Большой",
+          "price": 230,
+          "frontpadArticle": "11038"
+        }
+      ],
+      "id": "center-mtek45cm",
+      "available": true
+    },
+    {
+      "name": "Раф",
+      "description": "Состав уточняется",
+      "price": 180,
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-drink-raf-8fd8eadb.jpg",
+      "volumes": [
+        {
+          "id": "vol-11039",
+          "label": "Средний",
+          "price": 180,
+          "frontpadArticle": "11039"
+        },
+        {
+          "id": "vol-11040",
+          "label": "Большой",
+          "price": 210,
+          "frontpadArticle": "11040"
+        }
+      ],
+      "id": "center-mtek30qj",
+      "available": true
+    },
+    {
+      "name": "Раф фисташка малина",
+      "description": "Состав уточняется",
+      "price": 200,
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-drink-raf-8fd8eadb.jpg",
+      "volumes": [
+        {
+          "id": "vol-11041",
+          "label": "Средний",
+          "price": 200,
+          "frontpadArticle": "11041"
+        },
+        {
+          "id": "vol-11042",
+          "label": "Большой",
+          "price": 230,
+          "frontpadArticle": "11042"
+        }
+      ],
+      "id": "center-mtek5gnu",
+      "available": true
+    },
+    {
+      "id": "center-fp-11043",
+      "name": "Тоник кофе",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "image": "/menu/dish.png",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-11043",
+          "label": "Средний",
+          "price": 210,
+          "frontpadArticle": "11043"
+        },
+        {
+          "id": "vol-11044",
+          "label": "Большой",
+          "price": 240,
+          "frontpadArticle": "11044"
+        }
+      ],
+      "price": 210
+    },
+    {
+      "id": "center-fp-11045",
+      "name": "Флэт уайт",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "image": "/menu/dish.png",
+      "available": true,
+      "price": 200,
+      "frontpadArticle": "11045"
+    },
+    {
+      "id": "center-fp-11046",
+      "name": "Эспрессо",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "image": "/menu/dish.png",
+      "available": true,
+      "price": 100,
+      "frontpadArticle": "11046"
+    },
+    {
+      "id": "center-fp-11000",
+      "name": "Чай апельсин",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "image": "/menu/dish.png",
+      "available": true,
+      "price": 140,
+      "frontpadArticle": "11000"
+    },
+    {
+      "id": "center-fp-11001",
+      "name": "Чай зелёный",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "image": "/menu/dish.png",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-11001",
+          "label": "Средний",
+          "price": 80,
+          "frontpadArticle": "11001"
+        },
+        {
+          "id": "vol-11002",
+          "label": "Большой",
+          "price": 100,
+          "frontpadArticle": "11002"
+        }
+      ],
+      "price": 80
+    },
+    {
+      "id": "center-fp-11003",
+      "name": "Чай малина",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "image": "/menu/dish.png",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-11003",
+          "label": "Средний",
+          "price": 120,
+          "frontpadArticle": "11003"
+        },
+        {
+          "id": "vol-11004",
+          "label": "Большой",
+          "price": 140,
+          "frontpadArticle": "11004"
+        }
+      ],
+      "price": 120
+    },
+    {
+      "id": "center-fp-11005",
+      "name": "Чай облепиха",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "image": "/menu/dish.png",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-11005",
+          "label": "Средний",
+          "price": 120,
+          "frontpadArticle": "11005"
+        },
+        {
+          "id": "vol-11006",
+          "label": "Большой",
+          "price": 140,
+          "frontpadArticle": "11006"
+        }
+      ],
+      "price": 120
+    },
+    {
+      "id": "center-fp-11007",
+      "name": "Чай фейхоа",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "image": "/menu/dish.png",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-11007",
+          "label": "Средний",
+          "price": 120,
+          "frontpadArticle": "11007"
+        },
+        {
+          "id": "vol-11008",
+          "label": "Большой",
+          "price": 140,
+          "frontpadArticle": "11008"
+        }
+      ],
+      "price": 120
+    },
+    {
+      "name": "Чай чёрный",
+      "description": "Состав уточняется",
+      "price": 80,
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-mtek6kht-cf17289d.jpg",
+      "volumes": [
+        {
+          "id": "vol-11009",
+          "label": "Средний",
+          "price": 80,
+          "frontpadArticle": "11009"
+        },
+        {
+          "id": "vol-11010",
+          "label": "Большой",
+          "price": 100,
+          "frontpadArticle": "11010"
+        }
+      ],
+      "id": "center-mtek6l9c",
+      "available": true
+    },
+    {
+      "id": "center-fp-11011",
+      "name": "Базилик Арбуз",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "image": "/menu/dish.png",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-11011",
+          "label": "Средний",
+          "price": 190,
+          "frontpadArticle": "11011"
+        },
+        {
+          "id": "vol-11012",
+          "label": "Большой",
+          "price": 220,
+          "frontpadArticle": "11012"
+        }
+      ],
+      "price": 190
+    },
+    {
+      "id": "center-fp-11013",
+      "name": "Лаванда-ананас",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-drink-lavender-pineapple-5201a298.jpg",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-11013",
+          "label": "Средний",
+          "price": 170,
+          "frontpadArticle": "11013"
+        },
+        {
+          "id": "vol-11014",
+          "label": "Большой",
+          "price": 200,
+          "frontpadArticle": "11014"
+        }
+      ],
+      "price": 170
+    },
+    {
+      "id": "center-fp-11015",
+      "name": "Мохито",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-drink-mojito-5a18e2dd.jpg",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-11015",
+          "label": "Средний",
+          "price": 170,
+          "frontpadArticle": "11015"
+        },
+        {
+          "id": "vol-11016",
+          "label": "Большой",
+          "price": 200,
+          "frontpadArticle": "11016"
+        }
+      ],
+      "price": 170
+    },
+    {
+      "id": "center-fp-11017",
+      "name": "Фрэш",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "image": "/menu/dish.png",
+      "available": true,
+      "price": 280,
+      "frontpadArticle": "11017"
+    },
+    {
+      "id": "center-fp-11018",
+      "name": "Цитрус-клубника",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-drink-citrus-strawberry-ea477631.jpg",
+      "available": true,
+      "volumes": [
+        {
+          "id": "vol-11018",
+          "label": "Средний",
+          "price": 190,
+          "frontpadArticle": "11018"
+        },
+        {
+          "id": "vol-11019",
+          "label": "Большой",
+          "price": 220,
+          "frontpadArticle": "11019"
+        }
+      ],
+      "price": 190
+    },
+    {
+      "name": "Кока-кола",
+      "description": "Состав уточняется",
+      "price": 110,
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-mteg6ire-c913408d.jpg",
+      "volumes": [
+        {
+          "id": "vol-mteg3sk8-nre1",
+          "label": "1 литр",
+          "price": 150,
+          "frontpadArticle": "100"
+        },
+        {
+          "id": "vol-mteg5q9w-qnch",
+          "label": "Железная банка",
+          "price": 110,
+          "frontpadArticle": "101"
+        }
+      ],
+      "id": "center-mteg6kjs",
+      "available": true
+    },
+    {
+      "name": "Липтон",
+      "description": "0,5",
+      "price": 110,
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-mtegahjj-13b66361.jpg",
+      "frontpadArticle": "102",
+      "id": "center-mtegb4qa",
+      "available": true
+    },
+    {
+      "name": "Фанта",
+      "description": "Состав уточняется",
+      "price": 111,
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-mtegc8er-b58bfbd6.jpg",
+      "volumes": [
+        {
+          "id": "vol-mtegbibb-5f41",
+          "label": "1 литр",
+          "price": 150,
+          "frontpadArticle": "107"
+        },
+        {
+          "id": "vol-mtegbtxv-f0gp",
+          "label": "Железная банка",
+          "price": 111,
+          "frontpadArticle": "108"
+        }
+      ],
+      "id": "center-mtegc8mm",
+      "available": true
+    },
+    {
+      "name": "Палпи",
+      "description": "0,5",
+      "price": 110,
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-mtegd6ip-4bbd8348.jpg",
+      "frontpadArticle": "103",
+      "id": "center-mtegd8d9",
+      "available": true
+    },
+    {
+      "name": "Спрайт",
+      "description": "Железная банка",
+      "price": 110,
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-mteght34-8ef98998.jpg",
+      "frontpadArticle": "105",
+      "id": "center-mteghtgx",
+      "available": true
+    },
+    {
+      "name": "Чай с вареньем",
+      "description": "Состав уточняется",
+      "price": 100,
+      "category": "drinks-2",
+      "image": "/api/uploads/menu-mtek7swa-1585a54f.jpg",
+      "volumes": [
+        {
+          "id": "vol-mtek7a9n-wqll",
+          "label": "Большой",
+          "price": 120,
+          "frontpadArticle": "124"
+        },
+        {
+          "id": "vol-mtek7dbg-66ok",
+          "label": "Маленький",
+          "price": 100,
+          "frontpadArticle": "125"
+        }
+      ],
+      "id": "center-mtek7vem",
+      "available": true
+    },
+    {
+      "id": "center-drink-12b48032",
+      "name": "Лимонад киви-яблоко",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "available": true,
+      "image": "/api/uploads/menu-drink-kiwi-apple-d72bba37.jpg",
+      "price": 190,
+      "volumes": [
+        {
+          "id": "vol-kiwi-m",
+          "label": "Средний",
+          "price": 190
+        },
+        {
+          "id": "vol-kiwi-b",
+          "label": "Большой",
+          "price": 220
+        }
+      ]
+    },
+    {
+      "id": "center-drink-b4aec8f4",
+      "name": "Лимонад Анчан-вишня",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "available": true,
+      "image": "/api/uploads/menu-drink-anchan-cherry-74d34e7f.jpg",
+      "price": 190,
+      "volumes": [
+        {
+          "id": "vol-anchan-m",
+          "label": "Средний",
+          "price": 190
+        },
+        {
+          "id": "vol-anchan-b",
+          "label": "Большой",
+          "price": 220
+        }
+      ]
+    },
+    {
+      "id": "center-drink-5b4a73a6",
+      "name": "Пьяная вишня",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "available": true,
+      "image": "/api/uploads/menu-drink-drunk-cherry-7c90463d.jpg",
+      "price": 190,
+      "volumes": [
+        {
+          "id": "vol-drunk-m",
+          "label": "Средний",
+          "price": 190
+        },
+        {
+          "id": "vol-drunk-b",
+          "label": "Большой",
+          "price": 220
+        }
+      ]
+    },
+    {
+      "id": "center-drink-a8ff297f",
+      "name": "Матча клубника-банан",
+      "description": "Состав уточняется",
+      "category": "drinks-2",
+      "available": true,
+      "image": "/api/uploads/menu-drink-matcha-strawberry-banana-550ad5c4.jpg",
+      "price": 190,
+      "volumes": [
+        {
+          "id": "vol-matcha-m",
+          "label": "Средний",
+          "price": 190
+        },
+        {
+          "id": "vol-matcha-b",
+          "label": "Большой",
+          "price": 220
+        }
+      ]
     }
   ],
   "hippodrome": [
@@ -838,7 +1541,7 @@
       "category": "salads",
       "frontpadArticle": "6002",
       "description": "Огурец, помидоры",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtegnkpa-12da8d6f.jpg",
       "available": true
     },
     {
@@ -858,7 +1561,7 @@
       "category": "sauces",
       "frontpadArticle": "8001",
       "description": "Сыр, сливки",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mteenfs0-33dc7aef.jpg",
       "available": true
     },
     {
@@ -868,24 +1571,24 @@
       "category": "sauces",
       "frontpadArticle": "8000",
       "description": "Томаты, специи",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mteen5th-2426ffa8.jpg",
       "available": true
     },
     {
-      "name": "Кола",
+      "name": "Кока-кола",
       "description": "Состав уточняется",
       "price": 110,
       "category": "coffeeShop",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtegi98c-b4ac02ed.jpg",
       "id": "hippodrome-msrjg8zx",
       "available": true
     },
     {
       "name": "Фанта",
-      "description": "Состав уточняется",
+      "description": "",
       "price": 110,
       "category": "coffeeShop",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtegj1ia-111b28e6.jpg",
       "id": "hippodrome-msrjgf1p",
       "available": true
     },
@@ -894,7 +1597,7 @@
       "description": "Состав уточняется",
       "price": 110,
       "category": "coffeeShop",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtegjbs3-2d124051.jpg",
       "id": "hippodrome-msrjgltd",
       "available": true
     },
@@ -903,7 +1606,7 @@
       "description": "Состав уточняется",
       "price": 110,
       "category": "coffeeShop",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtegjec1-8b4f71cf.jpg",
       "id": "hippodrome-msrjgtzq",
       "available": true
     },
@@ -912,7 +1615,7 @@
       "description": "Состав уточняется",
       "price": 110,
       "category": "coffeeShop",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtegjiei-05e59318.jpg",
       "id": "hippodrome-msrjh008",
       "available": true
     },
@@ -1014,7 +1717,7 @@
       "description": "Состав уточняется",
       "price": 80,
       "category": "coffeeShop",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtegkc3t-fd23fd9d.jpg",
       "id": "hippodrome-msrjkomz",
       "available": true,
       "volumes": [
@@ -1035,7 +1738,7 @@
       "description": "Состав уточняется",
       "price": 60,
       "category": "coffeeShop",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtegkjpm-ac2a7adf.jpg",
       "id": "hippodrome-msrjltdy",
       "available": true,
       "volumes": [
@@ -1056,7 +1759,7 @@
       "description": "Состав уточняется",
       "price": 150,
       "category": "coffeeShop",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtegkvvj-60e2aab1.jpg",
       "id": "hippodrome-msrjn0n6",
       "available": true
     },
@@ -1065,7 +1768,7 @@
       "description": "Состав уточняется",
       "price": 130,
       "category": "coffeeShop",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtegkzs0-cc3b29fc.jpg",
       "id": "hippodrome-msrjn6zr",
       "available": true
     },
@@ -1095,7 +1798,7 @@
       "description": "Состав уточняется",
       "price": 90,
       "category": "coffeeShop",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mteglde7-2b1d07eb.jpg",
       "id": "hippodrome-msrjoqqn",
       "available": true
     },
@@ -1104,7 +1807,7 @@
       "description": "Состав уточняется",
       "price": 130,
       "category": "coffeeShop",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtegljx5-2d7ba435.jpg",
       "id": "hippodrome-msrjoxee",
       "available": true
     },
@@ -1113,7 +1816,7 @@
       "description": "Состав уточняется",
       "price": 180,
       "category": "coffeeShop",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mteglvsf-b64eb3ba.jpg",
       "id": "hippodrome-msrjp5ed",
       "available": true
     },
@@ -1122,7 +1825,7 @@
       "description": "Состав уточняется",
       "price": 170,
       "category": "coffeeShop",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtegmg83-ae4066f9.jpg",
       "id": "hippodrome-msrjpaos",
       "available": true
     },
@@ -1131,7 +1834,7 @@
       "description": "Состав уточняется",
       "price": 170,
       "category": "coffeeShop",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtegmj22-d2c4b295.jpg",
       "id": "hippodrome-msrjpdqg",
       "available": true
     },
@@ -1140,7 +1843,7 @@
       "description": "Состав уточняется",
       "price": 175,
       "category": "coffeeShop",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtegmlqi-c13258f3.jpg",
       "id": "hippodrome-msrjpgfk",
       "available": true
     },
