@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import {
   Loader2,
@@ -8,6 +9,7 @@ import {
   Store,
   Trash2,
   Truck,
+  UserRound,
   X,
 } from "lucide-react";
 import { CleanMap } from "@/components/CleanMap";
@@ -74,7 +76,7 @@ function maxPreorderLocal(): string {
 
 export function CartDrawer() {
   const { franchise, franchiseId } = useFranchise();
-  const { user } = useUser();
+  const { user, ready: userReady } = useUser();
   const {
     items,
     total,
@@ -253,7 +255,7 @@ export function CartDrawer() {
 
   async function submitOrder(e: FormEvent) {
     e.preventDefault();
-    if (!items.length) return;
+    if (!items.length || !user) return;
     setLoading(true);
     setResult(null);
 
@@ -654,20 +656,47 @@ export function CartDrawer() {
           </div>
 
           <div className="mt-auto border-t border-line px-4 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-7">
-            <button
-              type="submit"
-              disabled={!items.length || loading}
-              className="btn-soft w-full gap-2 uppercase tracking-wide disabled:opacity-50"
-            >
-              {loading ? (
+            {!userReady ? (
+              <button
+                type="button"
+                disabled
+                className="btn-soft w-full gap-2 uppercase tracking-wide disabled:opacity-50"
+              >
                 <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                "Оформить заказ"
-              )}
-            </button>
-            <p className="mt-2 text-center text-xs text-ink-muted">
-              Оплата от платёжного сервиса — подключим позже
-            </p>
+              </button>
+            ) : !user ? (
+              <div className="space-y-3">
+                <div className="rounded-2xl border border-[var(--line)] bg-[var(--gold-soft)]/25 px-4 py-3 text-center">
+                  <UserRound className="mx-auto h-5 w-5 text-[var(--espresso)]" />
+                  <p className="mt-2 text-sm font-medium text-ink">
+                    Войдите или зарегистрируйтесь
+                  </p>
+                  <p className="mt-1 text-xs text-ink-muted">
+                    Оформление заказа доступно только авторизованным клиентам
+                  </p>
+                </div>
+                <Link
+                  href="/account?checkout=1"
+                  onClick={() => setOpen(false)}
+                  className="btn-soft flex w-full items-center justify-center gap-2 uppercase tracking-wide"
+                >
+                  <UserRound className="h-4 w-4" />
+                  Войти / Регистрация
+                </Link>
+              </div>
+            ) : (
+              <button
+                type="submit"
+                disabled={!items.length || loading}
+                className="btn-soft w-full gap-2 uppercase tracking-wide disabled:opacity-50"
+              >
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  "Оформить заказ"
+                )}
+              </button>
+            )}
             {result && (
               <p className="mt-2 text-center text-sm text-ink-muted">{result}</p>
             )}

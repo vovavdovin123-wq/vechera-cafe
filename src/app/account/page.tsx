@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { ArrowLeft, Loader2, MapPin, Package, Phone, UserRound } from "lucide-react";
 import {
@@ -14,6 +15,7 @@ import {
 import { CartDrawer } from "@/components/CartDrawer";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { useCart } from "@/context/CartContext";
 import { useUser } from "@/context/UserContext";
 import { FRANCHISE_TAB_LABELS } from "@/lib/franchises";
 import { saveCheckoutDraft } from "@/lib/checkout-storage";
@@ -45,7 +47,15 @@ const SECTION_TITLES: Record<AccountSection, string> = {
 };
 
 export default function AccountPage() {
+  const router = useRouter();
+  const [checkoutAfterAuth, setCheckoutAfterAuth] = useState(false);
+  const { setOpen } = useCart();
   const { user, ready, login, register, logout, updateProfile } = useUser();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setCheckoutAfterAuth(params.get("checkout") === "1");
+  }, []);
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [section, setSection] = useState<AccountSection>("orders");
   const [phone, setPhone] = useState("");
@@ -144,6 +154,10 @@ export default function AccountPage() {
     } else {
       setPassword("");
       setPasswordConfirm("");
+      if (checkoutAfterAuth) {
+        router.push("/");
+        setOpen(true);
+      }
     }
     setAuthLoading(false);
   }
@@ -207,6 +221,11 @@ export default function AccountPage() {
                 <h1 className="mt-5 text-center font-display text-2xl font-semibold text-ink sm:text-3xl">
                   {authMode === "login" ? "Вход" : "Регистрация"}
                 </h1>
+                {checkoutAfterAuth && (
+                  <p className="mt-2 text-center text-sm text-ink-muted">
+                    После входа вы вернётесь к оформлению заказа
+                  </p>
+                )}
 
                 <form onSubmit={onAuthSubmit} className="mt-6 space-y-3">
                   {authMode === "register" && (

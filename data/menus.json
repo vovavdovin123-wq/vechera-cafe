@@ -567,7 +567,7 @@
       "category": "sauces",
       "frontpadArticle": "8000",
       "description": "Сыр, сливки",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtis1wz9-e699f700.jpg",
       "available": true
     },
     {
@@ -577,7 +577,7 @@
       "category": "sauces",
       "frontpadArticle": "8001",
       "description": "Томаты, специи",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtis24gh-161be3fc.jpg",
       "available": true
     },
     {
@@ -703,7 +703,7 @@
       "name": "Айс раф фисташка-малина",
       "description": "Состав уточняется",
       "category": "drinks-2",
-      "image": "/menu/dish.png",
+      "image": "",
       "available": true,
       "volumes": [
         {
@@ -815,7 +815,7 @@
       "name": "Какао тоник (пьяная вишня)",
       "description": "Состав уточняется",
       "category": "drinks-2",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtirtyd7-78329845.jpg",
       "available": true,
       "volumes": [
         {
@@ -884,7 +884,7 @@
       "name": "Матча анчан-вишня",
       "description": "Состав уточняется",
       "category": "drinks-2",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtirupje-be8b6137.jpg",
       "available": true,
       "volumes": [
         {
@@ -930,7 +930,7 @@
       "name": "Матча питахайя",
       "description": "Состав уточняется",
       "category": "drinks-2",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtirvxxb-3010e7da.jpg",
       "available": true,
       "volumes": [
         {
@@ -1068,7 +1068,7 @@
       "name": "Флэт уайт",
       "description": "Состав уточняется",
       "category": "drinks-2",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtirw709-8600343a.jpg",
       "available": true,
       "price": 200,
       "frontpadArticle": "11045"
@@ -1078,7 +1078,7 @@
       "name": "Эспрессо",
       "description": "Состав уточняется",
       "category": "drinks-2",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtirwckv-79cf3f73.jpg",
       "available": true,
       "price": 100,
       "frontpadArticle": "11046"
@@ -1088,7 +1088,7 @@
       "name": "Чай апельсин",
       "description": "Состав уточняется",
       "category": "drinks-2",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtirwh4s-cb4acad4.jpg",
       "available": true,
       "price": 140,
       "frontpadArticle": "11000"
@@ -1098,7 +1098,7 @@
       "name": "Чай зелёный",
       "description": "Состав уточняется",
       "category": "drinks-2",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtirwnbe-c6bdd9e5.jpg",
       "available": true,
       "volumes": [
         {
@@ -1121,7 +1121,7 @@
       "name": "Чай малина",
       "description": "Состав уточняется",
       "category": "drinks-2",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtirwtfy-5eadf994.jpg",
       "available": true,
       "volumes": [
         {
@@ -1144,7 +1144,7 @@
       "name": "Чай облепиха",
       "description": "Состав уточняется",
       "category": "drinks-2",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtirwxfl-1196c0ba.jpg",
       "available": true,
       "volumes": [
         {
@@ -1167,7 +1167,7 @@
       "name": "Чай фейхоа",
       "description": "Состав уточняется",
       "category": "drinks-2",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtirx187-e3e62825.jpg",
       "available": true,
       "volumes": [
         {
@@ -1213,7 +1213,7 @@
       "name": "Базилик Арбуз",
       "description": "Состав уточняется",
       "category": "drinks-2",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtirxhda-e22dcfb5.jpg",
       "available": true,
       "volumes": [
         {
@@ -1259,7 +1259,7 @@
       "name": "Гранат-базилик",
       "description": "Состав уточняется",
       "category": "drinks-2",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtirxnjl-350b681d.jpg",
       "available": true,
       "volumes": [
         {
@@ -1328,7 +1328,7 @@
       "name": "Манго-маракуйя",
       "description": "Состав уточняется",
       "category": "drinks-2",
-      "image": "/menu/dish.png",
+      "image": "/api/uploads/menu-mtirxxgm-b642d2f4.jpg",
       "available": true,
       "volumes": [
         {
@@ -1500,48 +1500,6 @@
       ],
       "id": "center-mtek7vem",
       "available": true
-    },
-    {
-      "id": "center-drink-b4aec8f4",
-      "name": "Лимонад Анчан-вишня",
-      "description": "Состав уточняется",
-      "category": "drinks-2",
-      "available": true,
-      "image": "/api/uploads/menu-drink-anchan-cherry-74d34e7f.jpg",
-      "price": 190,
-      "volumes": [
-        {
-          "id": "vol-anchan-m",
-          "label": "Маленький",
-          "price": 190
-        },
-        {
-          "id": "vol-anchan-b",
-          "label": "Большой",
-          "price": 220
-        }
-      ]
-    },
-    {
-      "id": "center-drink-5b4a73a6",
-      "name": "Пьяная вишня",
-      "description": "Состав уточняется",
-      "category": "drinks-2",
-      "available": true,
-      "image": "/api/uploads/menu-drink-drunk-cherry-7c90463d.jpg",
-      "price": 190,
-      "volumes": [
-        {
-          "id": "vol-drunk-m",
-          "label": "Маленький",
-          "price": 190
-        },
-        {
-          "id": "vol-drunk-b",
-          "label": "Большой",
-          "price": 220
-        }
-      ]
     }
   ],
   "hippodrome": [

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { COOKIE_NAME, verifySessionToken } from "@/lib/admin-auth";
+import { parseUserSessionToken, USER_COOKIE_NAME } from "@/lib/user-auth";
 import { sendOrderToFrontPad } from "@/lib/frontpad";
 import { notifyNewOrder } from "@/lib/notify";
 import {
@@ -46,6 +47,18 @@ export async function DELETE(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const jar = await cookies();
+    const session = parseUserSessionToken(jar.get(USER_COOKIE_NAME)?.value);
+    if (!session) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Войдите или зарегистрируйтесь в личном кабинете, чтобы оформить заказ",
+        },
+        { status: 401 },
+      );
+    }
+
     const body = (await request.json()) as OrderPayload;
 
     if (!body?.items?.length || !body.franchiseId || !body.total) {
