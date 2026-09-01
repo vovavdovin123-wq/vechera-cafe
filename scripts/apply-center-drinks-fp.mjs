@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Обновляет/добавляет напитки Центра (drinks-2) по каталогу FrontPad.
- * Пары без «Б» = Средний, с «Б» = Большой → одна позиция с volumes.
+ * Пары м/М = Маленький, Б = Большой → одна позиция с volumes.
  */
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
@@ -9,20 +9,44 @@ import { join } from "path";
 const MENUS_FILE = join(process.cwd(), "data", "menus.json");
 const CATEGORY = "drinks-2";
 const DEFAULT_IMAGE = "/menu/dish.png";
+const M = "Маленький";
+const B = "Большой";
 
-/** @type {Array<{ name: string, match?: string[], volumes?: {label:string,price:number,fp:string}[], price?: number, fp?: string }>} */
+/** @type {Array<{ name: string, match?: string[], exactOnly?: boolean, volumes?: {label:string,price:number,fp:string}[], price?: number, fp?: string }>} */
 const CATALOG = [
   {
     name: "Айс кофе",
     match: ["айс кофе"],
     volumes: [
-      { label: "Средний", price: 200, fp: "11020" },
-      { label: "Большой", price: 230, fp: "11021" },
+      { label: M, price: 200, fp: "11020" },
+      { label: B, price: 230, fp: "11021" },
+    ],
+  },
+  {
+    name: "Айс латте",
+    volumes: [
+      { label: M, price: 200, fp: "11055" },
+      { label: B, price: 230, fp: "11056" },
+    ],
+  },
+  {
+    name: "Айс раф",
+    volumes: [
+      { label: M, price: 230, fp: "11057" },
+      { label: B, price: 250, fp: "11058" },
+    ],
+  },
+  {
+    name: "Айс раф фисташка-малина",
+    match: ["айс раф фисташка"],
+    volumes: [
+      { label: M, price: 250, fp: "11059" },
+      { label: B, price: 280, fp: "11060" },
     ],
   },
   {
     name: "Американо",
-    match: ["американо", "кофе американо"],
+    match: ["американо"],
     price: 130,
     fp: "11022",
   },
@@ -30,8 +54,8 @@ const CATALOG = [
     name: "Апельсиновый кофе (Бамбл)",
     match: ["апельсиновый кофе", "бамбл"],
     volumes: [
-      { label: "Средний", price: 210, fp: "11023" },
-      { label: "Большой", price: 240, fp: "11024" },
+      { label: M, price: 210, fp: "11023" },
+      { label: B, price: 240, fp: "11024" },
     ],
   },
   {
@@ -43,47 +67,79 @@ const CATALOG = [
     name: "Горячий шоколад",
     match: ["горячий шоколад"],
     volumes: [
-      { label: "Средний", price: 170, fp: "11027" },
-      { label: "Большой", price: 190, fp: "11028" },
+      { label: M, price: 170, fp: "11027" },
+      { label: B, price: 190, fp: "11028" },
     ],
   },
   {
     name: "Какао",
     match: ["какао"],
+    exactOnly: true,
     volumes: [
-      { label: "Средний", price: 140, fp: "11029" },
-      { label: "Большой", price: 170, fp: "11030" },
+      { label: M, price: 140, fp: "11029" },
+      { label: B, price: 170, fp: "11030" },
+    ],
+  },
+  {
+    name: "Какао тоник (пьяная вишня)",
+    match: ["какао тоник"],
+    volumes: [
+      { label: M, price: 200, fp: "11061" },
+      { label: B, price: 250, fp: "11062" },
     ],
   },
   {
     name: "Капучино",
-    match: ["капучино", "кофе капучино"],
+    match: ["капучино"],
     volumes: [
-      { label: "Средний", price: 170, fp: "11031" },
-      { label: "Большой", price: 200, fp: "11032" },
+      { label: M, price: 170, fp: "11031" },
+      { label: B, price: 200, fp: "11032" },
     ],
   },
   {
     name: "Латте",
-    match: ["латте", "кофе латте"],
+    match: ["латте"],
+    exactOnly: true,
     volumes: [
-      { label: "Средний", price: 170, fp: "11033" },
-      { label: "Большой", price: 200, fp: "11034" },
+      { label: M, price: 170, fp: "11033" },
+      { label: B, price: 200, fp: "11034" },
+    ],
+  },
+  {
+    name: "Матча анчан-вишня",
+    volumes: [
+      { label: M, price: 250, fp: "11065" },
+      { label: B, price: 280, fp: "11066" },
+    ],
+  },
+  {
+    name: "Матча клубника-банан",
+    match: ["матча клубника"],
+    volumes: [
+      { label: M, price: 250, fp: "11063" },
+      { label: B, price: 280, fp: "11064" },
+    ],
+  },
+  {
+    name: "Матча питахайя",
+    volumes: [
+      { label: M, price: 250, fp: "11067" },
+      { label: B, price: 280, fp: "11068" },
     ],
   },
   {
     name: "Раф апельсин",
     volumes: [
-      { label: "Средний", price: 200, fp: "11035" },
-      { label: "Большой", price: 230, fp: "11036" },
+      { label: M, price: 200, fp: "11035" },
+      { label: B, price: 230, fp: "11036" },
     ],
   },
   {
     name: "Раф карамель миндаль",
     match: ["раф карамель"],
     volumes: [
-      { label: "Средний", price: 200, fp: "11037" },
-      { label: "Большой", price: 230, fp: "11038" },
+      { label: M, price: 200, fp: "11037" },
+      { label: B, price: 230, fp: "11038" },
     ],
   },
   {
@@ -91,34 +147,34 @@ const CATALOG = [
     match: ["раф классический"],
     exactOnly: true,
     volumes: [
-      { label: "Средний", price: 180, fp: "11039" },
-      { label: "Большой", price: 210, fp: "11040" },
+      { label: M, price: 180, fp: "11039" },
+      { label: B, price: 210, fp: "11040" },
     ],
   },
   {
     name: "Раф фисташка малина",
     match: ["раф фисташка малина", "раф фисташка"],
     volumes: [
-      { label: "Средний", price: 200, fp: "11041" },
-      { label: "Большой", price: 230, fp: "11042" },
+      { label: M, price: 200, fp: "11041" },
+      { label: B, price: 230, fp: "11042" },
     ],
   },
   {
     name: "Тоник кофе",
     volumes: [
-      { label: "Средний", price: 210, fp: "11043" },
-      { label: "Большой", price: 240, fp: "11044" },
+      { label: M, price: 210, fp: "11043" },
+      { label: B, price: 240, fp: "11044" },
     ],
   },
   {
     name: "Флэт уайт",
-    match: ["флэт уайт", "flat white", "кофе флэт"],
+    match: ["флэт уайт", "flat white"],
     price: 200,
     fp: "11045",
   },
   {
     name: "Эспрессо",
-    match: ["эспрессо", "кофе эспрессо"],
+    match: ["эспрессо"],
     price: 100,
     fp: "11046",
   },
@@ -132,64 +188,94 @@ const CATALOG = [
     name: "Чай зелёный",
     match: ["чай зеленый", "чай зелёный"],
     volumes: [
-      { label: "Средний", price: 80, fp: "11001" },
-      { label: "Большой", price: 100, fp: "11002" },
+      { label: M, price: 80, fp: "11001" },
+      { label: B, price: 100, fp: "11002" },
     ],
   },
   {
     name: "Чай малина",
     match: ["чай малина"],
     volumes: [
-      { label: "Средний", price: 120, fp: "11003" },
-      { label: "Большой", price: 140, fp: "11004" },
+      { label: M, price: 120, fp: "11003" },
+      { label: B, price: 140, fp: "11004" },
     ],
   },
   {
     name: "Чай облепиха",
     match: ["чай облепиха"],
     volumes: [
-      { label: "Средний", price: 120, fp: "11005" },
-      { label: "Большой", price: 140, fp: "11006" },
+      { label: M, price: 120, fp: "11005" },
+      { label: B, price: 140, fp: "11006" },
     ],
   },
   {
     name: "Чай фейхоа",
     match: ["чай фейхоа"],
     volumes: [
-      { label: "Средний", price: 120, fp: "11007" },
-      { label: "Большой", price: 140, fp: "11008" },
+      { label: M, price: 120, fp: "11007" },
+      { label: B, price: 140, fp: "11008" },
     ],
   },
   {
     name: "Чай чёрный",
     match: ["чай чёрный", "чай черный"],
     volumes: [
-      { label: "Средний", price: 80, fp: "11009" },
-      { label: "Большой", price: 100, fp: "11010" },
+      { label: M, price: 80, fp: "11009" },
+      { label: B, price: 100, fp: "11010" },
     ],
   },
   {
     name: "Базилик Арбуз",
     match: ["базилик арбуз", "базилик-арбуз"],
     volumes: [
-      { label: "Средний", price: 190, fp: "11011" },
-      { label: "Большой", price: 220, fp: "11012" },
+      { label: M, price: 190, fp: "11011" },
+      { label: B, price: 220, fp: "11012" },
     ],
   },
   {
-    name: "Лаванда Ананас",
+    name: "Голубая лагуна",
+    volumes: [
+      { label: M, price: 190, fp: "11053" },
+      { label: B, price: 220, fp: "11054" },
+    ],
+  },
+  {
+    name: "Гранат-базилик",
+    volumes: [
+      { label: M, price: 190, fp: "11049" },
+      { label: B, price: 220, fp: "11050" },
+    ],
+  },
+  {
+    name: "Лимонад киви-яблоко",
+    match: ["лимонад киви", "киви-яблоко", "киви яблоко"],
+    volumes: [
+      { label: M, price: 190, fp: "11047" },
+      { label: B, price: 220, fp: "11048" },
+    ],
+  },
+  {
+    name: "Лаванда-ананас",
     match: ["лаванда ананас", "лаванда-ананас"],
     volumes: [
-      { label: "Средний", price: 170, fp: "11013" },
-      { label: "Большой", price: 200, fp: "11014" },
+      { label: M, price: 170, fp: "11013" },
+      { label: B, price: 200, fp: "11014" },
+    ],
+  },
+  {
+    name: "Манго-маракуйя",
+    volumes: [
+      { label: M, price: 190, fp: "11051" },
+      { label: B, price: 220, fp: "11052" },
     ],
   },
   {
     name: "Мохито",
     match: ["мохито"],
+    exactOnly: true,
     volumes: [
-      { label: "Средний", price: 170, fp: "11015" },
-      { label: "Большой", price: 200, fp: "11016" },
+      { label: M, price: 170, fp: "11015" },
+      { label: B, price: 200, fp: "11016" },
     ],
   },
   {
@@ -198,11 +284,11 @@ const CATALOG = [
     fp: "11017",
   },
   {
-    name: "Цитрус клубника",
+    name: "Цитрус-клубника",
     match: ["цитрус клубника", "цитрус-клубника"],
     volumes: [
-      { label: "Средний", price: 190, fp: "11018" },
-      { label: "Большой", price: 220, fp: "11019" },
+      { label: M, price: 190, fp: "11018" },
+      { label: B, price: 220, fp: "11019" },
     ],
   },
 ];
@@ -240,7 +326,9 @@ function applyEntry(entry, item) {
   item.category = CATEGORY;
   item.available = item.available ?? true;
   item.description = item.description?.trim() || "Состав уточняется";
-  item.image = item.image?.trim() || DEFAULT_IMAGE;
+  if (!item.image?.trim()) {
+    item.image = DEFAULT_IMAGE;
+  }
 }
 
 function findItem(items, entry, usedIds) {
@@ -293,9 +381,16 @@ for (const entry of CATALOG) {
 
 const result = [...byId.values()];
 
-// Сохраняем прочие напитки (кола, фанта…) без изменений
 for (const item of drinks) {
   if (!usedIds.has(item.id)) {
+    // Переименовать объёмы у сохранённых позиций
+    if (item.volumes?.length) {
+      for (const vol of item.volumes) {
+        if (vol.label === "Средний" || vol.label === "М" || vol.label === "м") {
+          vol.label = M;
+        }
+      }
+    }
     result.push(item);
     console.log("keep:", item.name);
   }
