@@ -24,6 +24,7 @@ import {
 import { useCart, cartLineKey } from "@/context/CartContext";
 import { getStoredFranchiseId, useFranchise } from "@/context/FranchiseContext";
 import { useUser } from "@/context/UserContext";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { franchiseFromOrderItems } from "@/lib/order-franchise";
 import {
   loadCheckoutDraft,
@@ -77,6 +78,7 @@ function maxPreorderLocal(): string {
 export function CartDrawer() {
   const { franchise, franchiseId } = useFranchise();
   const { user, ready: userReady } = useUser();
+  const { settings } = useSiteSettings();
   const {
     items,
     total,
@@ -186,7 +188,10 @@ export function CartDrawer() {
     return 0;
   }, [promo, total]);
 
-  const payable = Math.max(0, total - discount);
+  const payable = Math.max(
+    0,
+    total - discount + (mode === "delivery" ? settings.deliveryFee : 0),
+  );
 
   const mapMarkers = useMemo(() => {
     const cafe = {
@@ -268,7 +273,11 @@ export function CartDrawer() {
     try {
       const promoNote =
         promo.kind !== "none" ? `Промокод ${promo.code}` : undefined;
-      const commentParts = [addressNote, promoNote].filter(Boolean);
+      const deliveryNote =
+        mode === "delivery" && settings.deliveryFee > 0
+          ? `Доставка ${settings.deliveryFee} ₽`
+          : undefined;
+      const commentParts = [addressNote, promoNote, deliveryNote].filter(Boolean);
 
       const payload: Record<string, unknown> = {
         franchiseId: orderFranchiseId,
@@ -441,6 +450,10 @@ export function CartDrawer() {
 
             {mode === "delivery" ? (
               <>
+                <div className="rounded-2xl border border-[var(--gold)]/40 bg-[var(--gold-soft)]/35 px-4 py-3 text-sm text-ink">
+                  {settings.deliveryNote ||
+                    `Доставка по Беслану — ${settings.deliveryFee} ₽`}
+                </div>
                 <input
                   required={items.length > 0}
                   value={street}
@@ -645,6 +658,12 @@ export function CartDrawer() {
                   <div className="flex justify-between text-ink-muted">
                     <span>Скидка</span>
                     <span>−{discount} ₽</span>
+                  </div>
+                )}
+                {mode === "delivery" && settings.deliveryFee > 0 && (
+                  <div className="flex justify-between text-ink-muted">
+                    <span>Доставка</span>
+                    <span>{settings.deliveryFee} ₽</span>
                   </div>
                 )}
                 <div className="flex justify-between font-semibold">

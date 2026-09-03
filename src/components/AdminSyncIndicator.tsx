@@ -3,13 +3,15 @@
 import { useMenu } from "@/context/MenuContext";
 import { useInterior } from "@/context/InteriorContext";
 import { usePromos } from "@/context/PromoContext";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 export function AdminSyncIndicator() {
   const { syncStatus: menuStatus } = useMenu();
   const { syncStatus: interiorStatus } = useInterior();
   const { syncStatus: promoStatus } = usePromos();
+  const { syncStatus: settingsStatus } = useSiteSettings();
 
-  const statuses = [menuStatus, interiorStatus, promoStatus];
+  const statuses = [menuStatus, interiorStatus, promoStatus, settingsStatus];
   const saving = statuses.includes("saving");
   const loading = statuses.includes("loading");
   const error = statuses.includes("error");

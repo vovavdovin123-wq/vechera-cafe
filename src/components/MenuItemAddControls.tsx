@@ -20,6 +20,19 @@ export function MenuItemAddControls({ item }: MenuItemAddControlsProps) {
   const totalQty = quantityOf(item.id);
   const [pickVolume, setPickVolume] = useState(false);
 
+  if (!item.available) {
+    return (
+      <div className="mt-2.5 flex flex-col gap-2 sm:mt-5 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+        <p className="text-base font-semibold text-ink sm:text-xl">
+          {formatMenuPrice(item)}
+        </p>
+        <p className="w-full rounded-xl border border-line bg-bg/50 px-2.5 py-2 text-center text-xs font-medium text-ink-muted sm:flex-1 sm:text-sm">
+          Нет в наличии
+        </p>
+      </div>
+    );
+  }
+
   function handleAddClick() {
     if (hasVolumes) {
       setPickVolume(true);

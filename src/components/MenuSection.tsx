@@ -28,7 +28,6 @@ export function MenuSection() {
   const categoryCounts = useMemo(() => {
     const counts = new Map<string, number>();
     for (const item of items) {
-      if (!item.available) continue;
       counts.set(item.category, (counts.get(item.category) ?? 0) + 1);
     }
     return counts;
@@ -39,7 +38,7 @@ export function MenuSection() {
       {
         value: "all",
         label: "Все блюда",
-        count: items.filter((i) => i.available).length,
+        count: items.length,
       },
       ...availableCategories.map((c) => ({
         value: c.id,
@@ -51,9 +50,8 @@ export function MenuSection() {
   );
 
   const filtered = useMemo(() => {
-    const list = items.filter((i) => i.available);
-    if (category === "all") return list;
-    return list.filter((i) => i.category === category);
+    if (category === "all") return items;
+    return items.filter((i) => i.category === category);
   }, [items, category]);
 
   if (!contentReady) {
@@ -86,7 +84,9 @@ export function MenuSection() {
         {filtered.map((item, index) => (
           <article
             key={item.id}
-            className="menu-card animate-rise flex flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--white)] shadow-[var(--shadow-soft)]"
+            className={`menu-card animate-rise flex flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--white)] shadow-[var(--shadow-soft)] ${
+              !item.available ? "opacity-75" : ""
+            }`}
             style={{ animationDelay: `${Math.min(index, 8) * 40}ms` }}
           >
             <div className="relative aspect-[4/3] overflow-hidden bg-[var(--bg-deep)]">
@@ -96,12 +96,19 @@ export function MenuSection() {
                   key={item.image}
                   src={item.image}
                   alt={item.name}
-                  className="h-full w-full object-cover"
+                  className={`h-full w-full object-cover ${
+                    !item.available ? "grayscale-[40%]" : ""
+                  }`}
                 />
               ) : (
                 <div className="flex h-full items-center justify-center text-ink-muted">
                   <UtensilsCrossed className="h-8 w-8 opacity-40" />
                 </div>
+              )}
+              {!item.available && (
+                <span className="absolute left-2 top-2 rounded-full bg-[var(--espresso)]/90 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white sm:text-xs">
+                  Нет в наличии
+                </span>
               )}
             </div>
             <div className="flex flex-1 flex-col p-2.5 sm:p-5">

@@ -23,6 +23,7 @@ const PUBLIC_ENDPOINTS = {
   "menu-categories.json": "/api/content/menu-categories",
   "promos.json": "/api/content/promos",
   "interior.json": "/api/content/interior",
+  "site-settings.json": "/api/content/site-settings",
 };
 
 function collectUploadPaths(value, out = new Set()) {

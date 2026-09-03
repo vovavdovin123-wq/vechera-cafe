@@ -151,20 +151,12 @@ export function MenuProvider({ children }: { children: ReactNode }) {
     Record<FranchiseId, MenuCategoryDef[]>
   >({ center: [], hippodrome: [] });
   const [contentReady, setContentReady] = useState(false);
-  const [hydrated, setHydrated] = useState(false);
   const [syncStatus, setSyncStatus] = useState<
     "idle" | "loading" | "saving" | "error"
   >("loading");
-  const [savedMenus, setSavedMenus] = useState<Record<
-    FranchiseId,
-    MenuItem[]
-  > | null>(null);
-  const [savedCategories, setSavedCategories] = useState<Record<
-    FranchiseId,
-    MenuCategoryDef[]
-  > | null>(null);
+  const [menusDirty, setMenusDirty] = useState(false);
 
-  const snapshot = (data: unknown) => JSON.stringify(data);
+  const markDirty = useCallback(() => setMenusDirty(true), []);
 
   const saveMenus = useCallback(async (): Promise<boolean> => {
     setSyncStatus("saving");
@@ -175,8 +167,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
     if (menusResult.ok && categoriesResult.ok) {
       writeContentCache(CACHE_MENUS, allMenus);
       writeContentCache(CACHE_MENU_CATEGORIES, allCategories);
-      setSavedMenus(allMenus);
-      setSavedCategories(allCategories);
+      setMenusDirty(false);
       setSyncStatus("idle");
       return true;
     }
@@ -184,13 +175,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
     return false;
   }, [allMenus, allCategories]);
 
-  const isDirty = useMemo(() => {
-    if (!hydrated || !savedMenus || !savedCategories) return false;
-    return (
-      snapshot(allMenus) !== snapshot(savedMenus) ||
-      snapshot(allCategories) !== snapshot(savedCategories)
-    );
-  }, [allMenus, allCategories, savedMenus, savedCategories, hydrated]);
+  const isDirty = menusDirty;
 
   useEffect(() => {
     let cancelled = false;
@@ -204,13 +189,11 @@ export function MenuProvider({ children }: { children: ReactNode }) {
     if (cachedMenus?.center || cachedMenus?.hippodrome) {
       const fromCache = normalizeMenus(cachedMenus);
       setAllMenus(fromCache);
-      setSavedMenus(fromCache);
       const cats = normalizeMenuCategories(
         cachedCategories ?? undefined,
         fromCache,
       );
       setAllCategories(cats);
-      setSavedCategories(cats);
       setContentReady(true);
     }
 
@@ -233,10 +216,8 @@ export function MenuProvider({ children }: { children: ReactNode }) {
         nextMenus = normalizeMenus(menusData);
         setAllMenus(nextMenus);
         writeContentCache(CACHE_MENUS, nextMenus);
-        setSavedMenus(nextMenus);
       } else if (!cachedMenus?.center && !cachedMenus?.hippodrome) {
         setAllMenus(INITIAL_MENUS);
-        setSavedMenus(INITIAL_MENUS);
         nextMenus = INITIAL_MENUS;
       }
 
@@ -246,10 +227,9 @@ export function MenuProvider({ children }: { children: ReactNode }) {
       );
       setAllCategories(nextCategories);
       writeContentCache(CACHE_MENU_CATEGORIES, nextCategories);
-      setSavedCategories(nextCategories);
 
       setContentReady(true);
-      setHydrated(true);
+      setMenusDirty(false);
       setSyncStatus("idle");
     })();
 
@@ -273,8 +253,9 @@ export function MenuProvider({ children }: { children: ReactNode }) {
           },
         ],
       }));
+      markDirty();
     },
-    [franchiseId],
+    [franchiseId, markDirty],
   );
 
   const updateMenuItem = useCallback(
@@ -288,8 +269,9 @@ export function MenuProvider({ children }: { children: ReactNode }) {
           ),
         };
       });
+      markDirty();
     },
-    [franchiseId],
+    [franchiseId, markDirty],
   );
 
   const removeMenuItem = useCallback(
@@ -298,8 +280,9 @@ export function MenuProvider({ children }: { children: ReactNode }) {
         ...prev,
         [franchiseId]: (prev[franchiseId] ?? []).filter((i) => i.id !== id),
       }));
+      markDirty();
     },
-    [franchiseId],
+    [franchiseId, markDirty],
   );
 
   const toggleAvailable = useCallback(
@@ -310,8 +293,9 @@ export function MenuProvider({ children }: { children: ReactNode }) {
           i.id === id ? { ...i, available: !i.available } : i,
         ),
       }));
+      markDirty();
     },
-    [franchiseId],
+    [franchiseId, markDirty],
   );
 
   const addCategory = useCallback(
@@ -329,10 +313,11 @@ export function MenuProvider({ children }: { children: ReactNode }) {
         ...prev,
         [franchiseId]: [...(prev[franchiseId] ?? []), { id, label: trimmed }],
       }));
+      markDirty();
 
       return { ok: true as const, id };
     },
-    [allCategories, franchiseId],
+    [allCategories, franchiseId, markDirty],
   );
 
   const updateCategory = useCallback(
@@ -343,8 +328,9 @@ export function MenuProvider({ children }: { children: ReactNode }) {
           c.id === id ? { ...c, ...patch, id: c.id } : c,
         ),
       }));
+      markDirty();
     },
-    [franchiseId],
+    [franchiseId, markDirty],
   );
 
   const removeCategory = useCallback(
@@ -361,9 +347,10 @@ export function MenuProvider({ children }: { children: ReactNode }) {
         ...prev,
         [franchiseId]: (prev[franchiseId] ?? []).filter((c) => c.id !== id),
       }));
+      markDirty();
       return { ok: true as const };
     },
-    [allMenus, franchiseId],
+    [allMenus, franchiseId, markDirty],
   );
 
   const moveCategory = useCallback(
@@ -377,8 +364,9 @@ export function MenuProvider({ children }: { children: ReactNode }) {
         [list[index], list[target]] = [list[target], list[index]];
         return { ...prev, [franchiseId]: list };
       });
+      markDirty();
     },
-    [franchiseId],
+    [franchiseId, markDirty],
   );
 
   const applyFrontPadProducts = useCallback(
@@ -399,10 +387,11 @@ export function MenuProvider({ children }: { children: ReactNode }) {
         mismatches = result.mismatches;
         return { ...prev, [franchiseId]: result.items };
       });
+      markDirty();
 
       return { updated, assigned, skipped, mismatches };
     },
-    [franchiseId],
+    [franchiseId, markDirty],
   );
 
   const categories = useMemo(() => {

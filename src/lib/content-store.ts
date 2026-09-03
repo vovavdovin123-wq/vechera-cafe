@@ -6,6 +6,11 @@ import { DEFAULT_INTERIOR, type InteriorPhoto } from "@/lib/interior-data";
 import { INITIAL_MENUS } from "@/lib/menu-data";
 import { INITIAL_MENU_CATEGORIES } from "@/lib/menu-categories";
 import { PROMO_SLIDES, type PromoSlide } from "@/lib/promos";
+import {
+  DEFAULT_SITE_SETTINGS,
+  normalizeSiteSettings,
+  type SiteSettings,
+} from "@/lib/site-settings";
 import type { FranchiseId, MenuCategoryDef, MenuItem } from "@/lib/types";
 
 const DATA_DIR = path.join(process.cwd(), "data");
@@ -19,6 +24,7 @@ const MENU_CATEGORIES_FILE = path.join(DATA_DIR, "menu-categories.json");
 const INTERIOR_FILE = path.join(DATA_DIR, "interior.json");
 const PROMOS_FILE = path.join(DATA_DIR, "promos.json");
 const COUPONS_FILE = path.join(DATA_DIR, "coupons.json");
+const SITE_SETTINGS_FILE = path.join(DATA_DIR, "site-settings.json");
 
 async function ensureDirs() {
   await fs.mkdir(DATA_DIR, { recursive: true });
@@ -151,4 +157,20 @@ export async function readCoupons(): Promise<Coupon[]> {
 export async function writeCoupons(data: Coupon[]): Promise<Coupon[]> {
   await writeJsonFile(COUPONS_FILE, data);
   return data;
+}
+
+export async function readSiteSettings(): Promise<SiteSettings> {
+  const raw = await readJsonFile<Partial<SiteSettings>>(
+    SITE_SETTINGS_FILE,
+    DEFAULT_SITE_SETTINGS,
+  );
+  return normalizeSiteSettings(raw);
+}
+
+export async function writeSiteSettings(
+  data: SiteSettings,
+): Promise<SiteSettings> {
+  const normalized = normalizeSiteSettings(data);
+  await writeJsonFile(SITE_SETTINGS_FILE, normalized);
+  return normalized;
 }

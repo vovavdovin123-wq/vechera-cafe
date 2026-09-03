@@ -6,7 +6,6 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -15,7 +14,7 @@ import {
   readContentCache,
   writeContentCache,
 } from "@/lib/content-cache";
-import { debounce, fetchContent, saveContent } from "@/lib/content-sync";
+import { fetchContent, saveContent } from "@/lib/content-sync";
 import { DEFAULT_INTERIOR, type InteriorPhoto } from "@/lib/interior-data";
 import type { FranchiseId } from "@/lib/types";
 import { useFranchise } from "./FranchiseContext";
@@ -25,6 +24,8 @@ interface InteriorContextValue {
   addPhoto: (src: string) => void;
   updatePhoto: (id: string, src: string) => void;
   removePhoto: (id: string) => void;
+  saveInterior: () => Promise<boolean>;
+  isDirty: boolean;
   syncStatus: "idle" | "loading" | "saving" | "error";
   contentReady: boolean;
 }
@@ -49,27 +50,12 @@ export function InteriorProvider({ children }: { children: ReactNode }) {
   const { franchiseId } = useFranchise();
   const [allPhotos, setAllPhotos] =
     useState<Record<FranchiseId, InteriorPhoto[]>>(EMPTY_INTERIOR);
+  const [savedPhotos, setSavedPhotos] =
+    useState<Record<FranchiseId, InteriorPhoto[]>>(EMPTY_INTERIOR);
   const [contentReady, setContentReady] = useState(false);
-  const [hydrated, setHydrated] = useState(false);
   const [syncStatus, setSyncStatus] = useState<
     "idle" | "loading" | "saving" | "error"
   >("loading");
-  const skipSave = useRef(true);
-
-  const persist = useMemo(
-    () =>
-      debounce(async (data: Record<FranchiseId, InteriorPhoto[]>) => {
-        setSyncStatus("saving");
-        const result = await saveContent("/api/content/interior", data);
-        if (result.ok) {
-          writeContentCache(CACHE_INTERIOR, data);
-          setSyncStatus("idle");
-        } else {
-          setSyncStatus("error");
-        }
-      }, 600),
-    [],
-  );
 
   useEffect(() => {
     let cancelled = false;
@@ -77,7 +63,9 @@ export function InteriorProvider({ children }: { children: ReactNode }) {
     const cached =
       readContentCache<Record<FranchiseId, InteriorPhoto[]>>(CACHE_INTERIOR);
     if (cached?.center || cached?.hippodrome) {
-      setAllPhotos(normalizeInterior(cached));
+      const next = normalizeInterior(cached);
+      setAllPhotos(next);
+      setSavedPhotos(next);
       setContentReady(true);
     }
 
@@ -90,27 +78,19 @@ export function InteriorProvider({ children }: { children: ReactNode }) {
       if (data) {
         const next = normalizeInterior(data);
         setAllPhotos(next);
+        setSavedPhotos(next);
         writeContentCache(CACHE_INTERIOR, next);
       } else if (!cached?.center && !cached?.hippodrome) {
         setAllPhotos(DEFAULT_INTERIOR);
+        setSavedPhotos(DEFAULT_INTERIOR);
       }
       setContentReady(true);
-      setHydrated(true);
       setSyncStatus("idle");
     })();
     return () => {
       cancelled = true;
     };
   }, []);
-
-  useEffect(() => {
-    if (!hydrated) return;
-    if (skipSave.current) {
-      skipSave.current = false;
-      return;
-    }
-    persist(allPhotos);
-  }, [allPhotos, hydrated, persist]);
 
   const addPhoto = useCallback(
     (src: string) => {
@@ -145,12 +125,34 @@ export function InteriorProvider({ children }: { children: ReactNode }) {
     [franchiseId],
   );
 
+  const saveInterior = useCallback(async () => {
+    setSyncStatus("saving");
+    const result = await saveContent("/api/content/interior", allPhotos);
+    if (result.ok) {
+      const next = result.data ? normalizeInterior(result.data) : allPhotos;
+      setAllPhotos(next);
+      setSavedPhotos(next);
+      writeContentCache(CACHE_INTERIOR, next);
+      setSyncStatus("idle");
+      return true;
+    }
+    setSyncStatus("error");
+    return false;
+  }, [allPhotos]);
+
+  const isDirty = useMemo(
+    () => JSON.stringify(allPhotos) !== JSON.stringify(savedPhotos),
+    [allPhotos, savedPhotos],
+  );
+
   const value = useMemo(
     () => ({
       photos: allPhotos[franchiseId] ?? allPhotos.center ?? [],
       addPhoto,
       updatePhoto,
       removePhoto,
+      saveInterior,
+      isDirty,
       syncStatus,
       contentReady,
     }),
@@ -160,6 +162,8 @@ export function InteriorProvider({ children }: { children: ReactNode }) {
       addPhoto,
       updatePhoto,
       removePhoto,
+      saveInterior,
+      isDirty,
       syncStatus,
       contentReady,
     ],

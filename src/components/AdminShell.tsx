@@ -13,6 +13,7 @@ import { Loader2, LogOut } from "lucide-react";
 import { AdminLocationSwitcher } from "@/components/AdminLocationSwitcher";
 import { AdminNav, type AdminTab } from "@/components/AdminNav";
 import { AdminOrderAlerts } from "@/components/AdminOrderAlerts";
+import { AdminSaveBar } from "@/components/AdminSaveBar";
 import { AdminSyncIndicator } from "@/components/AdminSyncIndicator";
 import { BrandLogo } from "@/components/BrandLogo";
 import { PAGE } from "@/lib/layout";
@@ -179,63 +180,37 @@ export function AdminShell({
       <AdminOrderAlerts />
       <div className="admin-shell min-h-screen min-h-[100dvh] overflow-x-hidden">
         <header className="admin-top sticky top-0 z-40 overflow-x-hidden border-b border-white/10 bg-[color-mix(in_srgb,var(--espresso)_92%,black)] text-white shadow-[var(--shadow-soft)] backdrop-blur-md pt-[env(safe-area-inset-top)]">
-          <div className={`${PAGE} max-w-full min-w-0 py-3 sm:py-3.5`}>
-            {/* Мобилка и планшет: шапка в колонку. Десктоп (lg+): одна строка */}
-            <div className="flex min-w-0 flex-col gap-2.5 lg:flex-row lg:items-center lg:gap-3">
-              <div className="flex min-w-0 items-center gap-2">
-                <BrandLogo
-                  variant="light"
-                  href="/admin"
-                  size="sm"
-                  className="min-w-0 shrink"
-                />
-                <div className="ml-auto flex shrink-0 items-center gap-1.5 lg:hidden">
-                  <Link
-                    href="/"
-                    className="rounded-full border border-white/25 px-2.5 py-1.5 text-xs text-white/90 transition hover:border-[var(--gold)] hover:bg-white/10"
-                  >
-                    Сайт
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={onLogout}
-                    className="inline-flex items-center rounded-full border border-white/25 p-2 text-white/90 transition hover:border-[var(--gold)] hover:bg-white/10"
-                    aria-label="Выйти"
-                  >
-                    <LogOut className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </div>
-
-              <div className="min-w-0 lg:min-w-0 lg:flex-1">
-                <AdminNav active={active} />
-              </div>
-
-              <div className="hidden min-w-0 shrink-0 items-center gap-2 lg:flex">
-                {showLocationSwitcher && (
-                  <AdminLocationSwitcher lockedScope={adminScope} />
-                )}
+          <div className={`${PAGE} max-w-full min-w-0 space-y-2.5 py-3 sm:py-3.5`}>
+            <div className="flex min-w-0 items-center gap-2">
+              <BrandLogo
+                variant="light"
+                href="/admin"
+                size="sm"
+                className="min-w-0 shrink"
+              />
+              <div className="ml-auto flex shrink-0 items-center gap-1.5">
                 <Link
                   href="/"
-                  className="rounded-full border border-white/25 px-3 py-1.5 text-sm text-white/90 transition hover:border-[var(--gold)] hover:bg-white/10"
+                  className="rounded-full border border-white/25 px-2.5 py-1.5 text-xs text-white/90 transition hover:border-[var(--gold)] hover:bg-white/10 sm:px-3 sm:text-sm"
                 >
                   Сайт
                 </Link>
                 <button
                   type="button"
                   onClick={onLogout}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/25 px-3 py-1.5 text-sm text-white/90 transition hover:border-[var(--gold)] hover:bg-white/10"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-white/25 px-2.5 py-1.5 text-xs text-white/90 transition hover:border-[var(--gold)] hover:bg-white/10 sm:px-3 sm:text-sm"
+                  aria-label="Выйти"
                 >
-                  <LogOut className="h-4 w-4" />
-                  <span className="hidden xl:inline">Выйти</span>
+                  <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Выйти</span>
                 </button>
               </div>
             </div>
 
+            <AdminNav active={active} />
+
             {showLocationSwitcher && (
-              <div className="mt-2.5 min-w-0 lg:hidden">
-                <AdminLocationSwitcher lockedScope={adminScope} />
-              </div>
+              <AdminLocationSwitcher lockedScope={adminScope} />
             )}
           </div>
         </header>
@@ -248,8 +223,9 @@ export function AdminShell({
             <p className="mt-1 text-sm text-ink-muted">{subtitle}</p>
           )}
           <AdminSyncIndicator />
-          <div className="min-w-0">{children}</div>
+          <div className="min-w-0 pb-24">{children}</div>
         </main>
+        <AdminSaveBar />
       </div>
     </AdminAuthContext.Provider>
   );

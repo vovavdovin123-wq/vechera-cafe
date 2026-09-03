@@ -37,6 +37,7 @@ yarn-error.log*
 !/data/menus.json
 !/data/menu-categories.json
 !/data/frontpad-article-map.json
+!/data/site-settings.json
 !/data/uploads/
 !/data/uploads/**
 /public/uploads/

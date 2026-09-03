@@ -6,7 +6,6 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -15,7 +14,7 @@ import {
   readContentCache,
   writeContentCache,
 } from "@/lib/content-cache";
-import { debounce, fetchContent, saveContent } from "@/lib/content-sync";
+import { fetchContent, saveContent } from "@/lib/content-sync";
 import {
   DEFAULT_OVERLAY_STRENGTH,
   DEFAULT_OVERLAY_TINT,
@@ -28,6 +27,8 @@ interface PromoContextValue {
   addSlide: (slide: Omit<PromoSlide, "id">) => void;
   updateSlide: (id: string, patch: Partial<PromoSlide>) => void;
   removeSlide: (id: string) => void;
+  savePromos: () => Promise<boolean>;
+  isDirty: boolean;
   syncStatus: "idle" | "loading" | "saving" | "error";
   contentReady: boolean;
 }
@@ -60,34 +61,20 @@ function normalizeSlide(raw: Partial<PromoSlide> & { id: string }): PromoSlide {
 
 export function PromoProvider({ children }: { children: ReactNode }) {
   const [slides, setSlides] = useState<PromoSlide[]>([]);
+  const [savedSlides, setSavedSlides] = useState<PromoSlide[]>([]);
   const [contentReady, setContentReady] = useState(false);
-  const [hydrated, setHydrated] = useState(false);
   const [syncStatus, setSyncStatus] = useState<
     "idle" | "loading" | "saving" | "error"
   >("loading");
-  const skipSave = useRef(true);
-
-  const persist = useMemo(
-    () =>
-      debounce(async (data: PromoSlide[]) => {
-        setSyncStatus("saving");
-        const result = await saveContent("/api/content/promos", data);
-        if (result.ok) {
-          writeContentCache(CACHE_PROMOS, data);
-          setSyncStatus("idle");
-        } else {
-          setSyncStatus("error");
-        }
-      }, 600),
-    [],
-  );
 
   useEffect(() => {
     let cancelled = false;
 
     const cached = readContentCache<PromoSlide[]>(CACHE_PROMOS);
     if (cached?.length) {
-      setSlides(cached.map((s) => normalizeSlide(s)));
+      const next = cached.map((s) => normalizeSlide(s));
+      setSlides(next);
+      setSavedSlides(next);
       setContentReady(true);
     }
 
@@ -98,27 +85,19 @@ export function PromoProvider({ children }: { children: ReactNode }) {
       if (data?.length) {
         const next = data.map((s) => normalizeSlide(s));
         setSlides(next);
+        setSavedSlides(next);
         writeContentCache(CACHE_PROMOS, next);
       } else if (!cached?.length) {
         setSlides(PROMO_SLIDES);
+        setSavedSlides(PROMO_SLIDES);
       }
       setContentReady(true);
-      setHydrated(true);
       setSyncStatus("idle");
     })();
     return () => {
       cancelled = true;
     };
   }, []);
-
-  useEffect(() => {
-    if (!hydrated) return;
-    if (skipSave.current) {
-      skipSave.current = false;
-      return;
-    }
-    persist(slides);
-  }, [slides, hydrated, persist]);
 
   const addSlide = useCallback((slide: Omit<PromoSlide, "id">) => {
     const id = `promo-${Date.now().toString(36)}`;
@@ -137,16 +116,49 @@ export function PromoProvider({ children }: { children: ReactNode }) {
     setSlides((prev) => prev.filter((slide) => slide.id !== id));
   }, []);
 
+  const savePromos = useCallback(async () => {
+    setSyncStatus("saving");
+    const result = await saveContent("/api/content/promos", slides);
+    if (result.ok) {
+      const next = result.data?.length
+        ? result.data.map((s) => normalizeSlide(s))
+        : slides;
+      setSlides(next);
+      setSavedSlides(next);
+      writeContentCache(CACHE_PROMOS, next);
+      setSyncStatus("idle");
+      return true;
+    }
+    setSyncStatus("error");
+    return false;
+  }, [slides]);
+
+  const isDirty = useMemo(
+    () => JSON.stringify(slides) !== JSON.stringify(savedSlides),
+    [slides, savedSlides],
+  );
+
   const value = useMemo(
     () => ({
       slides,
       addSlide,
       updateSlide,
       removeSlide,
+      savePromos,
+      isDirty,
       syncStatus,
       contentReady,
     }),
-    [slides, addSlide, updateSlide, removeSlide, syncStatus, contentReady],
+    [
+      slides,
+      addSlide,
+      updateSlide,
+      removeSlide,
+      savePromos,
+      isDirty,
+      syncStatus,
+      contentReady,
+    ],
   );
 
   return <PromoContext.Provider value={value}>{children}</PromoContext.Provider>;

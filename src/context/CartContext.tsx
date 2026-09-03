@@ -54,6 +54,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [franchiseId]);
 
   const addItem = useCallback((menuItem: MenuItem, volumeId?: string) => {
+    if (!menuItem.available) return;
     if (itemHasVolumes(menuItem) && !volumeId) return;
 
     const key = cartLineKey(menuItem.id, volumeId);

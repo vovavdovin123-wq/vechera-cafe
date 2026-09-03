@@ -8,6 +8,7 @@ import { InteriorProvider } from "@/context/InteriorContext";
 import { MenuProvider } from "@/context/MenuContext";
 import { PromoProvider } from "@/context/PromoContext";
 import { SearchProvider } from "@/context/SearchContext";
+import { SiteSettingsProvider } from "@/context/SiteSettingsContext";
 import { UserProvider } from "@/context/UserContext";
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -17,12 +18,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <MenuProvider>
           <PromoProvider>
             <InteriorProvider>
-              <SearchProvider>
-                <CartProvider>
-                  <ChunkLoadRecovery />
-                  <FranchiseEntryGuard>{children}</FranchiseEntryGuard>
-                </CartProvider>
-              </SearchProvider>
+              <SiteSettingsProvider>
+                <SearchProvider>
+                  <CartProvider>
+                    <ChunkLoadRecovery />
+                    <FranchiseEntryGuard>{children}</FranchiseEntryGuard>
+                  </CartProvider>
+                </SearchProvider>
+              </SiteSettingsProvider>
             </InteriorProvider>
           </PromoProvider>
         </MenuProvider>

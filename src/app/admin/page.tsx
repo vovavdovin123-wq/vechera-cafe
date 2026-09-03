@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
-import { ArrowDown, ArrowUp, Loader2, Plus, RefreshCw, Save, Search, Trash2 } from "lucide-react";
+import { useMemo, useState, type FormEvent, memo, useEffect } from "react";
+import { ArrowDown, ArrowUp, Ban, Loader2, Plus, RefreshCw, Search, Trash2 } from "lucide-react";
 import { AdminCategorySelect } from "@/components/AdminCategorySelect";
 import { AdminShell } from "@/components/AdminShell";
 import { AdminVolumesEditor } from "@/components/AdminVolumesEditor";
@@ -29,12 +29,8 @@ export default function AdminPage() {
     removeCategory,
     moveCategory,
     applyFrontPadProducts,
-    saveMenus,
-    isDirty,
-    syncStatus,
   } = useMenu();
 
-  const [saveMsg, setSaveMsg] = useState<string | null>(null);
   const [categoryMsg, setCategoryMsg] = useState<string | null>(null);
   const [newCategoryLabel, setNewCategoryLabel] = useState("");
 
@@ -163,12 +159,6 @@ export default function AdminPage() {
     setFilterCategory(addCategoryId);
   }
 
-  async function onSaveAll() {
-    setSaveMsg(null);
-    const ok = await saveMenus();
-    setSaveMsg(ok ? "Меню сохранено на сервере" : "Не удалось сохранить — войдите заново");
-  }
-
   async function syncFromFrontPad() {
     setSyncLoading(true);
     setSyncMsg(null);
@@ -198,7 +188,7 @@ export default function AdminPage() {
         );
       }
       setSyncMsg(
-        `FrontPad: ${parts.join(", ")}. Нажмите «Сохранить меню».` +
+        `FrontPad: ${parts.join(", ")}. Нажмите «Сохранить» внизу.` +
           (mismatches.length
             ? ` Неверный артикул: ${mismatches
                 .slice(0, 3)
@@ -222,34 +212,8 @@ export default function AdminPage() {
       title="Управление меню"
       subtitle={`${franchise.shortAddress} · категории и блюда`}
     >
-      <div
-        className={`mt-4 flex flex-col gap-3 rounded-2xl border px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center ${
-          isDirty
-            ? "border-[var(--gold)]/50 bg-[var(--gold-soft)]/30"
-            : "border-line bg-surface"
-        }`}
-      >
-        <button
-          type="button"
-          onClick={() => void onSaveAll()}
-          disabled={!isDirty || syncStatus === "saving"}
-          className="btn-soft inline-flex w-full items-center justify-center gap-2 disabled:opacity-50 sm:w-auto"
-        >
-          {syncStatus === "saving" ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Save className="h-4 w-4" />
-          )}
-          Сохранить меню
-        </button>
-        <p className="text-sm text-ink-muted">
-          {isDirty
-            ? "Есть несохранённые изменения"
-            : "Все изменения сохранены"}
-        </p>
-        {saveMsg && (
-          <p className="w-full text-xs text-ink-muted">{saveMsg}</p>
-        )}
+      <div className="mt-4 rounded-2xl border border-line bg-surface px-4 py-3 text-sm text-ink-muted">
+        Изменения сохраняются кнопкой «Сохранить» внизу экрана.
       </div>
 
       <section className="mt-6 rounded-[22px] border border-line bg-surface p-4 shadow-[var(--shadow-soft)] sm:p-5">
@@ -489,13 +453,13 @@ export default function AdminPage() {
               </div>
               <ul className="space-y-3">
                 {section.items.map((item) => (
-                  <AdminItemRow
+                  <MemoAdminItemRow
                     key={item.id}
                     item={item}
                     categoryOptions={selectCategoryOptions}
                     onUpdate={updateMenuItem}
-                    onToggle={() => toggleAvailable(item.id)}
-                    onRemove={() => removeMenuItem(item.id)}
+                    onToggle={toggleAvailable}
+                    onRemove={removeMenuItem}
                   />
                 ))}
               </ul>
@@ -517,11 +481,95 @@ function AdminItemRow({
   item: MenuItem;
   categoryOptions: Array<{ value: string; label: string }>;
   onUpdate: (id: string, patch: Partial<MenuItem>) => void;
-  onToggle: () => void;
-  onRemove: () => void;
+  onToggle: (id: string) => void;
+  onRemove: (id: string) => void;
 }) {
+  const [name, setName] = useState(item.name);
+  const [description, setDescription] = useState(item.description);
+  const [price, setPrice] = useState(String(item.price));
+  const [article, setArticle] = useState(item.frontpadArticle ?? "");
+
+  useEffect(() => {
+    setName(item.name);
+    setDescription(item.description);
+    setPrice(String(item.price));
+    setArticle(item.frontpadArticle ?? "");
+  }, [item.id, item.name, item.description, item.price, item.frontpadArticle]);
+
+  function commitName() {
+    const next = name.trim();
+    if (next && next !== item.name) onUpdate(item.id, { name: next });
+  }
+
+  function commitDescription() {
+    if (description !== item.description) {
+      onUpdate(item.id, { description });
+    }
+  }
+
+  function commitPrice() {
+    if (item.volumes?.length) return;
+    const parsed = Math.round(Number(price));
+    if (Number.isFinite(parsed) && parsed > 0 && parsed !== item.price) {
+      onUpdate(item.id, { price: parsed });
+    } else {
+      setPrice(String(item.price));
+    }
+  }
+
+  function commitArticle() {
+    if (item.volumes?.length) return;
+    const next = article.replace(/\D/g, "") || undefined;
+    if (next !== item.frontpadArticle) {
+      onUpdate(item.id, { frontpadArticle: next });
+    }
+  }
+
   return (
-    <li className="admin-card flex min-w-0 flex-col gap-3 rounded-2xl border border-line bg-surface p-3 shadow-[var(--shadow-soft)] lg:grid lg:grid-cols-[1fr_auto] lg:items-start lg:p-4">
+    <li
+      className={`admin-card flex min-w-0 flex-col gap-3 rounded-2xl border p-3 shadow-[var(--shadow-soft)] sm:p-4 ${
+        item.available
+          ? "border-line bg-surface"
+          : "border-danger/30 bg-danger/5"
+      }`}
+    >
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">
+            Статус
+          </p>
+          <p
+            className={`text-sm font-semibold ${
+              item.available ? "text-success" : "text-danger"
+            }`}
+          >
+            {item.available ? "В меню" : "На стоп-листе"}
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => onToggle(item.id)}
+            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold transition ${
+              item.available
+                ? "bg-danger/15 text-danger hover:bg-danger/25"
+                : "bg-success/15 text-success hover:bg-success/25"
+            }`}
+          >
+            <Ban className="h-3.5 w-3.5" />
+            {item.available ? "Стоп-лист" : "Вернуть в меню"}
+          </button>
+          <button
+            type="button"
+            onClick={() => onRemove(item.id)}
+            className="btn-ghost btn-ghost-danger shrink-0 p-2"
+            aria-label="Удалить"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+
       <div className="min-w-0 grid gap-3">
         <ImagePicker
           persistOnServer
@@ -532,18 +580,18 @@ function AdminItemRow({
         />
         <div className="grid gap-2 sm:grid-cols-2">
           <input
-            value={item.name}
-            onChange={(e) => onUpdate(item.id, { name: e.target.value })}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            onBlur={commitName}
             className="admin-input"
             placeholder="Название"
           />
           <input
             type="number"
             min={1}
-            value={item.price}
-            onChange={(e) =>
-              onUpdate(item.id, { price: Number(e.target.value) || item.price })
-            }
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            onBlur={commitPrice}
             className="admin-input"
             placeholder="Цена"
             disabled={Boolean(item.volumes?.length)}
@@ -558,18 +606,16 @@ function AdminItemRow({
             />
           </div>
           <input
-            value={item.description}
-            onChange={(e) => onUpdate(item.id, { description: e.target.value })}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            onBlur={commitDescription}
             className="admin-input sm:col-span-2"
             placeholder="Состав"
           />
           <input
-            value={item.frontpadArticle ?? ""}
-            onChange={(e) =>
-              onUpdate(item.id, {
-                frontpadArticle: e.target.value.replace(/\D/g, "") || undefined,
-              })
-            }
+            value={article}
+            onChange={(e) => setArticle(e.target.value.replace(/\D/g, ""))}
+            onBlur={commitArticle}
             className="admin-input sm:col-span-2"
             placeholder="Артикул FrontPad"
             inputMode="numeric"
@@ -601,27 +647,8 @@ function AdminItemRow({
           </p>
         </div>
       </div>
-      <div className="flex flex-row items-center justify-end gap-2 border-t border-line pt-3 lg:flex-col lg:items-stretch lg:border-t-0 lg:pt-0">
-        <button
-          type="button"
-          onClick={onToggle}
-          className={`shrink-0 rounded-full px-3 py-2 text-xs font-medium transition sm:py-1.5 ${
-            item.available
-              ? "bg-success/15 text-success"
-              : "bg-danger/15 text-danger"
-          }`}
-        >
-          {item.available ? "В меню" : "Скрыто"}
-        </button>
-        <button
-          type="button"
-          onClick={onRemove}
-          className="btn-ghost btn-ghost-danger shrink-0 p-2"
-          aria-label="Удалить"
-        >
-          <Trash2 className="h-4 w-4" />
-        </button>
-      </div>
     </li>
   );
 }
+
+const MemoAdminItemRow = memo(AdminItemRow);
