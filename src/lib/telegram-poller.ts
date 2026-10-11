@@ -5,6 +5,7 @@ import { telegramBotToken } from "./telegram-subscribers";
 
 const OFFSET_FILE = path.join(process.cwd(), "data", "telegram-offset.json");
 const LOCK_FILE = path.join(process.cwd(), "data", "telegram-poll.lock");
+const STALE_MS = 45_000;
 
 let started = false;
 
@@ -24,28 +25,48 @@ async function writeOffset(offset: number) {
   await fs.writeFile(OFFSET_FILE, `${JSON.stringify({ offset })}\n`, "utf8");
 }
 
+async function writeLock() {
+  await fs.mkdir(path.dirname(LOCK_FILE), { recursive: true });
+  await fs.writeFile(
+    LOCK_FILE,
+    JSON.stringify({ pid: process.pid, at: Date.now() }),
+    "utf8",
+  );
+}
+
+function parseLock(raw: string): { pid: number; at: number } | null {
+  try {
+    const json = JSON.parse(raw) as { pid?: number; at?: number };
+    if (json.pid) return { pid: json.pid, at: Number(json.at) || 0 };
+  } catch {
+    const pid = Number(raw.trim());
+    if (pid) return { pid, at: 0 };
+  }
+  return null;
+}
+
+function pidAlive(pid: number) {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function acquireLock() {
   await fs.mkdir(path.dirname(LOCK_FILE), { recursive: true });
   try {
-    await fs.writeFile(LOCK_FILE, String(process.pid), { flag: "wx" });
-    return true;
-  } catch {
-    try {
-      const pid = Number((await fs.readFile(LOCK_FILE, "utf8")).trim());
-      if (pid && pid !== process.pid) {
-        try {
-          process.kill(pid, 0);
-          return false;
-        } catch {
-          /* stale lock */
-        }
-      }
-      await fs.writeFile(LOCK_FILE, String(process.pid), "utf8");
-      return true;
-    } catch {
-      return false;
+    const raw = await fs.readFile(LOCK_FILE, "utf8");
+    const lock = parseLock(raw);
+    if (lock && lock.pid !== process.pid && pidAlive(lock.pid)) {
+      if (lock.at && Date.now() - lock.at < STALE_MS) return false;
     }
+  } catch {
+    /* no lock yet */
   }
+  await writeLock();
+  return true;
 }
 
 async function telegramApi(method: string, body?: Record<string, unknown>) {
@@ -70,6 +91,7 @@ async function loop() {
 
   while (true) {
     try {
+      await writeLock();
       const data = await telegramApi("getUpdates", {
         offset,
         timeout: 25,

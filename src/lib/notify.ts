@@ -5,6 +5,7 @@ import {
   telegramBotToken,
   telegramSendMessage,
 } from "./telegram-subscribers";
+import { startTelegramPoller } from "./telegram-poller";
 
 export async function notifyNewOrder(
   order: OrderPayload,
@@ -86,11 +87,20 @@ async function dispatchNotification(
   kind: "order" | "feedback",
   franchiseId?: FranchiseId,
 ): Promise<void> {
+  await startTelegramPoller().catch(() => undefined);
   const webhook = process.env.NOTIFY_WEBHOOK_URL;
   const chats = await telegramChatIds(franchiseId);
+  console.info(`[notify] ${kind} recipients=${chats.length}`);
 
   if (telegramBotToken() && chats.length) {
-    await Promise.all(chats.map((chatId) => telegramSendMessage(chatId, text)));
+    await Promise.all(
+      chats.map(async (chatId) => {
+        const sent = await telegramSendMessage(chatId, text);
+        if (!sent.ok) {
+          console.error(`[notify] ${kind} not delivered to ${chatId} (${sent.status})`);
+        }
+      }),
+    );
     return;
   }
 

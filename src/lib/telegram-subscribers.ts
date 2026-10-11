@@ -9,18 +9,30 @@ export type TelegramSubscriber = {
 };
 
 const FILE = path.join(process.cwd(), "data", "telegram-subscribers.json");
+const LOCK_DIR = `${FILE}.lock`;
 
-async function ensureFile() {
-  await fs.mkdir(path.dirname(FILE), { recursive: true });
-  try {
-    await fs.access(FILE);
-  } catch {
-    await fs.writeFile(FILE, "[]", "utf8");
-  }
+async function sleep(ms: number) {
+  await new Promise((r) => setTimeout(r, ms));
 }
 
-export async function readTelegramSubscribers(): Promise<TelegramSubscriber[]> {
-  await ensureFile();
+async function withFileLock<T>(fn: () => Promise<T>): Promise<T> {
+  await fs.mkdir(path.dirname(FILE), { recursive: true });
+  for (let i = 0; i < 40; i++) {
+    try {
+      await fs.mkdir(LOCK_DIR);
+      try {
+        return await fn();
+      } finally {
+        await fs.rmdir(LOCK_DIR).catch(() => undefined);
+      }
+    } catch {
+      await sleep(50);
+    }
+  }
+  return fn();
+}
+
+async function readListUnlocked(): Promise<TelegramSubscriber[]> {
   try {
     const raw = JSON.parse(await fs.readFile(FILE, "utf8")) as TelegramSubscriber[];
     return Array.isArray(raw) ? raw : [];
@@ -29,9 +41,12 @@ export async function readTelegramSubscribers(): Promise<TelegramSubscriber[]> {
   }
 }
 
-async function writeTelegramSubscribers(list: TelegramSubscriber[]) {
-  await ensureFile();
+async function writeListUnlocked(list: TelegramSubscriber[]) {
   await fs.writeFile(FILE, `${JSON.stringify(list, null, 2)}\n`, "utf8");
+}
+
+export async function readTelegramSubscribers(): Promise<TelegramSubscriber[]> {
+  return withFileLock(readListUnlocked);
 }
 
 export async function addTelegramSubscriber(input: {
@@ -40,31 +55,36 @@ export async function addTelegramSubscriber(input: {
   username?: string;
 }): Promise<{ added: boolean; subscriber: TelegramSubscriber }> {
   const chatId = String(input.chatId);
-  const list = await readTelegramSubscribers();
-  const existing = list.find((s) => s.chatId === chatId);
-  if (existing) {
-    existing.name = input.name || existing.name;
-    existing.username = input.username || existing.username;
-    await writeTelegramSubscribers(list);
-    return { added: false, subscriber: existing };
-  }
-  const subscriber: TelegramSubscriber = {
-    chatId,
-    name: input.name,
-    username: input.username,
-    subscribedAt: new Date().toISOString(),
-  };
-  list.push(subscriber);
-  await writeTelegramSubscribers(list);
-  return { added: true, subscriber };
+  return withFileLock(async () => {
+    const list = await readListUnlocked();
+    const existing = list.find((s) => s.chatId === chatId);
+    if (existing) {
+      existing.name = input.name || existing.name;
+      existing.username = input.username || existing.username;
+      await writeListUnlocked(list);
+      return { added: false, subscriber: existing };
+    }
+    const subscriber: TelegramSubscriber = {
+      chatId,
+      name: input.name,
+      username: input.username,
+      subscribedAt: new Date().toISOString(),
+    };
+    list.push(subscriber);
+    await writeListUnlocked(list);
+    console.info("[telegram] subscribed", chatId, input.username || input.name || "");
+    return { added: true, subscriber };
+  });
 }
 
 export async function removeTelegramSubscriber(chatId: string | number) {
   const id = String(chatId);
-  const list = await readTelegramSubscribers();
-  const next = list.filter((s) => s.chatId !== id);
-  await writeTelegramSubscribers(next);
-  return next.length < list.length;
+  return withFileLock(async () => {
+    const list = await readListUnlocked();
+    const next = list.filter((s) => s.chatId !== id);
+    await writeListUnlocked(next);
+    return next.length < list.length;
+  });
 }
 
 export function telegramBotToken() {
