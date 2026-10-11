@@ -17,8 +17,20 @@ if [ -d .next ]; then
 fi
 mv .next-build .next
 
-echo "→ pm2 reload"
+if [ -f .env ]; then
+  grep -q '^TELEGRAM_STANDALONE_POLLER=' .env || echo 'TELEGRAM_STANDALONE_POLLER=1' >> .env
+fi
+
+echo "→ pm2 reload site"
 pm2 reload vechera --update-env || pm2 restart vechera --update-env
+
+echo "→ pm2 telegram poller"
+if pm2 describe vechera-telegram >/dev/null 2>&1; then
+  pm2 restart vechera-telegram --update-env
+else
+  pm2 start scripts/telegram-poller.mjs --name vechera-telegram --cwd /var/www/vechera-cafe
+fi
+pm2 save || true
 
 rm -rf .next-old
 

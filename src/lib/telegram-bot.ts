@@ -21,6 +21,11 @@ export type TelegramUpdate = {
   update_id?: number;
   message?: TelegramMessage;
   edited_message?: TelegramMessage;
+  my_chat_member?: {
+    chat?: TelegramChat;
+    from?: TelegramMessage["from"];
+    new_chat_member?: { status?: string };
+  };
 };
 
 function displayName(chat?: TelegramChat, from?: TelegramMessage["from"]) {
@@ -32,9 +37,37 @@ function displayName(chat?: TelegramChat, from?: TelegramMessage["from"]) {
 }
 
 export async function handleTelegramUpdate(update: TelegramUpdate) {
+  const member = update.my_chat_member;
+  if (member?.chat?.id) {
+    const status = member.new_chat_member?.status;
+    if (status === "kicked" || status === "left") {
+      await removeTelegramSubscriber(member.chat.id);
+      return;
+    }
+  }
+
   const message = update.message || update.edited_message;
   const chat = message?.chat;
-  if (!message || !chat?.id) return;
+  if (!message || !chat?.id) {
+    if (
+      member?.chat?.id &&
+      (member.new_chat_member?.status === "member" ||
+        member.new_chat_member?.status === "restricted")
+    ) {
+      const { added } = await addTelegramSubscriber({
+        chatId: member.chat.id,
+        name: displayName(member.chat, member.from),
+        username: member.from?.username || member.chat.username,
+      });
+      await telegramSendMessage(
+        member.chat.id,
+        added
+          ? "Готово. Теперь сюда будут приходить новые заказы с сайта Вечера.\n\nЧтобы отключить: /stop"
+          : "Вы уже подписаны. Новые заказы с сайта Вечера будут приходить сюда.\n\nЧтобы отключить: /stop",
+      );
+    }
+    return;
+  }
 
   const text = (message.text || "").trim();
   const command = text.split(/\s+/)[0].split("@")[0].toLowerCase();

@@ -95,7 +95,7 @@ async function loop() {
       const data = await telegramApi("getUpdates", {
         offset,
         timeout: 25,
-        allowed_updates: ["message"],
+        allowed_updates: ["message", "edited_message", "my_chat_member"],
       });
       if (!data.ok || !Array.isArray(data.result)) {
         console.error("[telegram poller]", data.description || "getUpdates failed");
@@ -122,6 +122,12 @@ async function loop() {
 
 export async function startTelegramPoller() {
   if (started) return;
+  if (
+    process.env.TELEGRAM_STANDALONE_POLLER === "1" ||
+    process.env.NODE_ENV === "production"
+  ) {
+    return;
+  }
   if (!telegramBotToken()) {
     console.warn("[telegram poller] TELEGRAM_BOT_TOKEN is empty");
     return;
