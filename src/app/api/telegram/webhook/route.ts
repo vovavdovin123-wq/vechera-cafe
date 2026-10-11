@@ -56,7 +56,7 @@ export async function POST(request: Request) {
 
   const message = update.message || update.edited_message;
   const chat = message?.chat;
-  if (!chat?.id) {
+  if (!message || !chat?.id) {
     return NextResponse.json({ ok: true });
   }
 
