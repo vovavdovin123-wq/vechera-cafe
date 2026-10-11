@@ -22,12 +22,23 @@ export async function POST(request: Request) {
 
 export async function GET() {
   const subscribers = await readTelegramSubscribers();
+  let pollerCount: number | null = null;
+  try {
+    const res = await fetch("http://127.0.0.1:38745/status", {
+      signal: AbortSignal.timeout(2000),
+    });
+    const data = (await res.json()) as { ok?: boolean; subscriberCount?: number };
+    if (data.ok) pollerCount = Number(data.subscriberCount) || 0;
+  } catch {
+    /* poller down */
+  }
   return NextResponse.json({
     ok: true,
     service: "telegram-bot",
     tokenConfigured: Boolean(telegramBotToken()),
     mode: "polling",
-    subscriberCount: subscribers.length,
+    subscriberCount: pollerCount ?? subscribers.length,
+    pollerOk: pollerCount !== null,
     dataDir: vecheraDataDir(),
   });
 }

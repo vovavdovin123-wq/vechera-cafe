@@ -82,6 +82,10 @@ async function telegramChatIds(franchiseId?: FranchiseId): Promise<string[]> {
   return [...ids];
 }
 
+const POLLER_URL = (
+  process.env.TELEGRAM_NOTIFY_URL || "http://127.0.0.1:38745"
+).replace(/\/$/, "");
+
 async function dispatchNotification(
   text: string,
   kind: "order" | "feedback",
@@ -89,9 +93,28 @@ async function dispatchNotification(
 ): Promise<void> {
   const webhook = process.env.NOTIFY_WEBHOOK_URL;
   try {
+    const res = await fetch(`${POLLER_URL}/notify`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, kind, franchiseId }),
+      signal: AbortSignal.timeout(20000),
+    });
+    const data = (await res.json().catch(() => ({}))) as {
+      ok?: boolean;
+      count?: number;
+    };
+    if (res.ok && data.ok && (data.count ?? 0) > 0) {
+      console.info(`[notify] ${kind} poller sent to ${data.count} chats`);
+      return;
+    }
+    console.error("[notify] poller http", res.status, data);
+  } catch (err) {
+    console.error("[notify] poller unreachable", err);
+  }
+
+  try {
     await appendTelegramOutbox({ text, kind, franchiseId });
     console.info(`[notify] ${kind} queued for telegram poller`);
-    return;
   } catch (err) {
     console.error("[notify] outbox", err);
   }

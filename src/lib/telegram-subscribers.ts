@@ -56,7 +56,25 @@ async function writeListUnlocked(list: TelegramSubscriber[]) {
 }
 
 export async function readTelegramSubscribers(): Promise<TelegramSubscriber[]> {
-  return withFileLock(readListUnlocked);
+  const byId = new Map<string, TelegramSubscriber>();
+  const files = [
+    subscribersFile(),
+    path.join(process.cwd(), "data", "telegram-subscribers.json"),
+    "/var/www/vechera-cafe/data/telegram-subscribers.json",
+  ];
+  for (const file of [...new Set(files)]) {
+    try {
+      const raw = JSON.parse(await fs.readFile(file, "utf8")) as TelegramSubscriber[];
+      if (!Array.isArray(raw)) continue;
+      for (const sub of raw) {
+        if (!sub?.chatId) continue;
+        byId.set(String(sub.chatId), { ...sub, chatId: String(sub.chatId) });
+      }
+    } catch {
+      /* missing file */
+    }
+  }
+  return [...byId.values()];
 }
 
 export async function addTelegramSubscriber(input: {

@@ -11,6 +11,7 @@ import {
   renameSync,
   unlinkSync,
 } from "fs";
+import http from "http";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -44,6 +45,7 @@ function loadEnv() {
 loadEnv();
 
 const TOKEN = (process.env.TELEGRAM_BOT_TOKEN || "").trim();
+const NOTIFY_PORT = Number(process.env.TELEGRAM_NOTIFY_PORT || 38745);
 if (!TOKEN) {
   console.error("[telegram-poller] TELEGRAM_BOT_TOKEN is empty");
   process.exit(1);
@@ -213,6 +215,68 @@ function recipientIds(franchiseId) {
 
 let draining = false;
 
+async function broadcast(text, franchiseId) {
+  const chats = recipientIds(franchiseId);
+  console.info("[telegram-poller] broadcast to", chats.length, "chats");
+  for (const chatId of chats) {
+    await send(chatId, text);
+  }
+  return chats.length;
+}
+
+function readHttpBody(req) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    req.on("data", (chunk) => chunks.push(chunk));
+    req.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
+    req.on("error", reject);
+  });
+}
+
+function startNotifyServer() {
+  const server = http.createServer(async (req, res) => {
+    res.setHeader("Content-Type", "application/json");
+    try {
+      const url = req.url || "/";
+      if (req.method === "GET" && (url === "/" || url === "/status")) {
+        const subs = readSubs();
+        res.end(
+          JSON.stringify({
+            ok: true,
+            subscriberCount: subs.length,
+            subscribers: subs.map((s) => ({
+              chatId: s.chatId,
+              name: s.name,
+              username: s.username,
+            })),
+          }),
+        );
+        return;
+      }
+      if (req.method === "POST" && url === "/notify") {
+        const item = JSON.parse((await readHttpBody(req)) || "{}");
+        if (!item.text) {
+          res.statusCode = 400;
+          res.end(JSON.stringify({ ok: false, error: "empty text" }));
+          return;
+        }
+        const count = await broadcast(item.text, item.franchiseId);
+        res.end(JSON.stringify({ ok: true, count }));
+        return;
+      }
+      res.statusCode = 404;
+      res.end(JSON.stringify({ ok: false }));
+    } catch (err) {
+      console.error("[telegram-poller] http", err);
+      res.statusCode = 500;
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+  });
+  server.listen(NOTIFY_PORT, "127.0.0.1", () => {
+    console.info(`[telegram-poller] notify http://127.0.0.1:${NOTIFY_PORT}`);
+  });
+}
+
 async function drainOutbox() {
   if (draining) return;
   draining = true;
@@ -259,6 +323,7 @@ async function drainOutbox() {
 }
 
 async function loop() {
+  startNotifyServer();
   await api("deleteWebhook", { drop_pending_updates: false });
   let offset = readOffset();
   console.info("[telegram-poller] started, offset", offset, "subs", readSubs().length);

@@ -19,6 +19,7 @@ mv .next-build .next
 
 if [ -f .env ]; then
   grep -q '^TELEGRAM_STANDALONE_POLLER=' .env || echo 'TELEGRAM_STANDALONE_POLLER=1' >> .env
+  grep -q '^TELEGRAM_NOTIFY_URL=' .env || echo 'TELEGRAM_NOTIFY_URL=http://127.0.0.1:38745' >> .env
 fi
 
 echo "→ pm2 reload site"
