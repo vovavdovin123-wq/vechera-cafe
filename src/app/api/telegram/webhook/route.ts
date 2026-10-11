@@ -1,4 +1,4 @@
-import { after, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import {
   addTelegramSubscriber,
   removeTelegramSubscriber,
@@ -68,11 +68,9 @@ export async function POST(request: Request) {
 
     if (command === "/stop") {
       await removeTelegramSubscriber(chat.id);
-      after(() =>
-        telegramSendMessage(
-          chat.id,
-          "Подписка отключена. Напишите /start, если снова нужны уведомления о заказах.",
-        ),
+      await telegramSendMessage(
+        chat.id,
+        "Подписка отключена. Напишите /start, если снова нужны уведомления о заказах.",
       );
       return NextResponse.json({ ok: true });
     }
@@ -83,13 +81,11 @@ export async function POST(request: Request) {
       username,
     });
 
-    after(() =>
-      telegramSendMessage(
-        chat.id,
-        added
-          ? "Готово. Теперь сюда будут приходить новые заказы с сайта Вечера."
-          : "Вы уже подписаны. Новые заказы с сайта Вечера будут приходить сюда.\n\nЧтобы отключить: /stop",
-      ),
+    await telegramSendMessage(
+      chat.id,
+      added
+        ? "Готово. Теперь сюда будут приходить новые заказы с сайта Вечера."
+        : "Вы уже подписаны. Новые заказы с сайта Вечера будут приходить сюда.\n\nЧтобы отключить: /stop",
     );
 
     return NextResponse.json({ ok: true });
@@ -100,5 +96,9 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-  return NextResponse.json({ ok: true, service: "telegram-webhook" });
+  return NextResponse.json({
+    ok: true,
+    service: "telegram-webhook",
+    tokenConfigured: Boolean(telegramBotToken()),
+  });
 }
