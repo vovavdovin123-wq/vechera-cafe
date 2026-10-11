@@ -74,18 +74,24 @@ export function telegramBotToken() {
 export async function telegramSendMessage(chatId: string | number, text: string) {
   const token = telegramBotToken();
   if (!token) return { ok: false, status: 0 };
-  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text,
-      disable_web_page_preview: true,
-    }),
-  });
-  if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    console.error(`[telegram] send ${chatId}: ${res.status} ${body}`);
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text,
+        disable_web_page_preview: true,
+      }),
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      console.error(`[telegram] send ${chatId}: ${res.status} ${body}`);
+    }
+    return { ok: res.ok, status: res.status };
+  } catch (err) {
+    console.error("[telegram] send failed", chatId, err);
+    return { ok: false, status: 0 };
   }
-  return { ok: res.ok, status: res.status };
 }

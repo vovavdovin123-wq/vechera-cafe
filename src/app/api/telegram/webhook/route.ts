@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import {
   addTelegramSubscriber,
   removeTelegramSubscriber,
@@ -34,60 +34,69 @@ function displayName(chat?: TelegramChat, from?: TelegramMessage["from"]) {
 }
 
 export async function POST(request: Request) {
-  const token = telegramBotToken();
-  if (!token) {
-    return NextResponse.json({ ok: false }, { status: 503 });
-  }
-
-  const secret = process.env.TELEGRAM_WEBHOOK_SECRET?.trim();
-  if (secret) {
-    const header = request.headers.get("x-telegram-bot-api-secret-token");
-    if (header !== secret) {
-      return NextResponse.json({ ok: false }, { status: 401 });
-    }
-  }
-
-  let update: TelegramUpdate;
   try {
-    update = (await request.json()) as TelegramUpdate;
-  } catch {
-    return NextResponse.json({ ok: true });
-  }
+    if (!telegramBotToken()) {
+      console.error("[telegram webhook] TELEGRAM_BOT_TOKEN is empty");
+      return NextResponse.json({ ok: true });
+    }
 
-  const message = update.message || update.edited_message;
-  const chat = message?.chat;
-  if (!message || !chat?.id) {
-    return NextResponse.json({ ok: true });
-  }
+    const secret = process.env.TELEGRAM_WEBHOOK_SECRET?.trim();
+    if (secret) {
+      const header = request.headers.get("x-telegram-bot-api-secret-token");
+      if (header !== secret) {
+        return NextResponse.json({ ok: false }, { status: 401 });
+      }
+    }
 
-  const text = (message.text || "").trim();
-  const command = text.split(/\s+/)[0].split("@")[0].toLowerCase();
-  const name = displayName(chat, message.from);
-  const username = message.from?.username || chat.username;
+    let update: TelegramUpdate;
+    try {
+      update = (await request.json()) as TelegramUpdate;
+    } catch {
+      return NextResponse.json({ ok: true });
+    }
 
-  if (command === "/stop") {
-    await removeTelegramSubscriber(chat.id);
-    await telegramSendMessage(
-      chat.id,
-      "Подписка отключена. Напишите /start, если снова нужны уведомления о заказах.",
+    const message = update.message || update.edited_message;
+    const chat = message?.chat;
+    if (!message || !chat?.id) {
+      return NextResponse.json({ ok: true });
+    }
+
+    const text = (message.text || "").trim();
+    const command = text.split(/\s+/)[0].split("@")[0].toLowerCase();
+    const name = displayName(chat, message.from);
+    const username = message.from?.username || chat.username;
+
+    if (command === "/stop") {
+      await removeTelegramSubscriber(chat.id);
+      after(() =>
+        telegramSendMessage(
+          chat.id,
+          "Подписка отключена. Напишите /start, если снова нужны уведомления о заказах.",
+        ),
+      );
+      return NextResponse.json({ ok: true });
+    }
+
+    const { added } = await addTelegramSubscriber({
+      chatId: chat.id,
+      name,
+      username,
+    });
+
+    after(() =>
+      telegramSendMessage(
+        chat.id,
+        added
+          ? "Готово. Теперь сюда будут приходить новые заказы с сайта Вечера."
+          : "Вы уже подписаны. Новые заказы с сайта Вечера будут приходить сюда.\n\nЧтобы отключить: /stop",
+      ),
     );
+
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error("[telegram webhook]", err);
     return NextResponse.json({ ok: true });
   }
-
-  const { added } = await addTelegramSubscriber({
-    chatId: chat.id,
-    name,
-    username,
-  });
-
-  await telegramSendMessage(
-    chat.id,
-    added
-      ? "Готово. Теперь сюда будут приходить новые заказы с сайта Вечера."
-      : "Вы уже подписаны. Новые заказы с сайта Вечера будут приходить сюда.\n\nЧтобы отключить: /stop",
-  );
-
-  return NextResponse.json({ ok: true });
 }
 
 export async function GET() {
