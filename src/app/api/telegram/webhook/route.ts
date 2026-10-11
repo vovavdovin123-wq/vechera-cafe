@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleTelegramUpdate, type TelegramUpdate } from "@/lib/telegram-bot";
+import { vecheraDataDir } from "@/lib/data-dir";
 import {
   readTelegramSubscribers,
   telegramBotToken,
@@ -27,5 +28,6 @@ export async function GET() {
     tokenConfigured: Boolean(telegramBotToken()),
     mode: "polling",
     subscriberCount: subscribers.length,
+    dataDir: vecheraDataDir(),
   });
 }

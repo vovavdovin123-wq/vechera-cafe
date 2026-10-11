@@ -3,7 +3,14 @@
  * Отдельный процесс: отвечает на /start любому аккаунту и пишет подписчиков.
  * На сервере: pm2 start scripts/telegram-poller.mjs --name vechera-telegram
  */
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from "fs";
+import {
+  existsSync,
+  readFileSync,
+  writeFileSync,
+  mkdirSync,
+  renameSync,
+  unlinkSync,
+} from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -11,6 +18,8 @@ const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DATA = path.join(ROOT, "data");
 const SUBS_FILE = path.join(DATA, "telegram-subscribers.json");
 const OFFSET_FILE = path.join(DATA, "telegram-offset.json");
+const OUTBOX_FILE = path.join(DATA, "telegram-outbox.jsonl");
+const OUTBOX_WORK = path.join(DATA, "telegram-outbox.work.jsonl");
 
 function loadEnv() {
   const file = path.join(ROOT, ".env");
@@ -178,10 +187,84 @@ async function handleUpdate(update) {
   }
 }
 
+function splitIds(raw) {
+  if (!raw || !String(raw).trim()) return [];
+  return String(raw)
+    .split(/[,;\s]+/)
+    .map((id) => id.trim())
+    .filter(Boolean);
+}
+
+function recipientIds(franchiseId) {
+  const ids = new Set();
+  for (const id of splitIds(process.env.TELEGRAM_CHAT_ID)) ids.add(id);
+  for (const id of splitIds(process.env.TELEGRAM_CHAT_IDS)) ids.add(id);
+  if (franchiseId === "center") {
+    for (const id of splitIds(process.env.TELEGRAM_CHAT_IDS_CENTER)) ids.add(id);
+  }
+  if (franchiseId === "hippodrome") {
+    for (const id of splitIds(process.env.TELEGRAM_CHAT_IDS_HIPPODROME)) {
+      ids.add(id);
+    }
+  }
+  for (const sub of readSubs()) ids.add(String(sub.chatId));
+  return [...ids];
+}
+
+let draining = false;
+
+async function drainOutbox() {
+  if (draining) return;
+  draining = true;
+  try {
+    ensureData();
+    const pending = [];
+    if (existsSync(OUTBOX_WORK)) pending.push(OUTBOX_WORK);
+    if (existsSync(OUTBOX_FILE)) {
+      const tmp = `${OUTBOX_FILE}.${process.pid}.${Date.now()}`;
+      renameSync(OUTBOX_FILE, tmp);
+      pending.push(tmp);
+    }
+    if (!pending.length) return;
+
+    for (const file of pending) {
+      const raw = readFileSync(file, "utf8");
+      const lines = raw.split(/\r?\n/).filter((l) => l.trim());
+      for (const line of lines) {
+        let item;
+        try {
+          item = JSON.parse(line);
+        } catch {
+          continue;
+        }
+        const chats = recipientIds(item.franchiseId);
+        console.info(
+          "[telegram-poller] notify",
+          item.kind,
+          "to",
+          chats.length,
+          "chats",
+        );
+        for (const chatId of chats) {
+          await send(chatId, item.text);
+        }
+      }
+      unlinkSync(file);
+    }
+  } catch (err) {
+    console.error("[telegram-poller] outbox", err);
+  } finally {
+    draining = false;
+  }
+}
+
 async function loop() {
   await api("deleteWebhook", { drop_pending_updates: false });
   let offset = readOffset();
-  console.info("[telegram-poller] started, offset", offset);
+  console.info("[telegram-poller] started, offset", offset, "subs", readSubs().length);
+  setInterval(() => {
+    drainOutbox().catch((err) => console.error("[telegram-poller] drain", err));
+  }, 1000);
 
   while (true) {
     try {

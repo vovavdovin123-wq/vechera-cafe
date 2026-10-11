@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { vecheraDataDir } from "./data-dir";
 
 export type TelegramSubscriber = {
   chatId: string;
@@ -8,22 +9,25 @@ export type TelegramSubscriber = {
   subscribedAt: string;
 };
 
-const FILE = path.join(process.cwd(), "data", "telegram-subscribers.json");
-const LOCK_DIR = `${FILE}.lock`;
+function subscribersFile() {
+  return path.join(vecheraDataDir(), "telegram-subscribers.json");
+}
 
 async function sleep(ms: number) {
   await new Promise((r) => setTimeout(r, ms));
 }
 
 async function withFileLock<T>(fn: () => Promise<T>): Promise<T> {
-  await fs.mkdir(path.dirname(FILE), { recursive: true });
+  const file = subscribersFile();
+  const lockDir = `${file}.lock`;
+  await fs.mkdir(path.dirname(file), { recursive: true });
   for (let i = 0; i < 40; i++) {
     try {
-      await fs.mkdir(LOCK_DIR);
+      await fs.mkdir(lockDir);
       try {
         return await fn();
       } finally {
-        await fs.rmdir(LOCK_DIR).catch(() => undefined);
+        await fs.rmdir(lockDir).catch(() => undefined);
       }
     } catch {
       await sleep(50);
@@ -34,7 +38,9 @@ async function withFileLock<T>(fn: () => Promise<T>): Promise<T> {
 
 async function readListUnlocked(): Promise<TelegramSubscriber[]> {
   try {
-    const raw = JSON.parse(await fs.readFile(FILE, "utf8")) as TelegramSubscriber[];
+    const raw = JSON.parse(
+      await fs.readFile(subscribersFile(), "utf8"),
+    ) as TelegramSubscriber[];
     return Array.isArray(raw) ? raw : [];
   } catch {
     return [];
@@ -42,7 +48,11 @@ async function readListUnlocked(): Promise<TelegramSubscriber[]> {
 }
 
 async function writeListUnlocked(list: TelegramSubscriber[]) {
-  await fs.writeFile(FILE, `${JSON.stringify(list, null, 2)}\n`, "utf8");
+  await fs.writeFile(
+    subscribersFile(),
+    `${JSON.stringify(list, null, 2)}\n`,
+    "utf8",
+  );
 }
 
 export async function readTelegramSubscribers(): Promise<TelegramSubscriber[]> {

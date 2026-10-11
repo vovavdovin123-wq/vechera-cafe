@@ -1,5 +1,6 @@
 import type { FeedbackPayload, FranchiseId, OrderPayload } from "./types";
 import { FRANCHISES } from "./franchises";
+import { appendTelegramOutbox } from "./telegram-outbox";
 import {
   readTelegramSubscribers,
   telegramBotToken,
@@ -87,6 +88,14 @@ async function dispatchNotification(
   franchiseId?: FranchiseId,
 ): Promise<void> {
   const webhook = process.env.NOTIFY_WEBHOOK_URL;
+  try {
+    await appendTelegramOutbox({ text, kind, franchiseId });
+    console.info(`[notify] ${kind} queued for telegram poller`);
+    return;
+  } catch (err) {
+    console.error("[notify] outbox", err);
+  }
+
   const chats = await telegramChatIds(franchiseId);
   console.info(`[notify] ${kind} recipients=${chats.length}`);
 
