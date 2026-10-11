@@ -108,7 +108,7 @@ export async function POST(request: Request) {
       orderNumber: frontpad.orderNumber,
     });
     await applyPendingWebhooks(frontpad.orderId, frontpad.orderNumber);
-    await notifyNewOrder(order, frontpad.orderId);
+    await notifyNewOrder(order, frontpad.orderId, frontpad.orderNumber);
 
     return NextResponse.json({
       ok: true,

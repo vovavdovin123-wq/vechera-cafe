@@ -1,23 +1,29 @@
-import type { FeedbackPayload, OrderPayload } from "./types";
+import type { FeedbackPayload, FranchiseId, OrderPayload } from "./types";
 import { FRANCHISES } from "./franchises";
+import {
+  readTelegramSubscribers,
+  telegramBotToken,
+  telegramSendMessage,
+} from "./telegram-subscribers";
 
-/**
- * Order / feedback notifications stub.
- * Later: wire Telegram bot, email, or dashboard webhook via env vars.
- */
 export async function notifyNewOrder(
   order: OrderPayload,
   orderId: string,
+  orderNumber?: string,
 ): Promise<void> {
   const franchise = FRANCHISES[order.franchiseId];
+  const title = orderNumber
+    ? `Новый заказ №${orderNumber}`
+    : `Новый заказ ${orderId}`;
   const lines = [
-    `🛒 Новый заказ ${orderId}`,
-    `Точка: ${franchise.address}`,
+    `🛒 ${title}`,
+    `Точка: ${franchise.shortAddress} (${franchise.address})`,
     `Способ: ${order.fulfillment === "pickup" ? "Самовывоз" : "Доставка"}`,
     `Сумма: ${order.total} ₽`,
     order.customerName ? `Имя: ${order.customerName}` : null,
     order.customerPhone ? `Телефон: ${order.customerPhone}` : null,
     order.address?.street ? `Адрес: ${order.address.street}` : null,
+    order.address?.entrance ? `Подъезд: ${order.address.entrance}` : null,
     order.address?.apartment ? `Кв.: ${order.address.apartment}` : null,
     order.comment ? `Комментарий: ${order.comment}` : null,
     "",
@@ -26,7 +32,7 @@ export async function notifyNewOrder(
     ),
   ].filter(Boolean);
 
-  await dispatchNotification(lines.join("\n"), "order");
+  await dispatchNotification(lines.join("\n"), "order", order.franchiseId);
 }
 
 export async function notifyFeedback(
@@ -45,23 +51,46 @@ export async function notifyFeedback(
   await dispatchNotification(lines.join("\n"), "feedback");
 }
 
+function splitChatIds(raw?: string): string[] {
+  if (!raw?.trim()) return [];
+  return raw
+    .split(/[,;\s]+/)
+    .map((id) => id.trim())
+    .filter(Boolean);
+}
+
+async function telegramChatIds(franchiseId?: FranchiseId): Promise<string[]> {
+  const ids = new Set<string>();
+  for (const id of splitChatIds(process.env.TELEGRAM_CHAT_ID)) ids.add(id);
+  for (const id of splitChatIds(process.env.TELEGRAM_CHAT_IDS)) ids.add(id);
+
+  if (franchiseId === "center") {
+    for (const id of splitChatIds(process.env.TELEGRAM_CHAT_IDS_CENTER)) {
+      ids.add(id);
+    }
+  }
+  if (franchiseId === "hippodrome") {
+    for (const id of splitChatIds(process.env.TELEGRAM_CHAT_IDS_HIPPODROME)) {
+      ids.add(id);
+    }
+  }
+
+  const subscribers = await readTelegramSubscribers();
+  for (const sub of subscribers) ids.add(sub.chatId);
+
+  return [...ids];
+}
+
 async function dispatchNotification(
   text: string,
   kind: "order" | "feedback",
+  franchiseId?: FranchiseId,
 ): Promise<void> {
   const webhook = process.env.NOTIFY_WEBHOOK_URL;
-  const telegramToken = process.env.TELEGRAM_BOT_TOKEN;
-  const telegramChat = process.env.TELEGRAM_CHAT_ID;
+  const chats = await telegramChatIds(franchiseId);
 
-  if (telegramToken && telegramChat) {
-    await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: telegramChat,
-        text,
-      }),
-    }).catch((err) => console.error("[notify telegram]", err));
+  if (telegramBotToken() && chats.length) {
+    await Promise.all(chats.map((chatId) => telegramSendMessage(chatId, text)));
     return;
   }
 
